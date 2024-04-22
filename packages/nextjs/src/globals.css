@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-    --surface-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 8%, theme('colors.surface.DEFAULT'));
-    --surface-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.DEFAULT'));
+    --surface-hover-layer: color-mix(in srgb, #ffffff 8%, theme('colors.surface.DEFAULT'));
+    --surface-press-layer: color-mix(in srgb, #ffffff 12%, theme('colors.surface.DEFAULT'));
 
     --primary-hover-layer: color-mix(in srgb, theme('colors.on.primary') 8%, theme('colors.primary'));
     --primary-press-layer: color-mix(in srgb, theme('colors.on.primary') 16%, theme('colors.primary'));
@@ -100,4 +100,3 @@ html {
         @apply text-on-background font-normal text-xl;
     }
 }
-
