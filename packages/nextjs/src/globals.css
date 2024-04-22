@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {    
+    --button-horizontal-padding: theme('spacing.4');
+    --button-vertical-padding: theme('spacing.0');
+    --button-height: theme('spacing.10');
+    --border-radius: theme('borderRadius.md');
+}
+
+html {
+    @apply bg-background;
+}
+
+@layer components {
+    .button {
+        @apply
+            flex
+            items-center
+            text-xs
+            font-medium
+            h-[var(--button-height)]
+            px-[var(--button-horizontal-padding)]
+            py-[var(--button-vertical-padding)]
+            rounded-md
+            transition-colors;
+    }
+}
+
