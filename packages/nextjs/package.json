@@ -32,6 +32,7 @@
     "@storybook/test": "^8.0.8",
     "@tailwindcss/typography": "^0.5.12",
     "autoprefixer": "^10.4.19",
+    "chromatic": "^11.3.0",
     "postcss": "^8",
     "postcss-loader": "^8.1.1",
     "storybook": "^8.0.8",

@@ -1,6 +1,10 @@
 import WorkflowVersionList from "./workflow-version-list";
 
-import { activeWorkflowVersion } from '~/molecules/workflow-version-list-item.stories';
+import {
+    draftWorkflowVersion,
+    activeWorkflowVersion,
+    inactiveWorkflowVersion,
+} from '~/molecules/workflow-version-list-item.stories';
 
 export default {
     component: WorkflowVersionList,
@@ -12,12 +16,12 @@ export const Empty = {
     },
 };
 
-export const Active = {
+export const Default = {
     args: {
         workflowVersions: [
             activeWorkflowVersion,
-            activeWorkflowVersion,
-            activeWorkflowVersion,
+            inactiveWorkflowVersion,
+            draftWorkflowVersion,
         ],
     },
 };

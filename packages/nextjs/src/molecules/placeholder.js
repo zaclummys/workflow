@@ -3,9 +3,9 @@ export default function Placeholder ({
     description,
 }) {
     return (
-        <div className="gap-1 py-10">
-            <span>{title}</span>
-            <span>{description}</span>
+        <div className="flex flex-col text-on-background text-center gap-1 py-10">
+            <span className="font-medium text-lg">{title}</span>
+            <span className="font-normal text-base">{description}</span>
         </div>
     );
 }

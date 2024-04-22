@@ -1,3 +1,5 @@
+import { Bird } from 'lucide-react';
+
 import IconMenuItem from './icon-menu-item';
 
 export default {
@@ -5,5 +7,11 @@ export default {
 };
 
 export const Default = {
-    render: () => <IconMenuItem>Lorem ipsum</IconMenuItem>,
+    render: () => (
+        <IconMenuItem>
+            <Bird />
+
+            Lorem ipsum
+        </IconMenuItem>
+    )
 };

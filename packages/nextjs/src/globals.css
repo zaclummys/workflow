@@ -2,7 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {    
+:root {
+    --surface-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 8%, theme('colors.surface.DEFAULT'));
+    --surface-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.DEFAULT'));
+
+    --primary-hover-layer: color-mix(in srgb, theme('colors.on.primary') 8%, theme('colors.primary'));
+    --primary-press-layer: color-mix(in srgb, theme('colors.on.primary') 16%, theme('colors.primary'));
+
+    --danger-hover-layer: color-mix(in srgb, theme('colors.on.danger') 8%, theme('colors.danger'));
+    --danger-press-layer: color-mix(in srgb, theme('colors.on.danger') 16%, theme('colors.danger'));
+}
+
+:root {
+    --page-actions-gap: theme('spacing.2');
+    --page-section-gap: theme('spacing.4');
+
     --button-horizontal-padding: theme('spacing.4');
     --button-vertical-padding: theme('spacing.0');
     --button-height: theme('spacing.10');
@@ -18,9 +32,6 @@
     --card-background: theme('colors.surface.DEFAULT');
     --card-horizontal-padding: theme('spacing.6');
     --card-vertical-padding: theme('spacing.4');
-
-    --surface-hover-layer: color-mix(in srgb, white 8%, theme('colors.surface.DEFAULT'));
-    --surface-press-layer: color-mix(in srgb, white 12%, theme('colors.surface.DEFAULT'));
 }
 
 html {
@@ -32,7 +43,7 @@ html {
         @apply
             flex
             items-center
-            text-xs
+            text-sm
             font-medium
             h-[var(--button-height)]
             px-[var(--button-horizontal-padding)]
@@ -79,6 +90,14 @@ html {
 
     .card-list {
         @apply flex flex-col gap-4;
+    }
+
+    .page-title {
+        @apply text-on-background font-normal text-2xl;
+    }
+
+    .page-section-title {
+        @apply text-on-background font-normal text-xl;
     }
 }
 

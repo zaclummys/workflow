@@ -4,6 +4,15 @@ export default {
     component: WorkflowVersionListItem,
 };
 
+export const draftWorkflowVersion = {
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    number: 100,
+    numberOfExecutions: 0,
+    createdAt: new Date(),
+    createdBy: 'John Doe',
+    status: 'draft',
+};
+
 export const activeWorkflowVersion = {
     id: '123e4567-e89b-12d3-a456-426614174000',
     number: 100,
@@ -22,14 +31,12 @@ export const inactiveWorkflowVersion = {
     status: 'inactive',
 };
 
-export const draftWorkflowVersion = {
-    id: '123e4567-e89b-12d3-a456-426614174000',
-    number: 100,
-    numberOfExecutions: 0,
-    createdAt: new Date(),
-    createdBy: 'John Doe',
-    status: 'draft',
+export const Draft = {
+    args: {
+        workflowVersion: draftWorkflowVersion,
+    },
 };
+
 
 export const Active = {
     args: {
@@ -43,8 +50,3 @@ export const Inactive = {
     },
 };
 
-export const Draft = {
-    args: {
-        workflowVersion: draftWorkflowVersion,
-    },
-};
