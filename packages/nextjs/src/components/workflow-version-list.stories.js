@@ -4,7 +4,7 @@ import {
     draftWorkflowVersion,
     activeWorkflowVersion,
     inactiveWorkflowVersion,
-} from '~/molecules/workflow-version-list-item.stories';
+} from '~/components/workflow-version-list-item.stories';
 
 export default {
     component: WorkflowVersionList,

@@ -14,7 +14,7 @@
 }
 
 :root {
-    --page-actions-gap: theme('spacing.2');
+    /* --page-actions-gap: theme('spacing.2'); */
     --page-section-gap: theme('spacing.4');
 
     --button-horizontal-padding: theme('spacing.4');

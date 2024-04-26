@@ -1,4 +1,4 @@
-import PrimaryButton from "~/atoms/primary-button";
+import PrimaryButton from "~/components/button/primary-button";
 
 export default function SignInTemplate () {
     return (

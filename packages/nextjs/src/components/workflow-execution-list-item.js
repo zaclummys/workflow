@@ -5,39 +5,33 @@ import WorkflowExecutionStatus from './workflow-execution-status';
 import { calculateTimeAgo } from '../date-time';
 
 export default function WorkflowExecutionListItem ({
-    execution: {
-        id,
-        number,
-        status,
-        executedAt,
-        executedBy,
-    }
+    workflowExecution
 }) {
-    const howLongAgoWasExecuted = calculateTimeAgo(executedAt);
+    const howLongAgoWasExecuted = calculateTimeAgo(workflowExecution.executedAt);
 
     return (
         <div className="card">
             <div className="flex flex-row">
                 <div class="flex flex-col grow">
                     <span className="card-title">
-                        Workflow Execution {number}
+                        Workflow Execution {workflowExecution.number}
                     </span>
 
                     <span className="card-subtitle">
-                        {id}
+                        {workflowExecution.id}
                     </span>
                 </div>
 
                 <div>
-                    <WorkflowExecutionStatus status={status} />
+                    <WorkflowExecutionStatus status={workflowExecution.status} />
                 </div>
             </div>
 
             <span className="card-text">
-                Executed {howLongAgoWasExecuted} by {executedBy}
+                Executed {howLongAgoWasExecuted} by {workflowExecution.executedBy}
             </span>
 
-            <Link class="card-link" href={`/workflow-execution/${id}`} />
+            <Link class="card-link" href={`/workflow-execution/${workflowExecution.id}`} />
         </div>
     );
 }

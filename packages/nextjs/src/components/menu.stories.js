@@ -1,8 +1,8 @@
-import Menu from '~/molecules/menu';
+import Menu from '~/components/menu';
 
-import DefaultMenuItem from '~/atoms/menu-item/default-menu-item';
-import DestructiveMenuItem from '~/atoms/menu-item/destructive-menu-item';
-import IconMenuItem from '~/atoms/menu-item/icon-menu-item';
+import DefaultMenuItem from '~/components/menu-item/default-menu-item';
+import DestructiveMenuItem from '~/components/menu-item/destructive-menu-item';
+import IconMenuItem from '~/components/menu-item/icon-menu-item';
 
 import {
     Dog,

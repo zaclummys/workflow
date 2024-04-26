@@ -1,5 +1,5 @@
-import Placeholder from "~/molecules/placeholder";
-import WorkflowVersionListItem from "~/molecules/workflow-version-list-item";
+import Placeholder from "~/components/placeholder";
+import WorkflowVersionListItem from "~/components/workflow-version-list-item";
 
 export default function WorkflowVersionList ({ workflowVersions }) {
     if (workflowVersions.length === 0) {

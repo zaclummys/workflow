@@ -1,36 +1,116 @@
-import OutlineButton from "~/atoms/button/outline-button";
-import PrimaryButton from "~/atoms/button/primary-button";
+import Link from "next/link";
 
-import Header from "~/organisms/header";
+import OutlineButton from "~/components/button/outline-button";
+import PrimaryButton from "~/components/button/primary-button";
+import Details from "~/components/details/details";
+import Detail from "~/components/details/detail";
+import DetailHeader from "~/components/details/detail-header";
+import DetailRow from "~/components/details/detail-row";
 
-export default function WorkflowVersionTemplate ({
-    workflowVersion
+import Header from "~/components/header";
+import WorkflowVersionStatus from "~/components/workflow-version-status";
+import WorkflowExecutionList from "~/components/workflow-execution-list";
+
+import PageActions from "~/components/page/page-actions";
+import PageContainer from "~/components/page/page-container";
+
+export default function WorkflowVersionTemplate({
+    workflowVersion,
 }) {
     return (
         <div>
             <Header />
 
-            <div className="container mx-auto">
+            <PageContainer>
                 <div className="flex flex-col">
                     <div className="flex flex-row">
                         <span className="page-title grow">
                             Workflow Version {workflowVersion.number}
                         </span>
 
-                        <div className="flex flex-row gap-[var(--page-actions-gap)]">
+                        <PageActions>
                             <PrimaryButton>Open</PrimaryButton>
-                            <OutlineButton>Execute</OutlineButton>
-                            <OutlineButton>Delete</OutlineButton>
-                        </div>
+
+                            {workflowVersion.status === 'active' ? (
+                                <>
+                                    <OutlineButton>Execute</OutlineButton>
+                                    <OutlineButton>Deactivate</OutlineButton>
+                                </>
+                            ) : (
+                                <>
+                                    <OutlineButton>Activate</OutlineButton>
+                                    <OutlineButton>Delete</OutlineButton>
+                                </>
+                            )}
+                        </PageActions>
                     </div>
+
+                    <WorkflowVersionDetails
+                        workflowVersion={workflowVersion} />
                 </div>
 
                 <div className="flex flex-col gap-[var(--page-section-gap)]">
                     <span className="page-section-title">
-                        Workflows
+                        Workflows executions
                     </span>
+
+                    <WorkflowExecutionList
+                        workflowExecutions={workflowVersion.workflowExecutions} />
                 </div>
-            </div>
+            </PageContainer>
         </div>
+    );
+}
+
+function WorkflowVersionDetails ({
+    workflowVersion,
+}) {
+    return (
+        <Details>
+            <DetailRow>
+                <Detail>
+                    <DetailHeader>
+                        Status
+                    </DetailHeader>
+
+                    <WorkflowVersionStatus
+                        status={workflowVersion.status} />
+                </Detail>
+
+                <Detail>
+                    <DetailHeader>
+                        Workflow
+                    </DetailHeader>
+
+                    <WorkflowLink
+                        workflow={workflowVersion.workflow} />
+                </Detail>
+
+                <Detail>
+                    <DetailHeader>
+                        Workspace
+                    </DetailHeader>
+
+                    <WorkspaceLink
+                        workspace={workflowVersion.workflow.workspace} />
+                </Detail>
+            </DetailRow>
+        </Details>
+    );
+}
+
+function WorkflowLink ({ workflow }) {
+    return (
+        <Link href={`/workflow/${workflow.id}`} className="font-medium">
+            {workflow.name}
+        </Link>
+    );
+}
+
+function WorkspaceLink ({ workspace }) {
+    return (        
+        <Link href={`/workspace/${workspace.id}`} className="font-medium">
+            {workspace.name}
+        </Link>
     );
 }
