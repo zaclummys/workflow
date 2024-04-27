@@ -43,8 +43,9 @@ html {
         @apply
             flex
             items-center
-            text-sm
+            justify-center
             font-medium
+            text-sm
             h-[var(--button-height)]
             px-[var(--button-horizontal-padding)]
             py-[var(--button-vertical-padding)]

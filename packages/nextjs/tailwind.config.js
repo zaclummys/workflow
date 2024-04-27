@@ -1,5 +1,7 @@
 const colors = require('tailwindcss/colors');
 
+const gray = colors.zinc;
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
@@ -9,36 +11,36 @@ module.exports = {
         extend: {
             colors: {
                 primary: colors.violet[400],
-                background: colors.zinc[800],
+                background: gray[800],
                 
                 surface: {
-                    DEFAULT: colors.zinc[700],
-                    high: colors.zinc[600],
+                    DEFAULT: gray[700],
+                    high: gray[600],
                 },
     
                 positive: colors.green[400],
                 negative: colors.red[400],
-                neutral: colors.zinc[400],
+                neutral: gray[400],
     
                 danger: colors.red[400],
 
                 outline: {
-                    DEFAULT: colors.zinc[300],
-                    variant: colors.zinc[400],
+                    DEFAULT: gray[400],
+                    variant: gray[500],
                 },
 
                 on: {
-                    primary: colors.zinc[50],
-                    background: colors.zinc[50],
+                    primary: gray[50],
+                    background: gray[50],
                     surface: {
-                        DEFAULT: colors.zinc[50],
-                        variant: colors.zinc[300],
+                        DEFAULT: gray[50],
+                        variant: gray[300],
                     },
-                    danger: colors.zinc[50],
+                    danger: gray[50],
     
-                    positive: colors.zinc[50],
-                    negative: colors.zinc[50],
-                    neutral: colors.zinc[50],
+                    positive: gray[50],
+                    negative: gray[50],
+                    neutral: gray[50],
                 },
             }
         }
