@@ -11,7 +11,7 @@ export default function WorkflowVersionList ({ workflowVersions }) {
     }
 
     return (
-        <div class="card-list">
+        <div className="card-list">
             {workflowVersions.map(workflowVersion => (
                 <WorkflowVersionListItem
                     key={workflowVersion.id}

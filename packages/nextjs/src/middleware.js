@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-import { validateSession } from '@workflow/core';
+import validateSession from '@workflow/core/validate-session';
 
 function isGuestRoute (request) {
     const guestRoutes = ['/sign-in', '/sign-up'];

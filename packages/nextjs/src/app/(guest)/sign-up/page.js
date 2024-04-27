@@ -16,6 +16,8 @@ import BoxFooter from "~/components/box/box-footer";
 import BoxFooterText from "~/components/box/box-footer-text";
 import BoxFooterLink from "~/components/box/box-footer-link";
 
+import signUpAction from "~/actions/sign-up-action";
+
 export const title = 'Sign Up';
 
 export default function SignUp() {
@@ -30,9 +32,9 @@ export default function SignUp() {
                 <BoxHeaderSubtitle>Join us today!</BoxHeaderSubtitle>
             </BoxHeader>
 
-            <Form>
+            <Form action={signUpAction}>
                 <Field>
-                    <Label for={nameId}>
+                    <Label htmlFor={nameId}>
                         Name
                     </Label>
 
@@ -43,7 +45,7 @@ export default function SignUp() {
                 </Field>
 
                 <Field>
-                    <Label for={emailId}>
+                    <Label htmlFor={emailId}>
                         Email
                     </Label>
 
@@ -54,7 +56,7 @@ export default function SignUp() {
                 </Field>
 
                 <Field>
-                    <Label for={passwordId}>
+                    <Label htmlFor={passwordId}>
                         Password
                     </Label>
 

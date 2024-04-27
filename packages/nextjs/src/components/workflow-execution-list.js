@@ -11,7 +11,7 @@ export default function WorkflowExecutionList ({ workflowExecutions }) {
     }
 
     return (
-        <div class="card-list">
+        <div className="card-list">
             {workflowExecutions.map(workflowExecution => (
                 <WorkflowExecutionListItem
                     key={workflowExecution.id}

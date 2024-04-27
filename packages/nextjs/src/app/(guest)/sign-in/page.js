@@ -31,7 +31,7 @@ export default function SignIn() {
 
             <Form>
                 <Field>
-                    <Label for={emailId}>
+                    <Label htmlFor={emailId}>
                         Email
                     </Label>
 
@@ -42,7 +42,7 @@ export default function SignIn() {
                 </Field>
 
                 <Field>
-                    <Label for={passwordId}>
+                    <Label htmlFor={passwordId}>
                         Password
                     </Label>
 

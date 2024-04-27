@@ -12,7 +12,7 @@ export default function WorkflowExecutionListItem ({
     return (
         <div className="card">
             <div className="flex flex-row">
-                <div class="flex flex-col grow">
+                <div className="flex flex-col grow">
                     <span className="card-title">
                         Workflow Execution {workflowExecution.number}
                     </span>
@@ -31,7 +31,7 @@ export default function WorkflowExecutionListItem ({
                 Executed {howLongAgoWasExecuted} by {workflowExecution.executedBy}
             </span>
 
-            <Link class="card-link" href={`/workflow-execution/${workflowExecution.id}`} />
+            <Link className="card-link" href={`/workflow-execution/${workflowExecution.id}`} />
         </div>
     );
 }

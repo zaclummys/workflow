@@ -14,5 +14,11 @@
     "dev": "pnpm --filter @workflow/nextjs dev",
     "storybook": "pnpm --filter @workflow/nextjs storybook"
   },
-  "packageManager": "pnpm@8.15.0"
+  "packageManager": "pnpm@8.15.0",
+  "devDependencies": {
+    "vitest": "^1.5.2"
+  },
+  "dependencies": {
+    "argon2": "^0.40.1"
+  }
 }

@@ -19,7 +19,7 @@ export default function WorkflowVersionListItem ({
     return (
         <div className="card">
             <div className="flex flex-row">
-                <div class="flex flex-col grow">
+                <div className="flex flex-col grow">
                     <span className="card-title">
                         Workflow Version {number}
                     </span>
@@ -38,7 +38,7 @@ export default function WorkflowVersionListItem ({
                 Created {howLongAgoWasCreated} by {createdBy}
             </span>
 
-            <Link class="card-link" href={`/workflow-version/${id}`} />
+            <Link className="card-link" href={`/workflow-version/${id}`} />
         </div>
     );
 }
