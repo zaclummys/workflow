@@ -1,19 +1,20 @@
 import { randomUUID } from 'crypto';
-import { Session } from 'inspector';
+import { hash, verify } from 'argon2';
 
-export default class User {
-    static create ({
+import { Session } from './session';
+
+export class User {
+    static async create ({
         name,
         email,
         password,
     }) {
-        const id = randomUUID();
-
         return new User({
-            id,
             name,
             email,
-            password,
+            id: UserId.create(),
+            color: UserColor.create(),
+            password: await UserPassword.create(password),
         });
     }
 
@@ -22,15 +23,14 @@ export default class User {
         name,
         email,
         password,
+        color,
     }) {
-        this.id = id;
         this.name = name;
         this.email = email;
+        
+        this.id = id;
+        this.color = color;
         this.password = password;
-    }
-
-    getId () {
-        return this.id;
     }
 
     verifyPassword (passwordToBeVerified) {
@@ -42,5 +42,80 @@ export default class User {
             userId: this.id,
         });
     }
+
+    getId () {
+        return this.id.toString();
+    }
+
+    getName () {
+        return this.name;
+    }
+
+    getEmail () {
+        return this.email;
+    }
+
+    getPassword () {
+        return this.password.toString();
+    }
+
+    getColor () {
+        return this.color.toString();
+    }
 }
 
+export class UserId {
+    static create () {
+        return new UserId(randomUUID());
+    }
+
+    constructor (uuid) {
+        this.uuid = uuid;
+    }
+
+    toString () {
+        return this.uuid;
+    }
+}
+
+export class UserPassword {
+    static async create (passwordToBeHashed) {
+        if (passwordToBeHashed.length < 8) {
+            throw new Error('Password must contain at least 8 characters');
+        }
+
+        if (passwordToBeHashed.length > 255) {
+            throw new Error('Password must contain at maximum of 255 characters');
+        }
+
+        const hashedPassword = await hash(passwordToBeHashed);
+
+        return new UserPassword(hashedPassword);
+    }
+
+    constructor (hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
+
+    verify (passwordToBeVerified) {
+        return verify(this.hashedPassword, passwordToBeVerified);
+    }
+
+    toString () {
+        return this.hashedPassword;
+    }
+}
+
+export class UserColor {
+    static create () {
+        return new UserColor();
+    }
+    
+    constructor () {
+        this.name = 'purple';
+    }
+
+    toString () {
+        return this.name;
+    }
+}
