@@ -34,7 +34,7 @@ export default function HeaderUserMenuButton ({ user }) {
                     
                     <div className="absolute right-0 top-0">
                         <HeaderUserMenu
-                            onClick={onMenuClick} />
+                            onMenuClick={onMenuClick} />
                     </div>
                 </div>
             )}

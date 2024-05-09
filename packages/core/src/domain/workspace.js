@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto';
+
 export class Workspace {
     static create ({
         name,

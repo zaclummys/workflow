@@ -1,16 +1,7 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import signIn from '@workflow/core/sign-in';
-
-function setSessionTokenCookie (sessionToken) {
-    cookies().set('session_token', sessionToken, {
-        path: '/',
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-    });
-}
+import { setSessionToken } from '~/actions/cookies';
 
 export default async function signInAction ({ email, password }) {
     const {
@@ -23,7 +14,7 @@ export default async function signInAction ({ email, password }) {
     });
 
     if (success) {        
-        setSessionTokenCookie(sessionToken);
+        setSessionToken(sessionToken);
     }
 
     return {

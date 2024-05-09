@@ -42,6 +42,17 @@ module.exports = {
                     negative: gray[50],
                     neutral: gray[50],
                 },
+
+                user: {
+                    red: colors.red[400],
+                    orange: colors.orange[400],
+                    yellow: colors.yellow[400],
+                    green: colors.green[400],
+                    indigo: colors.indigo[400],
+                    purple: colors.purple[400],
+                    pink: colors.pink[400],
+                    blue: colors.blue[400],
+                }
             }
         }
     },

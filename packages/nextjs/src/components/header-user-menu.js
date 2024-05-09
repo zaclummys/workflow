@@ -1,28 +1,29 @@
 import signOutAction from '~/actions/guest/sign-out-action';
 
-export default function HeaderUserMenu ({ onClick }) {
+import { Menu, MenuItem } from './menu';
+
+export default function HeaderUserMenu ({ onMenuClick }) {
     const onSignOutButtonClick = async () => {
         await signOutAction();
     };
 
     return (
-        <menu
-            className="flex flex-col rounded bg-surface-high overflow-hidden"
-            onClick={onClick}>
-            <button className="py-3 px-6 text-left text-sm hover:bg-[var(--surface-high-hover-layer)] active:bg-[var(--surface-high-press-layer)] transition-colors">
+        <Menu
+            onClick={onMenuClick}>
+            <MenuItem>
                 Edit personal information
-            </button>
+            </MenuItem>
 
-            <button className="py-3 px-6 text-left text-sm hover:bg-[var(--surface-high-hover-layer)] active:bg-[var(--surface-high-press-layer)] transition-colors">
+            <MenuItem>
                 Change password
-            </button>
+            </MenuItem>
 
-            <button
-                className="py-3 px-6 text-left text-sm text-danger hover:bg-[var(--surface-high-hover-layer)] active:bg-[var(--surface-high-press-layer)] transition-colors"
+            <MenuItem
+                className="text-danger"
                 onClick={onSignOutButtonClick}>
                 Sign Out
-            </button>
-        </menu>
+            </MenuItem>
+        </Menu>
     );
 }
 

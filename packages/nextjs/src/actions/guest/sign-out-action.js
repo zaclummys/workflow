@@ -1,22 +1,18 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import signOut from '@workflow/core/sign-out';
+import { getSessionToken } from '~/actions/cookies';
 
 export default async function signOutAction () {
-    const cookieStore = cookies();
+    const sessionToken = getSessionToken();
 
-    const sessionTokenCookie = cookieStore.get('session_token');
-
-    if (sessionTokenCookie && sessionTokenCookie.value) {
+    if (sessionToken) {
         await signOut({
-            sessionToken: sessionTokenCookie.value
+            sessionToken
         });        
-    }
-
-    cookieStore.delete('session_token');
+    }    
 
     redirect('/sign-in');
 }

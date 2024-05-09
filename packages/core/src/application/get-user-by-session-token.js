@@ -19,7 +19,6 @@ export default async function getUserBySessionToken ({ sessionToken }) {
     }
 
     return {
-        id: user.getId(),
         name: user.getName(),
         color: user.getColor(),
     };

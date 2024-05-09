@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 export default function useForm (handler, onSuccess) {
     const [pending, setPending] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setErrorMessage] = useState(null);
 
     const onSubmit = async (event) => {
         event.preventDefault();
 
-        setError(null);
+        setErrorMessage(null);
         setPending(true);
 
         try {
@@ -16,9 +16,10 @@ export default function useForm (handler, onSuccess) {
             if (success) {
                 onSuccess();
             } else {
-                setError(message);
+                setErrorMessage(message);
+                setPending(false);
             }
-        } finally {
+        } catch {
             setPending(false);
         }
     }

@@ -1,14 +1,26 @@
-export const title = 'Workspaces';
+import getWorkspacesAction from '~/actions/current-user/get-workspaces-action';
 
 import Header from '~/components/header';
 import Container from '~/components/container';
-import { Section, SectionTitle } from '~/components/section';
-import { WorkspaceGrid, WorkspaceGridItem } from '~/components/workspace-grid';
 
-import getCurrentUserWorkspaces from '~/actions/current-user/get-workspaces';
+import {
+    Section,
+    SectionHeader,
+    SectionTitle,
+    SectionActions,
+} from '~/components/section';
+
+import {
+    WorkspaceGrid,
+    WorkspaceGridItem,
+ } from '~/components/workspace-grid';
+
+import NewWorkspaceModalButton from '~/components/new-workspace-modal-button';
+
+ export const title = 'Workspaces';
 
 export default async function Workspaces () {
-    const workspaces = await getCurrentUserWorkspaces();
+    const workspaces = await getWorkspacesAction();
 
     return (
         <>
@@ -16,19 +28,24 @@ export default async function Workspaces () {
 
             <Container>
                 <Section>
-                    <SectionTitle>Workspaces</SectionTitle>
+                    <SectionHeader>
+                        <SectionTitle>Workspaces</SectionTitle>
+                        <SectionActions>
+                            <NewWorkspaceModalButton />
+                        </SectionActions>
+                    </SectionHeader>
 
                     <WorkspaceGrid>
-                        {/* {workspaces.map(workspace => (
+                        {workspaces.map(workspace => (
                             <WorkspaceGridItem
                                 key={workspace.id}
                                 workspace={workspace} />
-                        ))} */}
+                        ))}
                     </WorkspaceGrid>
                 </Section>
 
                 <Section>
-                    <SectionTitle>Workflow Versions Recently Edited</SectionTitle>
+                    <SectionTitle>Recently Edited Workflow Versions</SectionTitle>
                 </Section>
             </Container>
         </>  

@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-export function getSessionTokenFromCookies () {
+export function getSessionToken () {
     const sessionTokenCookie = cookies().get('session_token');
 
     if (!sessionTokenCookie) {
@@ -14,4 +14,17 @@ export function getSessionTokenFromCookies () {
     }
 
     return sessionToken;
+}
+
+export function setSessionToken (sessionToken) {
+    cookies().set('session_token', sessionToken, {
+        path: '/',
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+    });
+}
+
+export function deleteSessionToken () {
+    cookies().delete('session_token');
 }

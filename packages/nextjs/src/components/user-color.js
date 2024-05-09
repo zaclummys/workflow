@@ -3,28 +3,28 @@ import { twMerge } from 'tailwind-merge';
 function getUserColorClassName (color) {
     switch (color) {
         case 'red':
-            return 'bg-var(--color-user-red)';
+            return 'bg-user-red';
 
         case 'orange':
-            return 'bg-var(--color-user-orange)';
+            return 'bg-user-orange';
 
         case 'yellow':
-            return 'bg-var(--color-user-yellow)';
+            return 'bg-user-yellow';
 
         case 'green':
-            return 'bg-var(--color-user-green)';
+            return 'bg-user-green';
 
         case 'indigo':
-            return 'bg-var(--color-user-indigo)';
+            return 'bg-user-indigo';
 
         case 'purple':
-            return 'bg-var(--color-user-purple)';
+            return 'bg-user-purple';
 
         case 'pink':
-            return 'bg-var(--color-user-pink)';
+            return 'bg-user-pink';
 
         case 'blue':
-            return 'bg-var(--color-user-blue)';
+            return 'bg-user-blue';
         
         default:
             throw new Error(`Unknown color: ${color}`);
@@ -35,6 +35,6 @@ export default function UserColor ({ color }) {
     const colorClassName = getUserColorClassName(color);
 
     return (
-        <div className={twMerge('rounded-full bg-primary', colorClassName)} />
+        <div className={twMerge('w-full h-full rounded-full bg-primary', colorClassName)} />
     );
 }
