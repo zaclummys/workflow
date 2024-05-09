@@ -2,12 +2,10 @@ import Link from 'next/link';
 
 import HeaderUserMenuButton from '~/components/header-user-menu-button';
 
-import getUser from '~/actions/current-user/get-user';
+import getUserAction from '~/actions/current-user/get-user-action';
 
 export default async function Header () {
-    const user = await getUser();
-
-    console.info(user)
+    const user = await getUserAction();
 
     return (
         <header className="flex flex-row bg-surface text-on-surface px-6 py-2 h-20">

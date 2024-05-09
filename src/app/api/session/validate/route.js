@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import validateSession from '@workflow/core/validate-session';
+import validateSession from '~/core/application/validate-session';
 
 export async function POST (request) {
     const { sessionToken } = await request.json();

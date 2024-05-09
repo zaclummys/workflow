@@ -1,4 +1,4 @@
-import createWorkspace from '@workflow/core/create-workspace';
+import createWorkspace from '~/core/application/create-workspace';
 import { getSessionToken } from '~/actions/cookies';
 
 export default async function createWorkspaceAction ({

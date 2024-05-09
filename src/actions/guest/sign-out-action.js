@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
-import signOut from '@workflow/core/sign-out';
+import signOut from '~/core/application/sign-out';
 import { getSessionToken } from '~/actions/cookies';
 
 export default async function signOutAction () {

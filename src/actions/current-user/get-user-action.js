@@ -1,4 +1,4 @@
-import getUserBySessionToken from '@workflow/core/get-user-by-session-token';
+import getUserBySessionToken from '~/core/application/get-user-by-session-token';
 
 import { getSessionToken } from '~/actions/cookies';
 

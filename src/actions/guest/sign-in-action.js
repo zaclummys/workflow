@@ -1,6 +1,6 @@
 'use server';
 
-import signIn from '@workflow/core/sign-in';
+import signIn from '~/core/application/sign-in';
 import { setSessionToken } from '~/actions/cookies';
 
 export default async function signInAction ({ email, password }) {

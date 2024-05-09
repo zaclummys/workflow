@@ -1,6 +1,6 @@
 'use server';
 
-import signUp from '@workflow/core/sign-up';
+import signUp from '~/core/application/sign-up';
 
 export default async function signUpAction ({
     name,

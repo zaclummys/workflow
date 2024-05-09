@@ -1,4 +1,4 @@
-import getWorkspaces from '@workflow/core/get-workspaces';
+import getWorkspaces from '~/core/application/get-workspaces';
 
 import { getSessionToken } from '~/actions/cookies';
 
