@@ -5,7 +5,7 @@ export class Session {
         return new Session({
             userId,
 
-            id: SessionId.create(),
+            id: randomUUID(),
             token: SessionToken.create(),
         });
     }
@@ -21,7 +21,7 @@ export class Session {
     }
 
     getId () {
-        return this.id.toString();
+        return this.id;
     }
 
     getToken () {
@@ -33,22 +33,8 @@ export class Session {
     }
 }
 
-export class SessionId {
-    static create () {
-        return new SessionId(randomUUID());
-    }
-
-    constructor (uuid) {
-        this.uuid = uuid;
-    }
-
-    toString () {
-        return this.uuid;
-    }
-}
-
 export class SessionToken {
-    static generate () {
+    static create () {
         const hex = randomBytes(256).toString('hex');
 
         return new SessionToken(hex);

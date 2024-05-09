@@ -1,3 +1,5 @@
+import { Session } from '../../../domain/session';
+
 export function fromSession (session) {
     return {
         id: session.getId(),

@@ -12,7 +12,7 @@ export class User {
         return new User({
             name,
             email,
-            id: UserId.create(),
+            id: randomUUID(),
             color: UserColor.create(),
             password: await UserPassword.create(password),
         });
@@ -64,20 +64,6 @@ export class User {
     }
 }
 
-export class UserId {
-    static create () {
-        return new UserId(randomUUID());
-    }
-
-    constructor (uuid) {
-        this.uuid = uuid;
-    }
-
-    toString () {
-        return this.uuid;
-    }
-}
-
 export class UserPassword {
     static async create (passwordToBeHashed) {
         if (passwordToBeHashed.length < 8) {
@@ -94,6 +80,10 @@ export class UserPassword {
     }
 
     constructor (hashedPassword) {
+        if (!hashedPassword) {
+            throw new Error('Password cannot be empty');
+        }
+
         this.hashedPassword = hashedPassword;
     }
 
@@ -107,12 +97,37 @@ export class UserPassword {
 }
 
 export class UserColor {
-    static create () {
-        return new UserColor();
+    static colors = [
+        'red',
+        'orange',
+        'yellow',
+        'green',
+        'indigo',
+        'purple',
+        'pink',
+        'blue',
+    ];
+
+    static getRandomColor () {
+        return UserColor.colors[Math.floor(Math.random() * UserColor.colors.length)];
+    }
+
+    static create () {        
+        const randomColor = UserColor.getRandomColor();
+
+        return new UserColor(randomColor);
     }
     
-    constructor () {
-        this.name = 'purple';
+    constructor (name) {
+        if (!name) {
+            throw new Error('Name cannot be empty');
+        }
+
+        if (!UserColor.colors.includes(name)) {
+            throw new Error(`Color must be one of the following: ${UserColor.colors.join(', ')}`);
+        }
+
+        this.name = name;
     }
 
     toString () {

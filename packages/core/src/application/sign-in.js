@@ -5,13 +5,19 @@ export default async function signIn ({ email, password }) {
     const user = await findUserByEmail(email);
 
     if (!user) {
-        throw new Error('The user was not found');
+        return {
+            success: false,
+            message: 'The email is not registered.',
+        };
     }
 
     const passwordIsCorrect = await user.verifyPassword(password);
 
     if (!passwordIsCorrect) {
-        throw new Error('The password is not correct');
+        return {
+            success: false,
+            message: 'The password is not correct.',
+        };
     }
 
     const session = user.createSession();
@@ -19,6 +25,7 @@ export default async function signIn ({ email, password }) {
     await insertSession(session);
 
     return {
-        sessionId: session.getId(),
+        success: true,
+        sessionToken: session.getToken(),
     };
 }

@@ -3,8 +3,11 @@
 @tailwind utilities;
 
 :root {
-    --surface-hover-layer: color-mix(in srgb, #ffffff 8%, theme('colors.surface.DEFAULT'));
-    --surface-press-layer: color-mix(in srgb, #ffffff 12%, theme('colors.surface.DEFAULT'));
+    --surface-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 12%, theme('colors.surface.DEFAULT'));
+    --surface-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.DEFAULT'));
+
+    --surface-high-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 12%, theme('colors.surface.high'));
+    --surface-high-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.high'));
 
     --primary-hover-layer: color-mix(in srgb, theme('colors.on.primary') 8%, theme('colors.primary'));
     --primary-press-layer: color-mix(in srgb, theme('colors.on.primary') 16%, theme('colors.primary'));
@@ -14,9 +17,6 @@
 }
 
 :root {
-    /* --page-actions-gap: theme('spacing.2'); */
-    --page-section-gap: theme('spacing.4');
-
     --button-horizontal-padding: theme('spacing.4');
     --button-vertical-padding: theme('spacing.0');
     --button-height: theme('spacing.10');
@@ -50,6 +50,7 @@ html {
             px-[var(--button-horizontal-padding)]
             py-[var(--button-vertical-padding)]
             rounded-[var(--button-border-radius)]
+            disabled:opacity-70 disabled:pointer-events-none
             transition-colors;
     }
 
@@ -95,9 +96,5 @@ html {
 
     .page-title {
         @apply text-on-background font-normal text-2xl;
-    }
-
-    .page-section-title {
-        @apply text-on-background font-normal text-xl;
     }
 }

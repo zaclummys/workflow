@@ -10,6 +10,10 @@ function extractUriFromEnv () {
 
 const uri = extractUriFromEnv();
 
+if (!uri) {
+    throw new Error('MongoDB URI cannot be empty');
+}
+
 const client = new MongoClient(uri, {
     serverApi: {
         strict: true,

@@ -1,36 +1,34 @@
-import { afterEach } from 'vitest';
 import signUp from '../../src/application/sign-up';
-
-import { drop } from '../../src/data/mongodb/client';
+import { deleteUserById } from '../../src/data/mongodb/user';
 
 describe('Sign up', () => {
     it('All good', async () => {
-        const response = await signUp({
+        const { userId } = await signUp({
             name: 'John Doe',
-            email: 'johndoe@acme.org',
+            email: 'all-good.sign-up@test.org',
             password: '12345678',
         });
 
-        expect(response).toEqual({
-            success: true
-        });
+        expect(userId).toBeDefined();
+
+        await deleteUserById(userId);
     });
 
     it.fails('Already taken email', async () => {
-        await signUp({
+        const { userId } = await signUp({
             name: 'John Doe',
-            email: 'johndoe@acme.org',
+            email: 'already-taken-email.sign-up@test.org',
             password: '12345678',
         });
 
-        await signUp({
-            name: 'John Doe',
-            email: 'johndoe@acme.org',
-            password: '12345678',
-        });
-    });
-
-    afterEach(async () => {
-        await drop();
+        try {
+            await signUp({
+                name: 'John Doe',
+                email: 'already-taken-email.sign-up@test.org',
+                password: '12345678',
+            });
+        } finally {
+            await deleteUserById(userId);
+        }
     });
 });

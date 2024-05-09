@@ -5,22 +5,37 @@ import {
 
 import { User } from '../domain/user';
 
-export default async function signUp ({ name, email, password }) {
-    const existingUser = await findUserByEmail(email);
+export default async function signUp ({
+    name,
+    email,
+    password,
+}) {
+    try {
+        const existingUser = await findUserByEmail(email);
 
-    if (existingUser) {
-        throw new Error('The email is already being used');
+        if (existingUser) {
+            return {
+                success: false,
+                message: 'The email is already being used.'
+            };
+        }
+
+        const user = await User.create({
+            name,
+            email,
+            password,
+        });
+
+        await insertUser(user);
+
+        return {
+            success: true,
+            userId: user.getId(),
+        };
+    } catch (error) {
+        return {
+            success: false,
+            message: 'An error occurred. Please try again.'
+        };
     }
-
-    const user = await User.create({
-        name,
-        email,
-        password,
-    });
-
-    await insertUser(user);
-
-    return {
-        success: true,
-    };
 }

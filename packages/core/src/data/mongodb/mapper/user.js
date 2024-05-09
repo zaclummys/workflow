@@ -1,4 +1,4 @@
-import { User, UserPassword } from '../../../domain/user';
+import { User, UserId, UserColor, UserPassword } from '../../../domain/user';
 
 export function toUser (userData) {
     if (userData == null) {
@@ -7,6 +7,8 @@ export function toUser (userData) {
 
     return new User({
         ...userData,
+        id: userData.id,
+        color: new UserColor(userData.color),
         password: new UserPassword(userData.password),
     });
 }

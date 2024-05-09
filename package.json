@@ -12,6 +12,7 @@
   },
   "scripts": {
     "dev": "pnpm --filter @workflow/nextjs dev",
+    "test": "vitest",
     "storybook": "pnpm --filter @workflow/nextjs storybook"
   },
   "packageManager": "pnpm@8.15.0",
