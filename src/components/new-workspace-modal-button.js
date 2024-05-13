@@ -1,11 +1,15 @@
 'use client';
 
 import { useId, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { Modal, ModalFooter, ModalTitle } from '~/components/modal';
-import { OutlineButton, PrimaryButton } from '~/components/button';
-import { Form, Field, Input, Label, TextArea } from '~/components/form';
 import useForm from '~/hooks/use-form';
+
+import { OutlineButton, PrimaryButton } from '~/components/button';
+import { Modal, ModalFooter, ModalTitle } from '~/components/modal';
+import { Form, Field, Input, Label, TextArea } from '~/components/form';
+
+import createWorkspaceAction from '~/actions/current-user/create-workspace-action';
 
 export default function NewWorkspaceModalButton() {
     const [isOpen, setIsOpen] = useState(false);
@@ -36,13 +40,20 @@ export default function NewWorkspaceModalButton() {
 function NewWorkspaceModal ({
     onCancelButtonClick,
 }) {
+    const router = useRouter();
+
     const formId = useId();
     const nameId = useId();
     const descriptionId = useId();
 
     const { pending, error, onSubmit } = useForm(async (event) => {
-        
-    })
+        return createWorkspaceAction({
+            name: event.target.name.value,
+            description: event.target.description.value,
+        });
+    }, ({ workspaceId }) => {
+        router.push(`/workspace/${workspaceId}`);
+    });
 
     return (
         <Modal>
@@ -61,6 +72,7 @@ function NewWorkspaceModal ({
 
                     <Input
                         id={nameId}
+                        disabled={pending}
                         name="name"
                         type="text"
                         required />
@@ -74,12 +86,17 @@ function NewWorkspaceModal ({
 
                     <TextArea
                         id={descriptionId}
+                        disabled={pending}
                         name="description"
                         required />
                 </Field>
             </Form>
 
-
+            {error && (
+                <span className="text-danger">
+                    {error}
+                </span>
+            )}
 
             <ModalFooter>
                 <OutlineButton
@@ -88,7 +105,9 @@ function NewWorkspaceModal ({
                 </OutlineButton>
 
                 <PrimaryButton
-                    form={formId}>
+                    type="submit"
+                    form={formId}
+                    disabled={pending}>
                     Create
                 </PrimaryButton>
             </ModalFooter>

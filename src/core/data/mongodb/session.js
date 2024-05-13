@@ -1,18 +1,14 @@
-import { connect } from './client';
-import { fromSession, toSession } from './mapper/session';
+import { database } from './client.js';
+import { Session } from '../../domain/session.js';
 
 export async function insertSession (session) {
-    const connection = await connect();
-
-    await connection
+    await database
         .collection('sessions')
         .insertOne(fromSession(session));
 }
 
 export async function findSessionByToken (token) {
-    const connection = await connect();
-
-    const sessionData = await connection
+    const sessionData = await database
         .collection('sessions')
         .findOne({ token });
 
@@ -23,10 +19,26 @@ export async function findSessionByToken (token) {
     return toSession(sessionData);
 }
 
-export async function deleteSessionByToken (token) {
-    const connection = await connect();
+export async function deleteSessionById (id) {
+    await database
+        .collection('sessions')
+        .deleteOne({ id });
+}
 
-    await connection
+export async function deleteSessionByToken (token) {
+    await database
         .collection('sessions')
         .deleteOne({ token });
+}
+
+export function fromSession (session) {
+    return {
+        id: session.getId(),
+        token: session.getToken(),
+        userId: session.getUserId(),
+    };
+}
+
+export function toSession (sessionData) {
+    return new Session(sessionData);
 }

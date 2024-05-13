@@ -1,4 +1,4 @@
-import { UserPassword } from '../../src/domain/user';
+import { UserPassword, UserColor } from '~/core/domain/user';
 
 function createGoodPassword() {
     return UserPassword.create('12345678');
@@ -46,4 +46,18 @@ describe('User', () => {
             expect(password.verify('87654321')).resolves.toBeFalsy();
         });
     });
+
+    describe('User color', () => {
+        it('Generate all colors', () => {
+            const colors = UserColor.colors;
+
+            for (const color of colors) {
+                const userColor = UserColor.create();
+
+                if (color === userColor.getName()) {
+                    break;
+                }
+            }            
+        });
+    })
 });

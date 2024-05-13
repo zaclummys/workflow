@@ -1,9 +1,14 @@
-import { connect } from './client.js';
+import { database } from './client.js';
+import { Workspace, WorkspaceMember } from '../../domain/workspace.js';
+
+export async function insertWorkspace (workspace) {
+    await database
+        .collection('workspaces')
+        .insertOne(fromWorkspace(workspace));
+}
 
 export async function findWorkspaceById (id) {
-    const connection = await connect();
-
-    const workspace = await connection
+    const workspace = await database
         .collection('workspaces')
         .findOne({ id });
 
@@ -11,23 +16,50 @@ export async function findWorkspaceById (id) {
         return null;
     }
 
-    return 
+    return toWorkspace(workspace);
 }
 
 export async function findWorkspacesByUserId (userId) {
-    const connection = await connect();
-
-    // find workspaces that user ID is inside of the workspace's member list
-    const workspaces = await connection
+    const workspaces = await database
         .collection('workspaces')
-        .find({ members: userId })
+        .find()
         .toArray();
-        
-    return workspaces.map(workspace => ({
-        id: workspace.id,
-        name: workspace.name,
-        description: workspace.description,
-        createdAt: workspace.createdAt,
-        updatedAt: workspace.updatedAt,
-    }));
+
+    return workspaces.map(toWorkspace);
+}
+
+export async function deleteWorkspaceById (id) {
+    await database
+        .collection('workspaces')
+        .deleteOne({ id });
+}
+
+export function fromWorkspace (workspace) {
+    return {
+        id: workspace.getId(),
+        name: workspace.getName(),
+        description: workspace.getDescription(),
+        createdAt: workspace.getCreatedAt(),
+        createdById: workspace.getCreatedById(),
+        members: workspace.getMembers()
+            .map(member => ({
+                userId: member.getUserId(),
+                addedAt: member.getAddedAt(),
+            }))
+    };
+}
+
+export function toWorkspace (workspaceData) {
+    return new Workspace({
+        id: workspaceData.id,
+        name: workspaceData.name,
+        description: workspaceData.description,
+        createdAt: workspaceData.createdAt,
+        createdById: workspaceData.createdById,
+        members: workspaceData.members
+            .map(memberData => new WorkspaceMember({
+                userId: memberData.userId,
+                addedAt: memberData.addedAt,
+            }))
+    });
 }

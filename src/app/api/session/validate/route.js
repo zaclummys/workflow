@@ -13,7 +13,9 @@ export async function POST (request) {
         return NextResponse.json({
             isSessionValid,
         });
-    } catch {
+    } catch (error) {
+        console.error(error);
+        
         return NextResponse.status(500);
     }
 }

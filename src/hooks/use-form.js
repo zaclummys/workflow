@@ -6,20 +6,23 @@ export default function useForm (handler, onSuccess) {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-
+        
         setErrorMessage(null);
         setPending(true);
 
         try {
-            const { success, message } = await handler(event);
+            const { success, message, ...rest } = await handler(event);
 
             if (success) {
-                onSuccess();
+                onSuccess(rest);
             } else {
                 setErrorMessage(message);
                 setPending(false);
             }
-        } catch {
+        } catch (error) {
+            console.error(error);
+
+            setErrorMessage('An unexpected error ocurred.');
             setPending(false);
         }
     }

@@ -14,12 +14,17 @@ async function validateSession ({ sessionToken }) {
     });
 
     if (!response.ok) {
-        throw new Error('Expected a OK response, but got: ' + response.status);
+        console.error('Expected a OK response, but got: ' + response.status);
+
+        return {
+            success: false,
+        };
     }
 
     const { isSessionValid } = await response.json();
 
     return {
+        success: true,
         isSessionValid,
     };
 }
@@ -60,10 +65,14 @@ export default async function middleware (request) {
             return redirectToSignInDeletingSessionCookie(request);
         }
 
-        const { isSessionValid } = await validateSession({
+        const { success, isSessionValid } = await validateSession({
             sessionToken: sessionTokenCookie.value,
         });
-    
+
+        if (!success) {
+            return redirectToSignIn(request);
+        }
+
         if (!isSessionValid) {
             return redirectToSignInDeletingSessionCookie(request);
         }

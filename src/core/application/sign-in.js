@@ -1,5 +1,6 @@
 import { findUserByEmail } from '../data/mongodb/user';
 import { insertSession } from '../data/mongodb/session';
+import { Session } from '../domain/session';
 
 export default async function signIn ({ email, password }) {
     const user = await findUserByEmail(email);
@@ -20,7 +21,9 @@ export default async function signIn ({ email, password }) {
         };
     }
 
-    const session = user.createSession();
+    const session = Session.create({
+        userId: user.getId(),
+    });
 
     await insertSession(session);
 

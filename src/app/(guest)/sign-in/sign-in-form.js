@@ -4,12 +4,8 @@ import { useId } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import Form from "~/components/form";
-import Field from "~/components/field";
-import Input from "~/components/input";
-import Label from "~/components/label";
-
-import PrimaryButton from "~/components/button/primary-button";
+import { Form, Field, Label, Input } from '~/components/form';
+import { PrimaryButton } from "~/components/button";
 
 import signInAction from '~/actions/guest/sign-in-action';
 import useForm from '~/hooks/use-form';

@@ -1,22 +1,15 @@
-import { connect } from './client';
+import { database } from './client.js';
 
-import {
-    toUser,
-    fromUser,
-} from './mapper/user';
+import { User, UserColor, UserPassword } from '../../domain/user.js';
 
 export async function insertUser (user) {
-    const connection = await connect();
-    
-    await connection
+    await database
         .collection('users')
         .insertOne(fromUser(user));
 }
 
 export async function findUserById (id) {
-    const connection = await connect();
-
-    const userData = await connection
+    const userData = await database
         .collection('users')
         .findOne({ id });
         
@@ -28,9 +21,7 @@ export async function findUserById (id) {
 }
 
 export async function findUserByEmail (email) {
-    const connection = await connect();
-
-    const userData = await connection
+    const userData = await database
         .collection('users')
         .findOne({ email });
         
@@ -42,17 +33,33 @@ export async function findUserByEmail (email) {
 }
 
 export async function deleteUserById (id) {
-    const connection = await connect();
-    
-    await connection
+    await database
         .collection('users')
         .deleteOne({ id });
 }
 
 export async function deleteUserByEmail (email) {
-    const connection = await connect();
-    
-    await connection
+    await database
         .collection('users')
         .deleteOne({ email });
+}
+
+
+export function toUser (userData) {
+    return new User({
+        ...userData,
+        id: userData.id,
+        color: new UserColor(userData.color),
+        password: new UserPassword(userData.password),
+    });
+}
+
+export function fromUser (user) {
+    return {
+        id: user.getId(),
+        name: user.getName(),
+        email: user.getEmail(),
+        password: user.getPassword(),
+        color: user.getColor(),
+    };
 }

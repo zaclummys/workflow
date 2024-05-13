@@ -1,8 +1,6 @@
 import { randomUUID } from 'crypto';
 import { hash, verify } from 'argon2';
 
-import { Session } from './session';
-
 export class User {
     static async create ({
         name,
@@ -37,12 +35,6 @@ export class User {
         return this.password.verify(passwordToBeVerified);
     }
 
-    createSession () {
-        return Session.create({
-            userId: this.id,
-        });
-    }
-
     getId () {
         return this.id.toString();
     }
@@ -60,7 +52,7 @@ export class User {
     }
 
     getColor () {
-        return this.color.toString();
+        return this.color.getName();
     }
 }
 
@@ -108,12 +100,18 @@ export class UserColor {
         'blue',
     ];
 
-    static getRandomColor () {
-        return UserColor.colors[Math.floor(Math.random() * UserColor.colors.length)];
+    static generateRandomColorIndex () {
+        return Math.floor(Math.random() * UserColor.colors.length);
+    }
+
+    static generateRandomColor () {
+        const randomColorIndex = UserColor.generateRandomColorIndex();
+
+        return UserColor.colors[randomColorIndex];
     }
 
     static create () {        
-        const randomColor = UserColor.getRandomColor();
+        const randomColor = UserColor.generateRandomColor();
 
         return new UserColor(randomColor);
     }
@@ -123,14 +121,18 @@ export class UserColor {
             throw new Error('Name cannot be empty');
         }
 
+        if (typeof name !== 'string') {
+            throw new Error('Name must be a string');
+        }
+
         if (!UserColor.colors.includes(name)) {
-            throw new Error(`Color must be one of the following: ${UserColor.colors.join(', ')}`);
+            throw new Error(`Color must be one of the following: ${UserColor.colors.join(', ')}, found ${name}`);
         }
 
         this.name = name;
     }
 
-    toString () {
+    getName () {
         return this.name;
     }
 }

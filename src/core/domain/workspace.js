@@ -11,10 +11,10 @@ export class Workspace {
             name,
             description,
             createdAt: new Date(),
-            updatedAt: new Date(),
+            createdById: userId,
             members: [
                 WorkspaceMember.create({ userId }),
-            ]
+            ],
         });
     }
 
@@ -23,15 +23,39 @@ export class Workspace {
         name,
         description,
         createdAt,
-        updatedAt,
+        createdById,
         members,
     }) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+        this.createdById = createdById;
         this.members = members;
+    }
+
+    getId () {
+        return this.id;
+    }
+
+    getName () {
+        return this.name;
+    }
+
+    getDescription () {
+        return this.description;
+    }
+
+    getCreatedAt () {
+        return this.createdAt;
+    }
+
+    getCreatedById () {
+        return this.createdById;
+    }
+
+    getMembers () {
+        return this.members;
     }
 
     addMember () {}

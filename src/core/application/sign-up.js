@@ -30,9 +30,11 @@ export default async function signUp ({
 
         return {
             success: true,
-            userId: user.getId(),
+            // userId: user.getId(),
         };
     } catch (error) {
+        console.error(error);
+        
         return {
             success: false,
             message: 'An error occurred. Please try again.'

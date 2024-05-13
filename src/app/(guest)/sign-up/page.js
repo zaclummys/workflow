@@ -3,21 +3,19 @@
 import { useId } from 'react';
 import { useRouter } from 'next/navigation';
 
-import Form from "~/components/form";
-import Field from "~/components/field";
-import Input from "~/components/input";
-import Label from "~/components/label";
-import PrimaryButton from "~/components/button/primary-button";
 
-import Box from "~/components/box/box";
+import { Form, Field, Label, Input } from '~/components/form';
+import { PrimaryButton } from "~/components/button";
 
-import BoxHeader from "~/components/box/box-header";
-import BoxHeaderTitle from "~/components/box/box-header-title";
-import BoxHeaderSubtitle from "~/components/box/box-header-subtitle";
-
-import BoxFooter from "~/components/box/box-footer";
-import BoxFooterText from "~/components/box/box-footer-text";
-import BoxFooterLink from "~/components/box/box-footer-link";
+import {
+    Box,
+    BoxHeader,
+    BoxHeaderTitle,
+    BoxHeaderSubtitle,
+    BoxFooter,
+    BoxFooterText,
+    BoxFooterLink,
+} from "~/components/box/box";
 
 import signUpAction from "~/actions/guest/sign-up-action";
 import useForm from '~/hooks/use-form';

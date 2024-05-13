@@ -1,3 +1,5 @@
+'use server';
+
 import getWorkspaces from '~/core/application/get-workspaces';
 
 import { getSessionToken } from '~/actions/cookies';

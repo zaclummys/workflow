@@ -1,12 +1,12 @@
-import Box from "~/components/box/box";
-
-import BoxHeader from "~/components/box/box-header";
-import BoxHeaderTitle from "~/components/box/box-header-title";
-import BoxHeaderSubtitle from "~/components/box/box-header-subtitle";
-
-import BoxFooter from "~/components/box/box-footer";
-import BoxFooterText from "~/components/box/box-footer-text";
-import BoxFooterLink from "~/components/box/box-footer-link";
+import {
+    Box,
+    BoxHeader,
+    BoxHeaderTitle,
+    BoxHeaderSubtitle,
+    BoxFooter,
+    BoxFooterText,
+    BoxFooterLink,
+} from "~/components/box/box";
 
 import SignInForm from './sign-in-form';
 

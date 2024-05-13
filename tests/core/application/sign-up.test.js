@@ -1,34 +1,56 @@
-import signUp from '../../src/application/sign-up';
-import { deleteUserById } from '../../src/data/mongodb/user';
+import signUp from '~/core/application/sign-up';
+import { findUserByEmail, deleteUserByEmail } from '~/core/data/mongodb/user';
 
 describe('Sign up', () => {
-    it('All good', async () => {
-        const { userId } = await signUp({
+    it('Can sign up sucessfully', async () => {
+        const { success } = await signUp({
             name: 'John Doe',
-            email: 'all-good.sign-up@test.org',
+            email: 'johndoe@acme.org',
             password: '12345678',
         });
 
-        expect(userId).toBeDefined();
+        expect(success).toBe(true);
+    });    
 
-        await deleteUserById(userId);
+    it('Can retrieve from database', async () => {
+        await signUp({
+            name: 'John Doe',
+            email: 'johndoe@acme.org',
+            password: '12345678',
+        });
+
+        const user = await findUserByEmail('johndoe@acme.org');
+
+        expect(user.getId()).toBeDefined();
+        expect(user.getColor()).toBeDefined();
+        expect(user.getPassword()).toBeDefined();
+        
+        expect(user.getName()).toBe('John Doe');
+        expect(user.getEmail()).toBe('johndoe@acme.org');
+    });   
+
+    it('Already taken email', async () => {
+        const signUpData = {
+            name: 'John Doe',
+            email: 'johndoe@acme.org',
+            password: '12345678',
+        };
+
+        const response = await signUp(signUpData);
+
+        expect(response).toEqual({
+            success: true
+        });
+
+        const responseAgain = await signUp(signUpData);
+
+        expect(responseAgain).toEqual({
+            success: false,
+            message: 'The email is already being used.',
+        });
     });
 
-    it.fails('Already taken email', async () => {
-        const { userId } = await signUp({
-            name: 'John Doe',
-            email: 'already-taken-email.sign-up@test.org',
-            password: '12345678',
-        });
-
-        try {
-            await signUp({
-                name: 'John Doe',
-                email: 'already-taken-email.sign-up@test.org',
-                password: '12345678',
-            });
-        } finally {
-            await deleteUserById(userId);
-        }
+    afterEach(async () => {
+        await deleteUserByEmail('johndoe@acme.org');
     });
 });

@@ -1,56 +1,71 @@
-import signIn from '../../src/application/sign-in';
+import signIn from '~/core/application/sign-in';
 
-import { User } from '../../src/domain/user';
-import { insertUser, deleteUserById } from '../../src/data/mongodb/user';
-import { findSessionByToken, deleteSessionByToken } from '../../src/data/mongodb/session';
+import { User } from '~/core/domain/user';
+import { insertUser, deleteUserById } from '~/core/data/mongodb/user';
+import { findSessionByToken, deleteSessionByToken } from '~/core/data/mongodb/session';
 
 describe('Sign In', async () => {
-    it('Returns session token', async () => {
-        const user = await User.create({
-            name: 'John Doe',
-            email: 'returns-session-token.sign-in@test.org',
-            password: '12345678',
-        });
-
-        await insertUser(user);
-
-        const { sessionToken } = await signIn({
-            email: 'returns-session-token.sign-in@test.org',
-            password: '12345678',
-        });
-
-        expect(sessionToken).toBeDefined();
-
-        await deleteSessionByToken(sessionToken);
-        await deleteUserById(user.getId());
+    const user = await User.create({
+        name: 'John Doe',
+        email: 'johndoe@acme.org',
+        password: '12345678',
     });
 
-    it('Stores in database', async () => {
-        const user = await User.create({
-            name: 'John Doe',
-            email: 'stores-in-database.sign-in@test.org',
+    beforeAll(async () => {
+        await insertUser(user);
+    });
+
+    it('Can sign in successfully', async () => {    
+        const { success, sessionToken } = await signIn({
+            email: 'johndoe@acme.org',
             password: '12345678',
         });
 
-        await insertUser(user);
+        expect(success).toBe(true);
 
+        await deleteSessionByToken(sessionToken);
+    });
+
+    it('Can retrieve from database', async () => {
         const { sessionToken } = await signIn({
-            email: 'stores-in-database.sign-in@test.org',
+            email: 'johndoe@acme.org',
             password: '12345678',
         });
 
         const session = await findSessionByToken(sessionToken);
 
-        expect(session).toBeDefined();
+        expect(session.getId()).not.toBeNull();
+        expect(session.getToken()).toBe(sessionToken);
+        expect(session.getUserId()).toBe(user.getId());
 
         await deleteSessionByToken(sessionToken);
-        await deleteUserById(user.getId());
     });
 
-    it.fails('Email does not exist', async () => {
-        await signIn({
-            email: 'email-does-not-exist.sign-in@test.org',
+    it('Cannot sign in if email is not registered', async () => {
+        const response = await signIn({
+            email: 'this-email-is-not-registered@acme.org',
             password: '12345678',
         });
+
+        expect(response).toEqual({
+            success: false,
+            message: 'The email is not registered.',
+        });
+    });
+
+    it('Cannot sign in if password is incorrect', async () => {    
+        const response = await signIn({
+            email: 'johndoe@acme.org',
+            password: 'this-is-not-the-password',
+        });
+
+        expect(response).toEqual({
+            success: false,
+            message: 'The password is not correct.',
+        });
+    });
+
+    afterAll(async () => {
+        await deleteUserById(user.getId());
     });
 });
