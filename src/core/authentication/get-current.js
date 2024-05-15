@@ -1,14 +1,15 @@
 import { findSessionByToken } from "../data/mongodb/session";
+import { findUserById } from "../data/mongodb/user";
 
 export default async function getCurrentUserId (sessionToken) {
     if (!sessionToken) {
-        throw new Error('Session Token cannot be empty');
+        return null;
     }
 
     const session = await findSessionByToken(sessionToken);
 
     if (!session) {
-        throw new Error('Session not found');
+        return null;
     }
 
     return session.getUserId();

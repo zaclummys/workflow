@@ -1,26 +1,30 @@
+import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkspacesByUserId } from '../data/mongodb/workspace';
-import getCurrentUserId from '../authentication/get-current-user-id';
 
 export default async function getWorkspaces ({ sessionToken }) {
-    const currentUserId = getCurrentUserId(sessionToken);
+    const session = await findSessionByToken(sessionToken);
 
-    if (!currentUserId) {
+    if (!session) {
         return {
             success: false,
         };
     }
 
-    const workspaces = await findWorkspacesByUserId(currentUserId);
+    const workspaces = await findWorkspacesByUserId(session.getUserId());
     
-    return workspaces.map(workspace => ({
-        id: workspace.getId(),
-        name: workspace.getName(),
-        description: workspace.getDescription(),
-        createdAt: workspace.getCreatedAt(),
-        members: workspace.getMembers()
-            .map(member => ({
-                userId: member.getUserId(),
-                addedAt: member.getAddedAt(),
-            }))
-    }));
+    return {
+        success: true,
+        workspaces: workspaces.map(workspace => ({
+            id: workspace.getId(),
+            name: workspace.getName(),
+            description: workspace.getDescription(),
+            createdAt: workspace.getCreatedAt(),
+            createdById: workspace.getCreatedById(),
+            members: workspace.getMembers()
+                .map(member => ({
+                    userId: member.getUserId(),
+                    addedAt: member.getAddedAt(),
+                }))
+        }))
+    };
 }

@@ -4,14 +4,17 @@ export default function HeaderUserButton ({
     user,
     onClick,
 }) {
+    if (!user) {
+        return null;
+    }
+
     return (
         <button
             className="flex flex-row items-center gap-2 px-3 py-3 rounded hover:bg-[var(--surface-hover-layer)] active:bg-[var(--surface-press-layer)] transition-colors"
             onClick={onClick}>
-            <div className="w-8 h-8">
-                <UserColor
-                    color={user.color} />
-            </div>            
+            <UserColor
+                className="w-8 h-8"
+                user={user} />
 
             <span className="text-base font-normal">
                 {user.name}

@@ -9,9 +9,9 @@ import { OutlineButton, PrimaryButton } from '~/components/button';
 import { Modal, ModalFooter, ModalTitle } from '~/components/modal';
 import { Form, Field, Input, Label, TextArea } from '~/components/form';
 
-import createWorkspaceAction from '~/actions/current-user/create-workspace-action';
+import createWorkspaceAction from '~/actions/create-workspace-action';
 
-export default function NewWorkspaceModalButton() {
+export default function NewWorkspaceModalButton () {
     const [isOpen, setIsOpen] = useState(false);
 
     const onButtonClick = () => {
@@ -30,14 +30,14 @@ export default function NewWorkspaceModalButton() {
             </PrimaryButton>
 
             {isOpen && (
-                <NewWorkspaceModal
+                <CreateWorkspaceModal
                     onCancelButtonClick={onCancelButtonClick} />
             )}
         </>
     );
 }
 
-function NewWorkspaceModal ({
+function CreateWorkspaceModal ({
     onCancelButtonClick,
 }) {
     const router = useRouter();
@@ -100,6 +100,7 @@ function NewWorkspaceModal ({
 
             <ModalFooter>
                 <OutlineButton
+                    disabled={pending}
                     onClick={onCancelButtonClick}>
                     Cancel
                 </OutlineButton>

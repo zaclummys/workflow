@@ -16,7 +16,7 @@ export function SectionHeader ({ children }) {
 
 export function SectionTitle ({ children }) {
     return (
-        <span className="text-on-background font-normal text-xl">
+        <span className="font-normal text-xl">
             {children}
         </span>
     );
@@ -24,7 +24,7 @@ export function SectionTitle ({ children }) {
 
 export function SectionActions ({ children }) {
     return (
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-2">
             {children}
         </div>
     );

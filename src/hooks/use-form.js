@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 export default function useForm (handler, onSuccess) {
     const [pending, setPending] = useState(false);
-    const [error, setErrorMessage] = useState(null);
+    const [error, setError] = useState(null);
 
     const onSubmit = async (event) => {
         event.preventDefault();
         
-        setErrorMessage(null);
+        setError(null);
         setPending(true);
 
         try {
@@ -16,13 +16,13 @@ export default function useForm (handler, onSuccess) {
             if (success) {
                 onSuccess(rest);
             } else {
-                setErrorMessage(message);
+                setError(message);
                 setPending(false);
             }
         } catch (error) {
             console.error(error);
 
-            setErrorMessage('An unexpected error ocurred.');
+            setError('An unexpected error ocurred.');
             setPending(false);
         }
     }

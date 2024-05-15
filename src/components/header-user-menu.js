@@ -1,4 +1,4 @@
-import signOutAction from '~/actions/guest/sign-out-action';
+import signOutAction from '~/actions/sign-out-action';
 
 import { Menu, MenuItem } from './menu';
 

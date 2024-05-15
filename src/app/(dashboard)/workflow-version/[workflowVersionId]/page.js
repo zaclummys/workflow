@@ -10,7 +10,7 @@ import Link from "next/link";
 
 import OutlineButton from "~/components/button/outline-button";
 import PrimaryButton from "~/components/button";
-import Details from "~/components/details/details";
+import Details from "~/components/details";
 import Detail from "~/components/details/detail";
 import DetailHeader from "~/components/details/detail-header";
 import DetailRow from "~/components/details/detail-row";

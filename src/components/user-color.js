@@ -1,6 +1,6 @@
 import { twMerge } from 'tailwind-merge';
 
-function getUserColorClassName (color) {
+function getBackgroundClassName (color) {
     switch (color) {
         case 'red':
             return 'bg-user-red';
@@ -27,14 +27,24 @@ function getUserColorClassName (color) {
             return 'bg-user-blue';
         
         default:
-            throw new Error(`Unknown color: ${color}`);
+            return 'bg-user-gray';
     }
 }
 
-export default function UserColor ({ color }) {
-    const colorClassName = getUserColorClassName(color);
+export default function UserColor ({
+    user,
+    className,
+}) {
+    if (!user) {
+        return null;
+    }
+
+    console.log(user.color)
+    const backgroundClassName = getBackgroundClassName(user.color);
 
     return (
-        <div className={twMerge('w-full h-full rounded-full bg-primary', colorClassName)} />
+        <div
+            title={user.name}
+            className={twMerge('w-full h-full rounded-full', backgroundClassName, className)} />
     );
 }

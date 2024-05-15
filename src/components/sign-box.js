@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export function Box({ children }) {
+export function SignBox ({ children }) {
     return (
         <div className="flex flex-col gap-6 px-8 py-8 bg-surface text-on-surface rounded-md max-w-lg w-full mx-auto">
             {children}
@@ -8,7 +8,7 @@ export function Box({ children }) {
     );
 }
 
-export function BoxHeader({ children }) {
+export function SignBoxHeader ({ children }) {
     return (
         <div className="flex flex-col items-center gap-1">
             {children}
@@ -16,7 +16,7 @@ export function BoxHeader({ children }) {
     )
 }
 
-export function BoxHeaderTitle({ children }) {
+export function SignBoxHeaderTitle ({ children }) {
     return (
         <span className="font-normal text-2xl">
             {children}
@@ -24,7 +24,7 @@ export function BoxHeaderTitle({ children }) {
     );
 }
 
-export function BoxHeaderSubtitle({ children }) {
+export function SignBoxHeaderSubtitle ({ children }) {
     return (
         <span className="font-normal text-sm text-on-surface-variant">
             {children}
@@ -32,7 +32,7 @@ export function BoxHeaderSubtitle({ children }) {
     );
 }
 
-export function BoxFooter({ children }) {
+export function SignBoxFooter ({ children }) {
     return (
         <div className="flex flex-col gap-2 items-center text-sm">
             {children}
@@ -40,7 +40,7 @@ export function BoxFooter({ children }) {
     );
 }
 
-export function BoxFooterText({ children }) {
+export function SignBoxFooterText ({ children }) {
     return (
         <span className="text-on-surface-variant">
             {children}
@@ -48,7 +48,7 @@ export function BoxFooterText({ children }) {
     );
 }
 
-export function BoxFooterLink({ href, children }) {
+export function SignBoxFooterLink ({ href, children }) {
     return (
         <Link href={href} className="text-primary">
             {children}

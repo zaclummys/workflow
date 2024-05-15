@@ -26,6 +26,10 @@ export class Workspace {
         createdById,
         members,
     }) {
+        if (!members || members.length === 0) {
+            throw new Error('Workspace must have at least one member');
+        }
+        
         this.id = id;
         this.name = name;
         this.description = description;
@@ -56,6 +60,18 @@ export class Workspace {
 
     getMembers () {
         return this.members;
+    }
+
+    /**
+     * Checks if a user belongs to the workspace.
+     * 
+     * @param {string} userId 
+     * @returns boolean
+     */
+    belongsTo (userId) {
+        return this.members.some(member => {
+            return userId === member.getUserId();
+        });
     }
 
     addMember () {}

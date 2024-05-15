@@ -1,16 +1,15 @@
-import { Workspace } from '../domain/workspace';
-
-import { insertWorkspace } from '../data/mongodb/workspace';
-import getCurrentUserId from '../authentication/get-current-user-id';
+import { Workspace } from '~/core/domain/workspace';
+import { findSessionByToken } from '~/core/data/mongodb/session';
+import { insertWorkspace } from '~/core/data/mongodb/workspace';
 
 export default async function createWorkspace ({
     name,
     description,
     sessionToken,
 }) {
-    const currentUserId = await getCurrentUserId(sessionToken);
+    const session = await findSessionByToken(sessionToken);
 
-    if (!currentUserId) {
+    if (!session) {
         return {
             success: false,
         };
@@ -19,7 +18,7 @@ export default async function createWorkspace ({
     const workspace = Workspace.create({
         name,
         description,
-        userId: currentUserId,
+        userId: session.getUserId(),
     });
 
     await insertWorkspace(workspace);

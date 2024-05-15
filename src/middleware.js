@@ -14,7 +14,7 @@ async function validateSession ({ sessionToken }) {
     });
 
     if (!response.ok) {
-        console.error('Expected a OK response, but got: ' + response.status);
+        throw new Error('Expected a OK response, but got: ' + response.status);
 
         return {
             success: false,
@@ -69,11 +69,7 @@ export default async function middleware (request) {
             sessionToken: sessionTokenCookie.value,
         });
 
-        if (!success) {
-            return redirectToSignIn(request);
-        }
-
-        if (!isSessionValid) {
+        if (!success || !isSessionValid) {
             return redirectToSignInDeletingSessionCookie(request);
         }
 

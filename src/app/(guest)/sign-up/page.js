@@ -8,16 +8,16 @@ import { Form, Field, Label, Input } from '~/components/form';
 import { PrimaryButton } from "~/components/button";
 
 import {
-    Box,
-    BoxHeader,
-    BoxHeaderTitle,
-    BoxHeaderSubtitle,
-    BoxFooter,
-    BoxFooterText,
-    BoxFooterLink,
-} from "~/components/box/box";
+    SignBox,
+    SignBoxHeader,
+    SignBoxHeaderTitle,
+    SignBoxHeaderSubtitle,
+    SignBoxFooter,
+    SignBoxFooterText,
+    SignBoxFooterLink,
+} from "~/components/sign-box";
 
-import signUpAction from "~/actions/guest/sign-up-action";
+import signUpAction from "~/actions/sign-up-action";
 import useForm from '~/hooks/use-form';
 
 export const title = 'Sign Up';
@@ -45,11 +45,11 @@ export default function SignUp() {
     });
 
     return (
-        <Box>
-            <BoxHeader>
-                <BoxHeaderTitle>Sign Up</BoxHeaderTitle>
-                <BoxHeaderSubtitle>Join us today!</BoxHeaderSubtitle>
-            </BoxHeader>
+        <SignBox>
+            <SignBoxHeader>
+                <SignBoxHeaderTitle>Sign Up</SignBoxHeaderTitle>
+                <SignBoxHeaderSubtitle>Join us today!</SignBoxHeaderSubtitle>
+            </SignBoxHeader>
 
             <Form onSubmit={onSubmit}>
                 <Field>
@@ -104,15 +104,15 @@ export default function SignUp() {
                 )}
             </Form>
 
-            <BoxFooter>
-                <BoxFooterText>
+            <SignBoxFooter>
+                <SignBoxFooterText>
                     Already have an account?
-                </BoxFooterText>
+                </SignBoxFooterText>
 
-                <BoxFooterLink href="/sign-in">
+                <SignBoxFooterLink href="/sign-in">
                     Sign In
-                </BoxFooterLink>
-            </BoxFooter>
-        </Box>
+                </SignBoxFooterLink>
+            </SignBoxFooter>
+        </SignBox>
     );
 }

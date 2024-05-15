@@ -1,4 +1,13 @@
-import UserColor from '~/components/user-color';
+import {
+    Card,
+    CardTitle,
+    CardDescription,
+    CardSection,
+    CardSectionTitle,
+    CardLink,
+} from '~/components/card';
+
+import { WorkspaceMemberList, WorkspaceMemberItem } from '~/components/workspace-member-list';
 
 export function WorkspaceGrid ({ children }) {
     return (
@@ -10,32 +19,40 @@ export function WorkspaceGrid ({ children }) {
 
 export function WorkspaceGridItem ({ workspace }) {
     return (
-        <div className="bg-surface rounded-lg p-4">
-            <span>{workspace.name}</span>
-            <span>{workspace.description}</span>
+        <Card>
+            <CardTitle>
+                {workspace.name}
+            </CardTitle>
 
-            <WorkspaceMemberList
+            <CardDescription>
+                {workspace.description}
+            </CardDescription>
+
+            <WorkspaceMemberSection
                 members={workspace.members} />
-        </div>
+
+            <CardLink
+                href={`/workspace/${workspace.id}`} />
+        </Card>
     );
 }
 
-function WorkspaceMemberList ({ members }) {
+function WorkspaceMemberSection ({ members }) {
     return (
-        <div className="flex flex-row">
-            {members.map(member => (
-                <WorkspaceMemberItem
-                    key={member}
-                    member={member} />
-            ))}
-        </div>
+        <CardSection>
+            <CardSectionTitle>
+                Members ({members.length})
+            </CardSectionTitle>
+
+            <WorkspaceMemberList>
+                {members.map(member => (
+                    <WorkspaceMemberItem
+                        key={member.userId}
+                        member={member} />
+                ))}
+            </WorkspaceMemberList>
+        </CardSection>
     );
 }
 
-async function WorkspaceMemberItem ({ member }) {
-    const user = await getUser(member.userId);
 
-    return (
-        <UserColor color={user.color} />
-    );
-}

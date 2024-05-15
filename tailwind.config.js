@@ -10,12 +10,18 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                primary: colors.violet[400],
+                primary: colors.violet[500],
+
                 background: gray[800],
                 
                 surface: {
                     DEFAULT: gray[700],
                     high: gray[600],
+
+                    hover: {
+                        DEFAULT: gray[600],
+                        high: gray[500],
+                    }
                 },
     
                 positive: colors.green[400],

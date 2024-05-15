@@ -1,7 +1,11 @@
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkspaceById } from '~/core/data/mongodb/workspace';
+import { insertWorkflow } from '~/core/data/mongodb/workflow';
+import { Workflow } from '~/core/domain/workflow';
 
-export default async function getWorkspace ({
+export default async function createWorkflow ({
+    name,
+    description,
     workspaceId,
     sessionToken,
 }) {
@@ -28,19 +32,18 @@ export default async function getWorkspace ({
             message: 'User does not belong to the workspace.'
         };
     }
+
+    const workflow = Workflow.create({
+        name,
+        description,
+        createdById: session.getUserId(),
+        workspace: workspace.getId(),
+    });
+
+    await insertWorkflow(workflow);
+
     return {
         success: true,
-        workspace: {
-            id: workspace.getId(),
-            name: workspace.getName(),
-            description: workspace.getDescription(),
-            createdAt: workspace.getCreatedAt(),
-            createdById: workspace.getCreatedById(),
-            members: workspace.getMembers()
-                .map(member => ({
-                    userId: member.getUserId(),
-                    addedAt: member.getAddedAt(),
-                }))
-        },
+        workflowId: workflow.getId(),
     };
 }

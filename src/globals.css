@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+    --surface-default-layer: theme('colors.surface.DEFAULT');
     --surface-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 12%, theme('colors.surface.DEFAULT'));
     --surface-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.DEFAULT'));
 
@@ -12,8 +13,8 @@
     --primary-hover-layer: color-mix(in srgb, theme('colors.on.primary') 8%, theme('colors.primary'));
     --primary-press-layer: color-mix(in srgb, theme('colors.on.primary') 16%, theme('colors.primary'));
 
-    --danger-hover-layer: color-mix(in srgb, theme('colors.on.danger') 8%, theme('colors.danger'));
-    --danger-press-layer: color-mix(in srgb, theme('colors.on.danger') 16%, theme('colors.danger'));
+    --danger-hover-layer: color-mix(in srgb, theme('colors.danger') 12%, theme('colors.surface.DEFAULT'));
+    --danger-press-layer: color-mix(in srgb, theme('colors.danger') 16%, theme('colors.surface.DEFAULT'));
 }
 
 :root {
@@ -35,7 +36,7 @@
 }
 
 html {
-    @apply bg-background;
+    @apply bg-background text-on-background;
 }
 
 @layer components {
@@ -44,57 +45,14 @@ html {
             flex
             items-center
             justify-center
-            font-medium
             text-sm
-            h-[var(--button-height)]
-            px-[var(--button-horizontal-padding)]
-            py-[var(--button-vertical-padding)]
-            rounded-[var(--button-border-radius)]
-            disabled:opacity-70 disabled:pointer-events-none
+            font-medium
+            h-10
+            px-4
+            py-0
+            rounded-md
+            disabled:opacity-70
+            disabled:pointer-events-none
             transition-colors;
-    }
-
-    .menu-item {
-        @apply flex flex-row text-base font-normal transition-colors px-[var(--menu-item-horizontal-padding)] py-[var(--menu-item-vertical-padding)];
-    }
-
-    .card {
-        @apply
-            flex
-            flex-col
-            relative
-            overflow-hidden
-            transition-colors
-            bg-[var(--card-background)]
-            px-[var(--card-horizontal-padding)]
-            py-[var(--card-vertical-padding)]
-            gap-[var(--card-gap)]
-            rounded-[var(--card-border-radius)]
-            hover:bg-[var(--surface-hover-layer)]
-            focus:bg-[var(--surface-press-layer)];
-
-        .card-title {
-            @apply font-medium text-base text-on-surface;
-        }
-    
-        .card-subtitle {
-            @apply font-medium text-sm text-on-surface-variant;
-        }
-    
-        .card-text {
-            @apply font-normal text-base text-on-surface;
-        }
-    
-        .card-link {
-            @apply absolute inset-0;
-        }
-    }
-
-    .card-list {
-        @apply flex flex-col gap-4;
-    }
-
-    .page-title {
-        @apply text-on-background font-normal text-2xl;
     }
 }

@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Form, Field, Label, Input } from '~/components/form';
 import { PrimaryButton } from "~/components/button";
 
-import signInAction from '~/actions/guest/sign-in-action';
+import signInAction from '~/actions/sign-in-action';
 import useForm from '~/hooks/use-form';
 
 export default function SignInForm () {    

@@ -20,6 +20,10 @@ export default function HeaderUserMenuButton ({ user }) {
         setIsOpen(false);
     };
 
+    if (!user) {
+        return null;
+    }
+
     return (
         <div className="relative">
             <HeaderUserButton

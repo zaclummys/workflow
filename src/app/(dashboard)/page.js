@@ -1,4 +1,4 @@
-import getWorkspacesAction from '~/actions/current-user/get-workspaces-action';
+import getWorkspacesAction from '~/actions/get-workspaces-action';
 
 import Header from '~/components/header';
 import Container from '~/components/container';
@@ -15,12 +15,12 @@ import {
     WorkspaceGridItem,
  } from '~/components/workspace-grid';
 
-import NewWorkspaceModalButton from '~/components/new-workspace-modal-button';
+import NewWorkspaceModalButton from '~/components/create-workspace-modal-button';
 
  export const title = 'Workspaces';
 
 export default async function Workspaces () {
-    const workspaces = await getWorkspacesAction();
+    const { workspaces } = await getWorkspacesAction();
 
     return (
         <>

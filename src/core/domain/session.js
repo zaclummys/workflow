@@ -15,6 +15,18 @@ export class Session {
         token,
         userId,
     }) {
+        if (!id) {
+            throw new Error('ID is required.');
+        }
+
+        if (!token) {
+            throw new Error('Token is required.');
+        }
+
+        if (!userId) {
+            throw new Error('User ID is required.');
+        }
+        
         this.id = id;
         this.token = token;
         this.userId = userId;
