@@ -1,19 +1,24 @@
+import Grid from '~/components/grid';
+
 import {
     Card,
     CardTitle,
-    CardDescription,
+    CardText,
     CardSection,
     CardSectionTitle,
     CardLink,
 } from '~/components/card';
 
-import { WorkspaceMemberList, WorkspaceMemberItem } from '~/components/workspace-member-list';
+import {
+    WorkspaceMemberList,
+    WorkspaceMemberItem,
+} from '~/components/workspace-member-list';
 
 export function WorkspaceGrid ({ children }) {
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Grid>
             {children}
-        </div>
+        </Grid>
     );
 }
 
@@ -24,9 +29,9 @@ export function WorkspaceGridItem ({ workspace }) {
                 {workspace.name}
             </CardTitle>
 
-            <CardDescription>
+            <CardText>
                 {workspace.description}
-            </CardDescription>
+            </CardText>
 
             <WorkspaceMemberSection
                 members={workspace.members} />

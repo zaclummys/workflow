@@ -28,7 +28,7 @@ const users = database.collection('users');
 const sessions = database.collection('sessions');
 const workspaces = database.collection('workspaces');
 
-await Promise.all([
+await global.Promise.all([
     users.createIndex({ id: 1 }, { unique: true }),
     users.createIndex({ email: 1 }, { unique: true }),
 

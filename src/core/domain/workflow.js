@@ -25,6 +25,30 @@ export class Workflow {
         createdAt,
         createdById,
     }) {
+        if (!id) {
+            throw new Error('ID is required');
+        }
+
+        if (!name) {
+            throw new Error('Name is required');
+        }
+
+        if (!description) {
+            throw new Error('Description is required');
+        }
+
+        if (!workspaceId) {
+            throw new Error('Workspace ID is required');
+        }
+
+        if (!createdById) {
+            throw new Error('Created by ID is required');
+        }
+
+        if (!createdAt) {
+            throw new Error('Created at is required');
+        }
+
         this.id = id;
         this.name = name;
         this.description = description;

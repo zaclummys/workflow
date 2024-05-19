@@ -1,14 +1,17 @@
 import Header from '~/components/header';
 import Container from '~/components/container';
 import DateAgo from '~/components/date-ago';
+import { Placeholder, PlaceholderTitle, PlaceholderText } from '~/components/placeholder';
 import { Section, SectionHeader, SectionTitle, SectionActions } from '~/components/section';
-import { PrimaryButton, OutlineButton, DestructiveOutlineButton } from '~/components/button';
+import { OutlineButton, DestructiveOutlineButton } from '~/components/button';
 import { Details, DetailRow, DetailCell, DetailCellHeader, DetailCellText } from '~/components/details';
 import { WorkspaceMemberList, WorkspaceMemberItem } from '~/components/workspace-member-list';
+import { WorkflowGrid, WorkflowGridItem } from '~/components/workflow-grid';
 import CreateWorkflowModalButton from '~/components/create-workflow-modal-button';
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getUserAction from '~/actions/get-user-action';
+import getWorkflowsAction from '~/actions/get-workflows-action';
 
 export const title = 'Workspace';
 
@@ -21,6 +24,16 @@ export default async function Workspace ({ params: { workspaceId }}) {
 
     const { user } = await getUserAction(workspace.createdById);
 
+    if (!user) {
+        return null;
+    }
+
+    const { workflows } = await getWorkflowsAction(workspaceId);
+
+    if (!workflows) {
+        return null;
+    }
+
     return (
         <>
             <Header />
@@ -31,7 +44,8 @@ export default async function Workspace ({ params: { workspaceId }}) {
                         <SectionTitle>{workspace.name}</SectionTitle>
 
                         <SectionActions>
-                            <CreateWorkflowModalButton />
+                            <CreateWorkflowModalButton
+                                workspaceId={workspace.id} />
 
                             <OutlineButton>Manage Members</OutlineButton>
                             <OutlineButton>Edit</OutlineButton>
@@ -77,6 +91,23 @@ export default async function Workspace ({ params: { workspaceId }}) {
 
                 <Section>
                     <SectionTitle>Workflows</SectionTitle>
+
+                    {workflows.length === 0 ? (
+                        <Placeholder>
+                            <PlaceholderTitle>No workflow</PlaceholderTitle>
+                            <PlaceholderText>
+                                You haven't created any workflow yet. Do you want to create one? 
+                            </PlaceholderText>
+                        </Placeholder>
+                    ) : (
+                        <WorkflowGrid>
+                            {workflows.map(workflow => (
+                                <WorkflowGridItem
+                                    key={workflow.id}
+                                    workflow={workflow} />
+                            ))}
+                        </WorkflowGrid>
+                    )}
                 </Section>
             </Container>
         </>

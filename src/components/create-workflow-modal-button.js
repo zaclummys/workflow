@@ -11,7 +11,9 @@ import { Form, Field, Input, Label, TextArea } from '~/components/form';
 
 import createWorkflowAction from '~/actions/create-workflow-action';
 
-export default function CreateWorkflowModalButton () {
+export default function CreateWorkflowModalButton ({
+    workspaceId,
+}) {
     const [isOpen, setIsOpen] = useState(false);
 
     const onButtonClick = () => {
@@ -22,6 +24,10 @@ export default function CreateWorkflowModalButton () {
         setIsOpen(false);
     };
 
+    if (!workspaceId) {
+        return null;
+    }
+    
     return (
         <>
             <PrimaryButton
@@ -31,6 +37,7 @@ export default function CreateWorkflowModalButton () {
 
             {isOpen && (
                 <CreateWorkflowModal
+                    workspaceId={workspaceId}
                     onCancelButtonClick={onCancelButtonClick} />
             )}
         </>
@@ -38,6 +45,7 @@ export default function CreateWorkflowModalButton () {
 }
 
 function CreateWorkflowModal ({
+    workspaceId,
     onCancelButtonClick,
 }) {
     const router = useRouter();
@@ -48,6 +56,7 @@ function CreateWorkflowModal ({
 
     const { pending, error, onSubmit } = useForm(async (event) => {
         return createWorkflowAction({
+            workspaceId,
             name: event.target.name.value,
             description: event.target.description.value,
         });

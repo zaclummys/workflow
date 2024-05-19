@@ -68,7 +68,7 @@ export class Workspace {
      * @param {string} userId 
      * @returns boolean
      */
-    belongsTo (userId) {
+    isMember (userId) {
         return this.members.some(member => {
             return userId === member.getUserId();
         });

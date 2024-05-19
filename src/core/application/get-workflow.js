@@ -1,6 +1,6 @@
+import { findWorkflowById } from '~/core/data/mongodb/workflow';
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkspaceById } from '~/core/data/mongodb/workspace';
-import { findWorkflowById } from '~/core/data/mongodb/workflow';
 
 export default async function getWorkflow ({
     workflowId,
@@ -14,28 +14,25 @@ export default async function getWorkflow ({
         };
     }
 
-    const workspace = await findWorkspaceById(workspaceId);
-
-    if (!workspace) {
-        return {
-            success: false,
-            message: 'Workspace not found.'
-        };
-    }
-    
-    if (!workspace.belongsTo(session.getUserId())) {
-        return {
-            success: false,
-            message: 'User does not belong to the workspace.'
-        };
-    }
-
     const workflow = await findWorkflowById(workflowId);
 
     if (!workflow) {
         return {
             success: false,
-            message: 'Workflow not found.'
+        };
+    }
+
+    const workspace = await findWorkspaceById(workflow.getWorkspaceId());
+
+    if (!workspace) {
+        return {
+            success: false,
+        };
+    }
+
+    if (!workspace.isMember(session.getUserId())) {
+        return {
+            success: false,
         };
     }
 
@@ -45,6 +42,8 @@ export default async function getWorkflow ({
             id: workflow.getId(),
             name: workflow.getName(),
             description: workflow.getDescription(),
+            createdAt: workflow.getCreatedAt(),
+            createdById: workflow.getCreatedById(),
             workspaceId: workflow.getWorkspaceId(),
         },
     }

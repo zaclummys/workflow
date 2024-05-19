@@ -22,7 +22,7 @@ export async function findWorkspaceById (id) {
 export async function findWorkspacesByUserId (userId) {
     const workspaces = await database
         .collection('workspaces')
-        .find()
+        .find({ 'members.userId': userId })
         .toArray();
 
     return workspaces.map(toWorkspace);

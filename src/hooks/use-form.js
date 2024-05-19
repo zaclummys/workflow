@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+const defaultErrorMessage = 'An unexpected error ocurred.';
+
 export default function useForm (handler, onSuccess) {
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
@@ -16,7 +18,12 @@ export default function useForm (handler, onSuccess) {
             if (success) {
                 onSuccess(rest);
             } else {
-                setError(message);
+                if (message) {
+                    setError(message);
+                } else {
+                    setError(defaultErrorMessage);
+                }
+
                 setPending(false);
             }
         } catch (error) {

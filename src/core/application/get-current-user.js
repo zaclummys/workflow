@@ -21,7 +21,6 @@ export default async function getCurrentUser ({ sessionToken }) {
     return {
         success: true,
         currentUser: {
-            id: currentUser.getId(),
             name: currentUser.getName(),
             color: currentUser.getColor(),
         }

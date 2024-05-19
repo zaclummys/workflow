@@ -12,9 +12,9 @@ export default async function signIn ({ email, password }) {
         };
     }
 
-    const passwordIsCorrect = await user.verifyPassword(password);
+    const isPasswordCorrect = await user.verifyPassword(password);
 
-    if (!passwordIsCorrect) {
+    if (!isPasswordCorrect) {
         return {
             success: false,
             message: 'The password is not correct.',

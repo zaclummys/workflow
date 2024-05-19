@@ -1,5 +1,6 @@
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkspaceById } from '~/core/data/mongodb/workspace';
+
 import { insertWorkflow } from '~/core/data/mongodb/workflow';
 import { Workflow } from '~/core/domain/workflow';
 
@@ -14,6 +15,7 @@ export default async function createWorkflow ({
     if (!session) {
         return {
             success: false,
+            message: 'You must be logged in to create a workflow.',
         };
     }
 
@@ -22,14 +24,14 @@ export default async function createWorkflow ({
     if (!workspace) {
         return {
             success: false,
-            message: 'Workspace not found.'
+            message: 'Workspace not found.',
         };
     }
-    
-    if (!workspace.belongsTo(session.getUserId())) {
+
+    if (!workspace.isMember(session.getUserId())) {
         return {
             success: false,
-            message: 'User does not belong to the workspace.'
+            message: 'You do not have permission to access this workspace.',
         };
     }
 
@@ -37,7 +39,7 @@ export default async function createWorkflow ({
         name,
         description,
         createdById: session.getUserId(),
-        workspace: workspace.getId(),
+        workspaceId: workspace.getId(),
     });
 
     await insertWorkflow(workflow);

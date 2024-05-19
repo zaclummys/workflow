@@ -35,11 +35,6 @@ export default function UserColor ({
     user,
     className,
 }) {
-    if (!user) {
-        return null;
-    }
-
-    console.log(user.color)
     const backgroundClassName = getBackgroundClassName(user.color);
 
     return (

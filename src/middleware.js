@@ -14,7 +14,7 @@ async function validateSession ({ sessionToken }) {
     });
 
     if (!response.ok) {
-        throw new Error('Expected a OK response, but got: ' + response.status);
+        console.error(await response.text());
 
         return {
             success: false,
@@ -56,8 +56,6 @@ export default async function middleware (request) {
         return NextResponse.next();
     }
 
-    console.info(`Middleware: ${request.nextUrl.toString()}`);
-
     const sessionTokenCookie = request.cookies.get('session_token');
 
     if (sessionTokenCookie) {
@@ -69,7 +67,11 @@ export default async function middleware (request) {
             sessionToken: sessionTokenCookie.value,
         });
 
-        if (!success || !isSessionValid) {
+        if (!success) {
+            return NextResponse.status(500).text('An unexpected error occurred.');
+        }
+
+        if (!isSessionValid) {
             return redirectToSignInDeletingSessionCookie(request);
         }
 

@@ -1,33 +1,23 @@
-import { findSessionByToken } from '~/core/data/mongodb/session';
+import canAccessWorkspace from '~/core/authorization/can-access-workspace';
 import { findWorkspaceById } from '~/core/data/mongodb/workspace';
 
 export default async function getWorkspace ({
     workspaceId,
     sessionToken,
 }) {
-    const session = await findSessionByToken(sessionToken);
+    const canCurrentUserAccessWorkspace = await canAccessWorkspace({
+        workspaceId,
+        sessionToken,
+    });
 
-    if (!session) {
+    if (!canCurrentUserAccessWorkspace) {
         return {
-            success: false,
+            success: false
         };
     }
 
     const workspace = await findWorkspaceById(workspaceId);
-
-    if (!workspace) {
-        return {
-            success: false,
-            message: 'Workspace not found.'
-        };
-    }
     
-    if (!workspace.belongsTo(session.getUserId())) {
-        return {
-            success: false,
-            message: 'User does not belong to the workspace.'
-        };
-    }
     return {
         success: true,
         workspace: {

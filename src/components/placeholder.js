@@ -1,11 +1,23 @@
-export default function Placeholder ({
-    title,
-    description,
-}) {
+export function Placeholder ({ children }) {
     return (
         <div className="flex flex-col text-center gap-1 py-10">
-            <span className="font-medium text-lg">{title}</span>
-            <span className="font-normal text-base">{description}</span>
+            {children}
         </div>
+    );
+}
+
+export function PlaceholderTitle ({ children }) {
+    return (
+        <span className="font-medium text-lg">
+            {children}
+        </span>
+    );
+}
+
+export function PlaceholderText ({ children }) {
+    return (
+        <span className="font-normal text-base">
+            {children}
+        </span>
     );
 }

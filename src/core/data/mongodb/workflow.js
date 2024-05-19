@@ -1,3 +1,6 @@
+import { database } from './client';
+import { Workflow } from '~/core/domain/workflow';
+
 export async function insertWorkflow (workflow) {
     await database
         .collection('workflows')
@@ -14,6 +17,15 @@ export async function findWorkflowById (id) {
     }
     
     return toWorkflow(workflowData);
+}
+
+export async function findWorkflowsByWorkspaceId (workspaceId) {
+    const workflowsData = await database
+        .collection('workflows')
+        .find({ workspaceId })
+        .toArray();
+
+    return workflowsData.map(toWorkflow);
 }
 
 export function fromWorkflow (workflow) {

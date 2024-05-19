@@ -1,13 +1,7 @@
-import { findUserById } from '../data/mongodb/user';
-import { findSessionByToken, deleteSessionByToken } from '../data/mongodb/session';
+import { findSessionByToken } from '~/core/data/mongodb/session';
+import { findUserById } from '~/core/data/mongodb/user';
 
 export default async function validateSession ({ sessionToken }) {
-    if (!sessionToken) {
-        return {
-            isSessionValid: false,
-        };
-    }
-
     const session = await findSessionByToken(sessionToken);
 
     if (!session) {
@@ -19,8 +13,6 @@ export default async function validateSession ({ sessionToken }) {
     const user = await findUserById(session.getUserId());
 
     if (!user) {
-        await deleteSessionByToken(sessionToken);
-
         return {
             isSessionValid: false,
         };

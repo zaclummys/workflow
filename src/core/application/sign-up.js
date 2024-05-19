@@ -10,34 +10,24 @@ export default async function signUp ({
     email,
     password,
 }) {
-    try {
-        const existingUser = await findUserByEmail(email);
+    const existingUser = await findUserByEmail(email);
 
-        if (existingUser) {
-            return {
-                success: false,
-                message: 'The email is already being used.'
-            };
-        }
-
-        const user = await User.create({
-            name,
-            email,
-            password,
-        });
-
-        await insertUser(user);
-
-        return {
-            success: true,
-            // userId: user.getId(),
-        };
-    } catch (error) {
-        console.error(error);
-        
+    if (existingUser) {
         return {
             success: false,
-            message: 'An error occurred. Please try again.'
+            message: 'The email is already being used.'
         };
     }
+
+    const user = await User.create({
+        name,
+        email,
+        password,
+    });
+
+    await insertUser(user);
+
+    return {
+        success: true,
+    };
 }
