@@ -1,7 +1,5 @@
 import Link from 'next/link';
-
 import HeaderUserMenuButton from '~/components/header-user-menu-button';
-
 import getCurrentUserAction from '~/actions/get-current-user-action';
 
 export default async function Header () {

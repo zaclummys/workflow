@@ -1,9 +1,10 @@
 import {
     insertUser,
-    findUserByEmail,
+    findUserByEmail, 
 } from '../data/mongodb/user';
-
-import { User } from '../domain/user';
+import {
+    User, 
+} from '../domain/user';
 
 export default async function signUp ({
     name,
@@ -15,7 +16,7 @@ export default async function signUp ({
     if (existingUser) {
         return {
             success: false,
-            message: 'The email is already being used.'
+            message: 'The email is already being used.',
         };
     }
 

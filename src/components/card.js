@@ -3,7 +3,7 @@ import Link from 'next/link';
 export function Card ({ children }) {
     return (
         <div
-            className="relative flex flex-col gap-2 overflow-hidden text-on-surface rounded-md p-4 bg-[var(--surface-default-layer)] hover:bg-[var(--surface-hover-layer)] transition-colors">
+            className="relative flex flex-col gap-2 overflow-hidden bg-surface text-on-surface rounded-md p-4  hover:bg-[var(--surface-hover-layer)] transition-colors">
             {children}
         </div>
     );

@@ -1,5 +1,7 @@
 
-import { findWorkflowsByWorkspaceId } from '~/core/data/mongodb/workflow';
+import {
+    findWorkflowsByWorkspaceId, 
+} from '~/core/data/mongodb/workflow';
 import canAccessWorkspace from '~/core/authorization/can-access-workspace';
 
 export default async function getWorkflows ({
@@ -13,7 +15,7 @@ export default async function getWorkflows ({
 
     if (!canCurrentUserAccessWorkspace) {
         return {
-            success: false
+            success: false,
         };
     }
 

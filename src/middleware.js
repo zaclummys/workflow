@@ -1,4 +1,6 @@
-import { NextResponse } from 'next/server';
+import {
+    NextResponse, 
+} from 'next/server';
 
 async function validateSession ({ sessionToken }) {    
     const response = await fetch(new URL('http://localhost:3000/api/session/validate'), {
@@ -9,7 +11,7 @@ async function validateSession ({ sessionToken }) {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            sessionToken
+            sessionToken,
         }),
     });
 

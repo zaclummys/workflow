@@ -1,19 +1,17 @@
 import {
     findSessionByToken, 
 } from '~/core/data/mongodb/session';
-import {
-    findWorkspaceById, 
-} from '~/core/data/mongodb/workspace';
-import {
-    insertWorkflow, 
-} from '~/core/data/mongodb/workflow';
-import {
-    Workflow, 
-} from '~/core/domain/workflow';
 
-export default async function createWorkflow ({
-    name,
-    description,
+import {
+    findWorkspaceById,
+    deleteWorkspaceById, 
+} from '~/core/data/mongodb/workspace';
+
+import {
+    findWorkflowsByWorkspaceId, 
+} from '~/core/data/mongodb/workflow';
+
+export default async function deleteWorkspace ({
     workspaceId,
     sessionToken,
 }) {
@@ -22,7 +20,7 @@ export default async function createWorkflow ({
     if (!session) {
         return {
             success: false,
-            message: 'You must be logged in to create a workflow.',
+            message: 'Session not found.'
         };
     }
 
@@ -35,24 +33,25 @@ export default async function createWorkflow ({
         };
     }
 
-    if (!workspace.isMember(session.getUserId())) {
+    if (!workspace.isOwner(session.getUserId())) {
         return {
             success: false,
-            message: 'You do not have permission to access this workspace.',
+            message: 'Cannot delete workspace you do not own.',
         };
     }
 
-    const workflow = Workflow.create({
-        name,
-        description,
-        createdById: session.getUserId(),
-        workspaceId: workspace.getId(),
-    });
+    const workflows = await findWorkflowsByWorkspaceId(workspaceId);
 
-    await insertWorkflow(workflow);
+    if (workflows.length > 0) {
+        return {
+            success: false,
+            message: 'Cannot delete workspace with workflows.',
+        };
+    }
+
+    await deleteWorkspaceById(workspaceId);
 
     return {
         success: true,
-        workflowId: workflow.getId(),
     };
 }

@@ -1,17 +1,23 @@
 import Link from 'next/link';
-
 import Header from '~/components/header';
 import Container from '~/components/container';
-import { Placeholder, PlaceholderTitle, PlaceholderText } from '~/components/placeholder';
-import { Section, SectionHeader, SectionTitle, SectionActions } from '~/components/section';
-import { PrimaryButton, OutlineButton, DestructiveOutlineButton } from '~/components/button';
-import { Details, DetailRow, DetailCell, DetailCellHeader, DetailCellText } from '~/components/details';
+import {
+    Placeholder, PlaceholderTitle, PlaceholderText, 
+} from '~/components/placeholder';
+import {
+    Section, SectionHeader, SectionTitle, SectionActions, 
+} from '~/components/section';
+import {
+    PrimaryButton, OutlineButton, DestructiveOutlineButton, 
+} from '~/components/button';
+import {
+    Details, DetailRow, DetailCell, DetailCellHeader, DetailCellText, 
+} from '~/components/details';
 import DateAgo from '~/components/date-ago';
-
-
 import getWorkflowAction from '~/actions/get-workflow-action';
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getUserAction from '~/actions/get-user-action';
+import DeleteWorkflowModalButton from '~/components/delete-workflow-modal-button';
 
 export const title = 'Workflow';
 
@@ -46,7 +52,8 @@ export default async function Workflow ({ params: { workflowId } }) {
                         <SectionActions>
                             <PrimaryButton>New Workflow Version</PrimaryButton>
                             <OutlineButton>Edit</OutlineButton>
-                            <DestructiveOutlineButton>Delete</DestructiveOutlineButton>
+                            <DeleteWorkflowModalButton
+                                workflow={workflow} />
                         </SectionActions>
                     </SectionHeader>
 

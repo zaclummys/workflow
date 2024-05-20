@@ -1,6 +1,9 @@
-import { database } from './client.js';
-
-import { User, UserColor, UserPassword } from '../../domain/user.js';
+import {
+    database, 
+} from './client.js';
+import {
+    User, UserColor, UserPassword, 
+} from '../../domain/user.js';
 
 export async function insertUser (user) {
     await database
@@ -11,7 +14,9 @@ export async function insertUser (user) {
 export async function findUserById (id) {
     const userData = await database
         .collection('users')
-        .findOne({ id });
+        .findOne({
+            id, 
+        });
         
     if (userData == null) {
         return null;
@@ -23,7 +28,9 @@ export async function findUserById (id) {
 export async function findUserByEmail (email) {
     const userData = await database
         .collection('users')
-        .findOne({ email });
+        .findOne({
+            email, 
+        });
         
     if (userData == null) {
         return null;
@@ -35,13 +42,17 @@ export async function findUserByEmail (email) {
 export async function deleteUserById (id) {
     await database
         .collection('users')
-        .deleteOne({ id });
+        .deleteOne({
+            id, 
+        });
 }
 
 export async function deleteUserByEmail (email) {
     await database
         .collection('users')
-        .deleteOne({ email });
+        .deleteOne({
+            email, 
+        });
 }
 
 

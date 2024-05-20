@@ -1,6 +1,7 @@
 import signOutAction from '~/actions/sign-out-action';
-
-import { Menu, MenuItem } from './menu';
+import {
+    Menu, MenuItem, 
+} from './menu';
 
 export default function HeaderUserMenu ({ onMenuClick }) {
     const onSignOutButtonClick = async () => {

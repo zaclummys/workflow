@@ -1,5 +1,9 @@
-import { database } from './client';
-import { Workflow } from '~/core/domain/workflow';
+import {
+    database, 
+} from './client';
+import {
+    Workflow, 
+} from '~/core/domain/workflow';
 
 export async function insertWorkflow (workflow) {
     await database
@@ -10,7 +14,9 @@ export async function insertWorkflow (workflow) {
 export async function findWorkflowById (id) {
     const workflowData = await database
         .collection('workflows')
-        .findOne({ id });
+        .findOne({
+            id, 
+        });
 
     if (workflowData == null) {
         return null;
@@ -22,10 +28,20 @@ export async function findWorkflowById (id) {
 export async function findWorkflowsByWorkspaceId (workspaceId) {
     const workflowsData = await database
         .collection('workflows')
-        .find({ workspaceId })
+        .find({
+            workspaceId, 
+        })
         .toArray();
 
     return workflowsData.map(toWorkflow);
+}
+
+export async function deleteWorkflowById (id) {
+    await database
+        .collection('workflows')
+        .deleteOne({
+            id, 
+        });
 }
 
 export function fromWorkflow (workflow) {

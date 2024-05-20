@@ -1,4 +1,6 @@
-import { randomUUID } from 'crypto';
+import {
+    randomUUID, 
+} from 'crypto';
 
 export class Workspace {
     static create ({
@@ -13,7 +15,9 @@ export class Workspace {
             createdAt: new Date(),
             createdById: userId,
             members: [
-                WorkspaceMember.create({ userId }),
+                WorkspaceMember.create({
+                    userId,
+                }),
             ],
         });
     }
@@ -63,6 +67,16 @@ export class Workspace {
     }
 
     /**
+     * Checks if a user is the owner of the workspace.
+     * 
+     * @param {string} userId 
+     * @returns 
+     */
+    isOwner (userId) {
+        return userId === this.createdById;
+    }
+
+    /**
      * Checks if a user belongs to the workspace.
      * 
      * @param {string} userId 
@@ -79,9 +93,7 @@ export class Workspace {
 }
 
 export class WorkspaceMember {
-    static create ({
-        userId
-    }) {
+    static create ({ userId }) {
         return new WorkspaceMember({
             userId,
             addedAt: new Date(),

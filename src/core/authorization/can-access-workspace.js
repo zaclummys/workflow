@@ -1,5 +1,9 @@
-import { findSessionByToken } from '~/core/data/mongodb/session';
-import { findWorkspaceById } from '~/core/data/mongodb/workspace';
+import {
+    findSessionByToken, 
+} from '~/core/data/mongodb/session';
+import {
+    findWorkspaceById, 
+} from '~/core/data/mongodb/workspace';
 
 export default async function canAccessWorkspace ({
     workspaceId,

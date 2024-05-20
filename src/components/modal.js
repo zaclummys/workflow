@@ -14,12 +14,19 @@ export function Modal ({ children }) {
 
 export function ModalTitle ({ children }) {
     return (
-        <span className=" font-normal text-xl">
+        <span className="font-normal text-xl">
             { children }
         </span>
     );
 }
 
+export function ModalText ({ children }) {
+    return (
+        <span>
+            { children }
+        </span>
+    );
+}
 
 export function ModalFooter ({ children }) {
     return (

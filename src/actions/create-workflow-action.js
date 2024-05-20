@@ -1,7 +1,9 @@
 'use server';
 
 import createWorkflow from '~/core/application/create-workflow';
-import { getSessionToken } from '~/actions/cookies';
+import {
+    getSessionToken, 
+} from '~/actions/cookies';
 
 export default async function createWorkflowAction ({
     name,

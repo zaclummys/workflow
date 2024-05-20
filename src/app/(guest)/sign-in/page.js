@@ -5,9 +5,8 @@ import {
     SignBoxHeaderSubtitle,
     SignBoxFooter,
     SignBoxFooterText,
-    SignBoxFooterLink,
+    SignBoxFooterLink, 
 } from "~/components/sign-box";
-
 import SignInForm from './sign-in-form';
 
 export const title = 'Sign In';

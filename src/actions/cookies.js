@@ -1,4 +1,6 @@
-import { cookies } from 'next/headers';
+import {
+    cookies, 
+} from 'next/headers';
 
 export function getSessionToken () {
     const sessionTokenCookie = cookies().get('session_token');

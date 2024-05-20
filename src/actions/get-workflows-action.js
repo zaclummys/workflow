@@ -1,5 +1,6 @@
-import { getSessionToken } from "./cookies";
-
+import {
+    getSessionToken, 
+} from "./cookies";
 import getWorkflows from "~/core/application/get-workflows";
 
 export default async function getWorkflowsAction (workspaceId) {

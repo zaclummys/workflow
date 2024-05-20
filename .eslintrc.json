@@ -1,6 +1,36 @@
 {
-    "extends": ["eslint:recommended", "next"],
+    "plugins": [
+        "@stylistic/js"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "next"
+    ],
     "rules": {
-        "react/no-unescaped-entities": "off"
+        "indent": ["error", 4],
+        "react/no-unescaped-entities": "off",
+        "comma-dangle": ["error", "always-multiline"],
+        "keyword-spacing": "error",
+        "object-property-newline": ["error", {
+            "allowAllPropertiesOnSameLine": false
+        }],
+        "object-curly-spacing": ["error", "always"],
+        "object-curly-newline": [
+            "error",
+            {
+                "ObjectExpression": "always",
+                "ObjectPattern": {
+                    "multiline": true
+                },
+                "ImportDeclaration": "always",
+                "ExportDeclaration": "always"
+            }
+        ],
+        "padding-line-between-statements": [
+            "error",
+            { "blankLine": "always", "prev": "*", "next": "*" },
+            { "blankLine": "any", "prev": "import", "next": "import" },
+            { "blankLine": "never", "prev": "expression", "next": "expression" }
+        ]
     }
 }

@@ -1,8 +1,8 @@
 import Link from 'next/link';
-
 import WorkflowVersionStatus from './workflow-version-status';
-
-import { calculateTimeAgo } from '../date-time';
+import {
+    calculateTimeAgo, 
+} from '../date-time';
 
 export default function WorkflowVersionListItem ({
     workflowVersion: {
@@ -12,7 +12,7 @@ export default function WorkflowVersionListItem ({
         numberOfExecutions,
         createdAt,
         createdBy,
-    }
+    },
 }) {
     const howLongAgoWasCreated = calculateTimeAgo(createdAt);
 

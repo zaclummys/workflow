@@ -1,4 +1,6 @@
-import { twMerge } from 'tailwind-merge';
+import {
+    twMerge, 
+} from 'tailwind-merge';
 
 export function Menu (props) {
     return <menu className="flex flex-col rounded bg-surface-high overflow-hidden text-nowrap max-w-60" {...props} />

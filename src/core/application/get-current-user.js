@@ -1,5 +1,9 @@
-import { findSessionByToken } from '~/core/data/mongodb/session';
-import { findUserById } from '~/core/data/mongodb/user';
+import {
+    findSessionByToken, 
+} from '~/core/data/mongodb/session';
+import {
+    findUserById, 
+} from '~/core/data/mongodb/user';
 
 export default async function getCurrentUser ({ sessionToken }) {
     const session = await findSessionByToken(sessionToken);
@@ -23,6 +27,6 @@ export default async function getCurrentUser ({ sessionToken }) {
         currentUser: {
             name: currentUser.getName(),
             color: currentUser.getColor(),
-        }
+        },
     };
 }

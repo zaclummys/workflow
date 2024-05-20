@@ -1,5 +1,4 @@
 import getUserAction from "~/actions/get-user-action";
-
 import UserColor from "~/components/user-color";
 
 export function WorkspaceMemberList ({ children }) {

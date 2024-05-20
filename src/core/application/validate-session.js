@@ -1,5 +1,9 @@
-import { findSessionByToken } from '~/core/data/mongodb/session';
-import { findUserById } from '~/core/data/mongodb/user';
+import {
+    findSessionByToken, 
+} from '~/core/data/mongodb/session';
+import {
+    findUserById, 
+} from '~/core/data/mongodb/user';
 
 export default async function validateSession ({ sessionToken }) {
     const session = await findSessionByToken(sessionToken);

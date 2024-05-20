@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import {
+    useState, 
+} from 'react';
 
 const defaultErrorMessage = 'An unexpected error ocurred.';
 
 export default function useForm (handler, onSuccess) {
     const [pending, setPending] = useState(false);
+
     const [error, setError] = useState(null);
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        
         setError(null);
         setPending(true);
 
@@ -28,7 +30,6 @@ export default function useForm (handler, onSuccess) {
             }
         } catch (error) {
             console.error(error);
-
             setError('An unexpected error ocurred.');
             setPending(false);
         }

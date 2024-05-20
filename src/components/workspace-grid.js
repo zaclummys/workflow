@@ -1,17 +1,15 @@
 import Grid from '~/components/grid';
-
 import {
     Card,
     CardTitle,
     CardText,
     CardSection,
     CardSectionTitle,
-    CardLink,
+    CardLink, 
 } from '~/components/card';
-
 import {
     WorkspaceMemberList,
-    WorkspaceMemberItem,
+    WorkspaceMemberItem, 
 } from '~/components/workspace-member-list';
 
 export function WorkspaceGrid ({ children }) {

@@ -1,4 +1,6 @@
-import { randomUUID, randomBytes } from 'crypto';
+import {
+    randomUUID, randomBytes, 
+} from 'crypto';
 
 export class Session {
     static create ({ userId }) {

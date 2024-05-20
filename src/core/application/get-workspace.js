@@ -1,5 +1,7 @@
 import canAccessWorkspace from '~/core/authorization/can-access-workspace';
-import { findWorkspaceById } from '~/core/data/mongodb/workspace';
+import {
+    findWorkspaceById, 
+} from '~/core/data/mongodb/workspace';
 
 export default async function getWorkspace ({
     workspaceId,
@@ -12,7 +14,7 @@ export default async function getWorkspace ({
 
     if (!canCurrentUserAccessWorkspace) {
         return {
-            success: false
+            success: false,
         };
     }
 
@@ -30,7 +32,7 @@ export default async function getWorkspace ({
                 .map(member => ({
                     userId: member.getUserId(),
                     addedAt: member.getAddedAt(),
-                }))
+                })),
         },
     };
 }

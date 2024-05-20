@@ -1,5 +1,9 @@
-import { randomUUID } from 'crypto';
-import { hash, verify } from 'argon2';
+import {
+    randomUUID, 
+} from 'crypto';
+import {
+    hash, verify, 
+} from 'argon2';
 
 export class User {
     static async create ({
@@ -25,7 +29,6 @@ export class User {
     }) {
         this.name = name;
         this.email = email;
-        
         this.id = id;
         this.color = color;
         this.password = password;

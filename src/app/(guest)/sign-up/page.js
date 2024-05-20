@@ -1,12 +1,17 @@
 'use client';
 
-import { useId } from 'react';
-import { useRouter } from 'next/navigation';
-
-
-import { Form, Field, Label, Input } from '~/components/form';
-import { PrimaryButton } from "~/components/button";
-
+import {
+    useId, 
+} from 'react';
+import {
+    useRouter, 
+} from 'next/navigation';
+import {
+    Form, Field, Label, Input, 
+} from '~/components/form';
+import {
+    PrimaryButton, 
+} from "~/components/button";
 import {
     SignBox,
     SignBoxHeader,
@@ -14,9 +19,8 @@ import {
     SignBoxHeaderSubtitle,
     SignBoxFooter,
     SignBoxFooterText,
-    SignBoxFooterLink,
+    SignBoxFooterLink, 
 } from "~/components/sign-box";
-
 import signUpAction from "~/actions/sign-up-action";
 import useForm from '~/hooks/use-form';
 
@@ -26,7 +30,9 @@ export default function SignUp() {
     const router = useRouter();
 
     const nameId = useId();
+
     const emailId = useId();
+
     const passwordId = useId();
 
     const {

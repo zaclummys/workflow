@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server'
-
+import {
+    NextResponse, 
+} from 'next/server'
 import validateSession from '~/core/application/validate-session';
 
 export async function POST (request) {

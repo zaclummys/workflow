@@ -1,5 +1,9 @@
-import { findSessionByToken } from '~/core/data/mongodb/session';
-import { findUserById } from '../data/mongodb/user';
+import {
+    findSessionByToken, 
+} from '~/core/data/mongodb/session';
+import {
+    findUserById, 
+} from '../data/mongodb/user';
 
 export default async function getUser ({
     userId,
@@ -27,6 +31,6 @@ export default async function getUser ({
             id: user.getId(),
             name: user.getName(),
             color: user.getColor(),
-        }
+        },
     };
 }

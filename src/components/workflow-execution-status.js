@@ -1,39 +1,39 @@
 import {
     Badge,
     BadgeAlert,
-    BadgeCheck,
+    BadgeCheck, 
 } from 'lucide-react';
 
 export default function WorkflowVersionStatus({ status }) {
     switch (status) {
-        case 'success':
-            return (
-                <span className="inline-flex flex-row items-center gap-2 text-sm font-medium text-positive">
-                    <BadgeCheck className="w-5" />
+    case 'success':
+        return (
+            <span className="inline-flex flex-row items-center gap-2 text-sm font-medium text-positive">
+                <BadgeCheck className="w-5" />
 
                     Success
-                </span>
-            );
+            </span>
+        );
 
-        case 'error':
-            return (
-                <span className="flex flex-row items-center gap-2 text-sm font-medium text-negative">
-                    <BadgeAlert className="w-5" />
+    case 'error':
+        return (
+            <span className="flex flex-row items-center gap-2 text-sm font-medium text-negative">
+                <BadgeAlert className="w-5" />
 
                     Error
-                </span>
-            );
+            </span>
+        );
 
-        case 'running':
-            return (
-                <span className="flex flex-row items-center gap-2 text-sm font-medium text-neutral">
-                    <Badge className="w-5" />
+    case 'running':
+        return (
+            <span className="flex flex-row items-center gap-2 text-sm font-medium text-neutral">
+                <Badge className="w-5" />
 
                     Running
-                </span>
-            );
+            </span>
+        );
 
-        default:
-            return null;
+    default:
+        return null;
     }
 }

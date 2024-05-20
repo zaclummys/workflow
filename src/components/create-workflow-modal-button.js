@@ -1,19 +1,24 @@
 'use client';
 
-import { useId, useState } from 'react';
-import { useRouter } from 'next/navigation';
-
+import {
+    useId, useState, 
+} from 'react';
+import {
+    useRouter, 
+} from 'next/navigation';
 import useForm from '~/hooks/use-form';
-
-import { OutlineButton, PrimaryButton } from '~/components/button';
-import { Modal, ModalFooter, ModalTitle } from '~/components/modal';
-import { Form, Field, Input, Label, TextArea } from '~/components/form';
-
+import {
+    OutlineButton, PrimaryButton, 
+} from '~/components/button';
+import {
+    Modal, ModalFooter, ModalTitle, 
+} from '~/components/modal';
+import {
+    Form, Field, Input, Label, TextArea, 
+} from '~/components/form';
 import createWorkflowAction from '~/actions/create-workflow-action';
 
-export default function CreateWorkflowModalButton ({
-    workspaceId,
-}) {
+export default function CreateWorkflowModalButton ({ workspaceId }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const onButtonClick = () => {
@@ -51,7 +56,9 @@ function CreateWorkflowModal ({
     const router = useRouter();
 
     const formId = useId();
+
     const nameId = useId();
+
     const descriptionId = useId();
 
     const { pending, error, onSubmit } = useForm(async (event) => {

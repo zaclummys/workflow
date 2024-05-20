@@ -1,12 +1,10 @@
 import Link from 'next/link';
-
 import WorkflowExecutionStatus from './workflow-execution-status';
+import {
+    calculateTimeAgo, 
+} from '../date-time';
 
-import { calculateTimeAgo } from '../date-time';
-
-export default function WorkflowExecutionListItem ({
-    workflowExecution
-}) {
+export default function WorkflowExecutionListItem ({ workflowExecution }) {
     const howLongAgoWasExecuted = calculateTimeAgo(workflowExecution.executedAt);
 
     return (

@@ -1,4 +1,6 @@
-import { formatDistanceToNow } from 'date-fns';
+import {
+    formatDistanceToNow, 
+} from 'date-fns';
 
 export default function DateAgo ({ date }) {
     if (!date) {

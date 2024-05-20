@@ -2,19 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    color: red;
+}
+
 :root {
-    --surface-default-layer: theme('colors.surface.DEFAULT');
-    --surface-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 12%, theme('colors.surface.DEFAULT'));
-    --surface-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.DEFAULT'));
+    --surface-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.surface.DEFAULT'));
+    --surface-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.surface.DEFAULT'));
 
-    --surface-high-hover-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 12%, theme('colors.surface.high'));
-    --surface-high-press-layer: color-mix(in srgb, theme('colors.on.surface.DEFAULT') 16%, theme('colors.surface.high'));
+    --surface-high-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.surface.high'));
+    --surface-high-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.surface.high'));
 
-    --primary-hover-layer: color-mix(in srgb, theme('colors.on.primary') 8%, theme('colors.primary'));
-    --primary-press-layer: color-mix(in srgb, theme('colors.on.primary') 16%, theme('colors.primary'));
+    --primary-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.primary'));
+    --primary-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.primary'));
 
-    --danger-hover-layer: color-mix(in srgb, theme('colors.danger') 12%, theme('colors.surface.DEFAULT'));
-    --danger-press-layer: color-mix(in srgb, theme('colors.danger') 16%, theme('colors.surface.DEFAULT'));
+    --danger-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.danger'));
+    --danger-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.danger'));
 }
 
 :root {

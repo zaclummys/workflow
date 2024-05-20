@@ -1,7 +1,9 @@
 'use server';
 
 import signIn from '~/core/application/sign-in';
-import { setSessionToken } from '~/actions/cookies';
+import {
+    setSessionToken, 
+} from '~/actions/cookies';
 
 export default async function signInAction ({ email, password }) {
     const {

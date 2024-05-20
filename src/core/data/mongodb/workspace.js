@@ -1,5 +1,9 @@
-import { database } from './client.js';
-import { Workspace, WorkspaceMember } from '../../domain/workspace.js';
+import {
+    database, 
+} from './client.js';
+import {
+    Workspace, WorkspaceMember, 
+} from '../../domain/workspace.js';
 
 export async function insertWorkspace (workspace) {
     await database
@@ -10,7 +14,9 @@ export async function insertWorkspace (workspace) {
 export async function findWorkspaceById (id) {
     const workspace = await database
         .collection('workspaces')
-        .findOne({ id });
+        .findOne({
+            id, 
+        });
 
     if (workspace == null) {
         return null;
@@ -22,7 +28,9 @@ export async function findWorkspaceById (id) {
 export async function findWorkspacesByUserId (userId) {
     const workspaces = await database
         .collection('workspaces')
-        .find({ 'members.userId': userId })
+        .find({
+            'members.userId': userId, 
+        })
         .toArray();
 
     return workspaces.map(toWorkspace);
@@ -31,7 +39,9 @@ export async function findWorkspacesByUserId (userId) {
 export async function deleteWorkspaceById (id) {
     await database
         .collection('workspaces')
-        .deleteOne({ id });
+        .deleteOne({
+            id, 
+        });
 }
 
 export function fromWorkspace (workspace) {
@@ -45,7 +55,7 @@ export function fromWorkspace (workspace) {
             .map(member => ({
                 userId: member.getUserId(),
                 addedAt: member.getAddedAt(),
-            }))
+            })),
     };
 }
 
@@ -60,6 +70,6 @@ export function toWorkspace (workspaceData) {
             .map(memberData => new WorkspaceMember({
                 userId: memberData.userId,
                 addedAt: memberData.addedAt,
-            }))
+            })),
     });
 }

@@ -1,5 +1,9 @@
-import { database } from './client.js';
-import { Session } from '../../domain/session.js';
+import {
+    database, 
+} from './client.js';
+import {
+    Session, 
+} from '../../domain/session.js';
 
 export async function insertSession (session) {
     await database
@@ -10,7 +14,9 @@ export async function insertSession (session) {
 export async function findSessionByToken (token) {
     const sessionData = await database
         .collection('sessions')
-        .findOne({ token });
+        .findOne({
+            token, 
+        });
 
     if (sessionData == null) {
         return null;
@@ -22,13 +28,17 @@ export async function findSessionByToken (token) {
 export async function deleteSessionById (id) {
     await database
         .collection('sessions')
-        .deleteOne({ id });
+        .deleteOne({
+            id, 
+        });
 }
 
 export async function deleteSessionByToken (token) {
     await database
         .collection('sessions')
-        .deleteOne({ token });
+        .deleteOne({
+            token, 
+        });
 }
 
 export function fromSession (session) {
