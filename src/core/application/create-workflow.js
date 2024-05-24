@@ -1,12 +1,15 @@
 import {
     findSessionByToken, 
 } from '~/core/data/mongodb/session';
+
 import {
     findWorkspaceById, 
 } from '~/core/data/mongodb/workspace';
+
 import {
     insertWorkflow, 
 } from '~/core/data/mongodb/workflow';
+
 import {
     Workflow, 
 } from '~/core/domain/workflow';
@@ -34,14 +37,7 @@ export default async function createWorkflow ({
             message: 'Workspace not found.',
         };
     }
-
-    if (!workspace.isMember(session.getUserId())) {
-        return {
-            success: false,
-            message: 'You do not have permission to access this workspace.',
-        };
-    }
-
+    
     const workflow = Workflow.create({
         name,
         description,

@@ -2,17 +2,21 @@ import {
     cookies, 
 } from 'next/headers';
 
+import {
+    redirect,
+} from 'next/navigation';
+
 export function getSessionToken () {
     const sessionTokenCookie = cookies().get('session_token');
 
     if (!sessionTokenCookie) {
-        throw new Error('Session Token Cookie not found');
+        redirect('/sign-in');
     }
 
     const sessionToken = sessionTokenCookie.value;
 
     if (!sessionToken) {
-        throw new Error('Session Token cannot be empty');
+        redirect('/sign-in');
     }
 
     return sessionToken;

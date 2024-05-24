@@ -54,6 +54,8 @@ function redirectToHome (request) {
 }
 
 export default async function middleware (request) {
+    return null;
+    
     if (request.nextUrl.pathname === '/favicon.ico') {
         return NextResponse.next();
     }
@@ -70,7 +72,7 @@ export default async function middleware (request) {
         });
 
         if (!success) {
-            return NextResponse.status(500).text('An unexpected error occurred.');
+            return null;
         }
 
         if (!isSessionValid) {

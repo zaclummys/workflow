@@ -1,12 +1,14 @@
 import {
     findUserByEmail, 
-} from '../data/mongodb/user';
+} from '~/core/data/mongodb/user';
+
 import {
     insertSession, 
-} from '../data/mongodb/session';
+} from '~/core/data/mongodb/session';
+
 import {
     Session, 
-} from '../domain/session';
+} from '~/core/domain/session';
 
 export default async function signIn ({ email, password }) {
     const user = await findUserByEmail(email);

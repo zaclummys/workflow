@@ -5,18 +5,7 @@ import {
     findUserById, 
 } from '../data/mongodb/user';
 
-export default async function getUser ({
-    userId,
-    sessionToken,
-}) {
-    const session = await findSessionByToken(sessionToken);
-
-    if (!session) {
-        return {
-            success: false,
-        };
-    }
-    
+export default async function getUser ({ userId }) {
     const user = await findUserById(userId);
 
     if (!user) {

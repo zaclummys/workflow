@@ -18,6 +18,7 @@ export default async function createWorkspace ({
     if (!session) {
         return {
             success: false,
+            message: 'You must be logged in to create a workspace.',
         };
     }
 

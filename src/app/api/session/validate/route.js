@@ -10,6 +10,8 @@ export async function POST (request) {
         sessionToken: sessionToken,
     });
 
+    throw new Error('a');
+
     return NextResponse.json({
         isSessionValid,
     });

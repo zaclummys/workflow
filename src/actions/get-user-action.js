@@ -1,6 +1,7 @@
 'use server';
 
 import getUser from '~/core/application/get-user';
+
 import {
     getSessionToken, 
 } from './cookies';

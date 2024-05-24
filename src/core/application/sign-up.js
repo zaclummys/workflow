@@ -1,10 +1,11 @@
 import {
     insertUser,
     findUserByEmail, 
-} from '../data/mongodb/user';
+} from '~/core/data/mongodb/user';
+
 import {
     User, 
-} from '../domain/user';
+} from '~/core/domain/user';
 
 export default async function signUp ({
     name,

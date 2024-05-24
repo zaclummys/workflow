@@ -11,32 +11,13 @@ import {
     findWorkflowsByWorkspaceId, 
 } from '~/core/data/mongodb/workflow';
 
-export default async function deleteWorkspace ({
-    workspaceId,
-    sessionToken,
-}) {
-    const session = await findSessionByToken(sessionToken);
-
-    if (!session) {
-        return {
-            success: false,
-            message: 'Session not found.'
-        };
-    }
-
+export default async function deleteWorkspace ({ workspaceId }) {
     const workspace = await findWorkspaceById(workspaceId);
 
     if (!workspace) {
         return {
             success: false,
             message: 'Workspace not found.',
-        };
-    }
-
-    if (!workspace.isOwner(session.getUserId())) {
-        return {
-            success: false,
-            message: 'Cannot delete workspace you do not own.',
         };
     }
 

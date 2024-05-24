@@ -15,6 +15,7 @@ export class Workflow {
             createdById,
             workspaceId,
             id: randomUUID(),
+            nextVersionNumber: 1,
             createdAt: new Date(),
         });
     }
@@ -23,6 +24,7 @@ export class Workflow {
         id,
         name,
         description,
+        nextVersionNumber,
         workspaceId,
         createdAt,
         createdById,
@@ -37,6 +39,10 @@ export class Workflow {
 
         if (!description) {
             throw new Error('Description is required');
+        }
+
+        if (!nextVersionNumber) {
+            throw new Error('Next version number is required');
         }
 
         if (!workspaceId) {
@@ -54,6 +60,7 @@ export class Workflow {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.nextVersionNumber = nextVersionNumber;
         this.workspaceId = workspaceId;
         this.createdAt = createdAt;
         this.createdById = createdById;
@@ -81,5 +88,13 @@ export class Workflow {
 
     getCreatedById () {
         return this.createdById;
+    }
+
+    getNextVersionNumber () {
+        return this.nextVersionNumber;
+    }
+
+    incrementNextVersionNumber () {
+        this.nextVersionNumber += 1;
     }
 }

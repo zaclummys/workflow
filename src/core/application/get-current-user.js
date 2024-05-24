@@ -11,6 +11,7 @@ export default async function getCurrentUser ({ sessionToken }) {
     if (!session) {
         return {
             success: false,
+            message: 'You must be logged in to get the current user.',
         };
     }
 
@@ -19,6 +20,7 @@ export default async function getCurrentUser ({ sessionToken }) {
     if (!currentUser) {
         return {
             success: false,
+            message: 'User not found.',
         };
     }
 

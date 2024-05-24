@@ -1,6 +1,7 @@
 import {
     database, 
 } from './client';
+
 import {
     Workflow, 
 } from '~/core/domain/workflow';
@@ -36,6 +37,16 @@ export async function findWorkflowsByWorkspaceId (workspaceId) {
     return workflowsData.map(toWorkflow);
 }
 
+export async function updateWorkflow (workflow) {
+    await database
+        .collection('workflows')
+        .updateOne({
+            id: workflow.getId(), 
+        }, {
+            $set: fromWorkflow(workflow), 
+        });
+}
+
 export async function deleteWorkflowById (id) {
     await database
         .collection('workflows')
@@ -49,6 +60,7 @@ export function fromWorkflow (workflow) {
         id: workflow.getId(),
         name: workflow.getName(),
         description: workflow.getDescription(),
+        nextVersionNumber: workflow.getNextVersionNumber(),
         workspaceId: workflow.getWorkspaceId(),
         createdAt: workflow.getCreatedAt(),
         createdById: workflow.getCreatedById(),

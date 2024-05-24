@@ -1,4 +1,4 @@
-import { database } from '~/core/data/client';
+import { database } from '~/core/data/mongodb/client';
 import { WorkflowVersion } from '~/core/domain/workflow-version';
 
 export async function insertWorkflowVersion (workflowVersion) {
@@ -19,22 +19,22 @@ export async function findWorkflowVersionById (id) {
     return toWorkflowVersion(workflowVersionData);
 }
 
-export async function findLatestWorkflowVersionByWorkflowId (workflowId) {
+export async function findWorkflowVersionByWorkflowId (workflowId) {
     const workflowVersionData = await database
         .collection('workflow-versions')
-        .findOne({ workflowId }, { sort: { number: -1 } });
+        .find({ workflowId }, { sort: { number: -1 } })
+        .toArray();
 
-    if (!workflowVersionData) {
-        return null;
-    }
-
-    return toWorkflowVersion(workflowVersionData);
+    return workflowVersionData.map(toWorkflowVersion);
 }
 
 export function fromWorkflowVersion (workflowVersion) {
     return {
         id: workflowVersion.getId(),
         number: workflowVersion.getNumber(),
+        status: workflowVersion.getStatus(),
+        elements: workflowVersion.getElements(),
+        variables: workflowVersion.getVariables(),
         workflowId: workflowVersion.getWorkflowId(),
         createdAt: workflowVersion.getCreatedAt(),
         createdById: workflowVersion.getCreatedById(),

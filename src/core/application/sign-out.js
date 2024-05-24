@@ -1,6 +1,6 @@
 import {
     deleteSessionByToken, 
-} from '../data/mongodb/session';
+} from '~/core/data/mongodb/session';
 
 export default async function signOut ({ sessionToken }) {
     await deleteSessionByToken(sessionToken);

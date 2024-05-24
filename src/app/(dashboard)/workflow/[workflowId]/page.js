@@ -1,27 +1,51 @@
 import Link from 'next/link';
+
 import Header from '~/components/header';
 import Container from '~/components/container';
+
 import {
-    Placeholder, PlaceholderTitle, PlaceholderText, 
+    Placeholder,
+    PlaceholderTitle,
+    PlaceholderText,
 } from '~/components/placeholder';
+
 import {
-    Section, SectionHeader, SectionTitle, SectionActions, 
+    Section,
+    SectionHeader,
+    SectionTitle,
+    SectionActions,
 } from '~/components/section';
+
 import {
-    PrimaryButton, OutlineButton, DestructiveOutlineButton, 
+    OutlineButton,
 } from '~/components/button';
+
 import {
-    Details, DetailRow, DetailCell, DetailCellHeader, DetailCellText, 
+    Details,
+    DetailRow,
+    DetailCell,
+    DetailCellHeader,
+    DetailCellText,
 } from '~/components/details';
+
 import DateAgo from '~/components/date-ago';
+
+import CreateWorkflowVersionButton from '~/components/create-workflow-version-button';
+import DeleteWorkflowModalButton from '~/components/delete-workflow-modal-button';
+
+import {
+    WorkflowVersionGrid,
+    WorkflowVersionGridItem,
+} from '~/components/workflow-version-grid';
+
 import getWorkflowAction from '~/actions/get-workflow-action';
+import getWorkflowVersionsAction from '~/actions/get-workflow-versions-action';
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getUserAction from '~/actions/get-user-action';
-import DeleteWorkflowModalButton from '~/components/delete-workflow-modal-button';
 
 export const title = 'Workflow';
 
-export default async function Workflow ({ params: { workflowId } }) {
+export default async function Workflow({ params: { workflowId } }) {
     const { workflow } = await getWorkflowAction(workflowId);
 
     if (!workflow) {
@@ -40,6 +64,8 @@ export default async function Workflow ({ params: { workflowId } }) {
         return null;
     }
 
+    const { workflowVersions } = await getWorkflowVersionsAction(workflowId);
+
     return (
         <>
             <Header />
@@ -50,8 +76,11 @@ export default async function Workflow ({ params: { workflowId } }) {
                         <SectionTitle>{workflow.name}</SectionTitle>
 
                         <SectionActions>
-                            <PrimaryButton>New Workflow Version</PrimaryButton>
+                            <CreateWorkflowVersionButton
+                                workflowId={workflow.id} />
+
                             <OutlineButton>Edit</OutlineButton>
+
                             <DeleteWorkflowModalButton
                                 workflow={workflow} />
                         </SectionActions>
@@ -108,13 +137,23 @@ export default async function Workflow ({ params: { workflowId } }) {
                 <Section>
                     <SectionTitle>Workflow Versions</SectionTitle>
 
-                    <Placeholder>
-                        <PlaceholderTitle>No workflow versions</PlaceholderTitle>
+                    {workflowVersions.length === 0 ? (
+                        <Placeholder>
+                            <PlaceholderTitle>No workflow versions</PlaceholderTitle>
 
-                        <PlaceholderText>
-                            You haven't created any workflow version yet. Do you want to create one? 
-                        </PlaceholderText>
-                    </Placeholder>
+                            <PlaceholderText>
+                                You haven't created any workflow version yet. Do you want to create one?
+                            </PlaceholderText>
+                        </Placeholder>
+                    ) : (
+                        <WorkflowVersionGrid>
+                            {workflowVersions.map(workflowVersion => (
+                                <WorkflowVersionGridItem
+                                    key={workflowVersion.id}
+                                    workflowVersion={workflowVersion} />
+                            ))}
+                        </WorkflowVersionGrid>
+                    )}
                 </Section>
             </Container>
         </>

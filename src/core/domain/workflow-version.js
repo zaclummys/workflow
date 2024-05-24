@@ -2,16 +2,21 @@ import { randomUUID } from 'crypto';
 
 export class WorkflowVersion {
     static create ({
+        number,
         workflowId,
         createdById,
     }) {
         return new WorkflowVersion({
+            number,
             workflowId,
             createdById,
             id: randomUUID(),
-            number: 1,
+            status: 'draft',
             variables: [],
-            elements: [],
+            elements: [
+                WorkflowStartElement.create(),
+                WorkflowEndElement.create(),
+            ],
             createdAt: new Date(),
         });
     }
@@ -19,6 +24,7 @@ export class WorkflowVersion {
     constructor ({
         id,
         number,
+        status,
         variables,
         elements,
         workflowId,
@@ -32,6 +38,10 @@ export class WorkflowVersion {
 
         if (!number) {
             throw new Error('Number is required.');
+        }
+
+        if (!status) {
+            throw new Error('Status is required.');
         }
 
         if (!variables) {
@@ -56,6 +66,7 @@ export class WorkflowVersion {
 
         this.id = id;
         this.number = number;
+        this.status = status;
         this.variables = variables;
         this.elements = elements;
         this.workflowId = workflowId;
@@ -72,12 +83,36 @@ export class WorkflowVersion {
         return this.number;
     }
 
+    getStatus () {
+        return this.status;
+    }
+
+    getVariables () {
+        return this.variables;
+    }
+
+    getElements () {
+        return this.elements;
+    }
+
     getWorkflowId () {
         return this.workflowId;
     }
 
+    getCreatedAt () {
+        return this.createdAt;
+    }
+
     getCreatedById () {
         return this.createdById;
+    }
+
+    activate () {
+        this.status = 'active';
+    }
+
+    deactivate () {
+        this.status = 'inactive';
     }
 
     addVariable (variable) {
@@ -96,10 +131,13 @@ export class WorkflowVersion {
         this.elements = this.elements.filter(element => idToBeRemoved !== element.getId());
     }
 
-    fork ({ forkedById }) {
+    fork ({
+        number,
+        createdById,
+    }) {
         return WorkflowVersion.create({
-            createdById: forkedById,
-            number: this.number + 1,
+            number,
+            createdById,
             workflowId: this.workflowId,
             variables: this.variables.map(variable => variable.clone()),
             elements: this.elements.map(element => element.clone()),
@@ -213,11 +251,55 @@ export class WorkflowVariable {
     }
 }
 
-export class WorkflowExpression {}
-
 export class WorkflowElement {}
-export class WorkflowStartElement {}
-export class WorkflowEndElement {}
+
+export class WorkflowStartElement {
+    static create () {
+        return new WorkflowStartElement({
+            id: randomUUID(),
+            nextElementId: null,
+        });
+    }
+
+    constructor ({
+        id,
+        nextElementId,
+    }) {
+        if (!id) {
+            throw new Error('ID is required.');
+        }
+
+        this.id = id;
+        this.nextElementId = nextElementId;
+    }
+
+    clone () {
+        return new WorkflowStartElement();
+    }
+}
+
+export class WorkflowEndElement {
+    static create () {
+        return new WorkflowEndElement({
+            id: randomUUID(),
+        });
+    }
+
+    constructor ({
+        id,
+    }) {
+        if (!id) {
+            throw new Error('ID is required.');
+        }
+
+        this.id = id;
+    }
+
+    clone () {
+        return new WorkflowEndElement();
+    }
+}
+
 export class WorkflowIfElement {
     static create ({
         conditions,   
@@ -252,16 +334,9 @@ export class WorkflowIfElement {
         return this.conditions;
     }
 
-    addCondition (condition) {
-        this.conditions.push(condition);
-    }
-
-    removeConditionById (id) {
-        this.conditions = this.conditions.filter(condition => condition.id !== id);
-    }
-
     clone () {
-        return WorkflowIfElement.create({
+        return new WorkflowIfElement({
+            id: this.id,
             conditions: this.conditions.map(condition => condition.clone()),
         });
     }
@@ -271,13 +346,13 @@ export class WorkflowCondition {
     static create ({
         variableId,
         operation,
-        expression,
+        value,
     }) {
         return new WorkflowCondition({
             id: randomUUID(),
             variableId,
             operation,
-            expression,
+            value,
         });
     }
 
@@ -285,7 +360,7 @@ export class WorkflowCondition {
         id,
         variableId,
         operation,
-        expression,
+        value,
     }) {
         if (!id) {
             throw new Error('ID is required.');
@@ -299,14 +374,14 @@ export class WorkflowCondition {
             throw new Error('Operation is required.');
         }
 
-        if (!expression) {
-            throw new Error('Expression is required.');
+        if (value === undefined) {
+            throw new Error('Value cannot be undefined.');
         }
 
         this.id = id;
         this.variableId = variableId;
         this.operation = operation;
-        this.expression = expression;
+        this.value = value;
     }
 
     getId () {
@@ -321,12 +396,13 @@ export class WorkflowCondition {
         return this.operation;
     }
 
-    getExpression () {
-        return this.expression;
+    getValue () {
+        return this.value;
     }
 
     clone () {
-        return WorkflowCondition.create({
+        return new WorkflowCondition({
+            id: this.id,
             variableId: this.variableId,
             operation: this.operation,
             expression: this.expression,
@@ -334,4 +410,134 @@ export class WorkflowCondition {
     }
 }
 
-export class WorkflowAssignmentElement {}
+export class WorkflowAssignElement {
+    static create ({
+        name,
+        description,
+        assignments,
+    }) {
+        return new WorkflowVersion({
+            id: randomUUID(),
+            name,
+            description,
+            assignments,
+        });
+    }
+
+    constructor ({
+        id,
+        name,
+        description,
+        assignments,
+    }) {
+        if (!id) {
+            throw new Error('Id is required.');
+        }
+
+        if (!name) {
+            throw new Error('Name is required.');
+        }
+
+        if (!assignments) {
+            throw new Error('Assignments are required.');
+        }
+
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.assignments = assignments;
+    }
+
+    getId () {
+        return this.id;
+    }
+
+    getName () {
+        return this.name;
+    }
+
+    getDescription () {
+        return this.description;
+    }
+
+    getAssignments () {
+        return this.assignments;
+    }
+
+    clone () {
+        return new WorkflowAssignElement({
+            id: this.id,
+            name: this.name,
+            description: this.description,
+            assignments: this.assignments.map(assignment => assignment.clone()),
+        });
+    }
+}
+
+export class WorkflowAssignment {
+    static create ({
+        variableId,
+        operation,
+        value,
+    }) {
+        return new WorkflowAssignment({
+            id: randomUUID(),
+            variableId,
+            operation,
+            value,
+        });
+    }
+
+    constructor ({
+        id,
+        variableId,
+        operation,
+        value,
+    }) {
+        if (!id) {
+            throw new Error('ID is required.');
+        }
+
+        if (!variableId) {
+            throw new Error('Variable ID is required.');
+        }
+
+        if (!operation) {
+            throw new Error('Operation is required.');
+        }
+
+        if (value === undefined) {
+            throw new Error('Value cannot be undefined.');
+        }
+
+        this.id = id;
+        this.variableId = variableId;
+        this.operation = operation;
+        this.value = value;
+    }
+
+    getId () {
+        return this.id;
+    }
+
+    getVariableId () {
+        return this.variableId;
+    }
+
+    getOperation () {
+        return this.operation;
+    }
+
+    getValue () {
+        return this.value;
+    }
+
+    clone () {
+        return new WorkflowAssignment({
+            id: this.id,
+            variableId: this.variableId,
+            operation: this.operation,
+            value: this.value,
+        });
+    }
+}

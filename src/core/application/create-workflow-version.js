@@ -8,12 +8,15 @@ import {
 
 import {
     findWorkflowById, 
+    updateWorkflow,
 } from '~/core/data/mongodb/workflow';
 
 import {
     insertWorkflowVersion,
     findLatestWorkflowVersionByWorkflowId,
 } from '~/core/data/mongodb/workflow-version';
+
+import { WorkflowVersion } from '~/core/domain/workflow-version';
 
 export default async function createWorkflowVersion ({
     workflowId,
@@ -24,7 +27,7 @@ export default async function createWorkflowVersion ({
     if (!session) {
         return {
             success: false,
-            message: 'You must be logged in to create a workflow.',
+            message: 'You must be logged in to create a workflow version.',
         };
     }
 
@@ -36,39 +39,17 @@ export default async function createWorkflowVersion ({
             message: 'Workflow not found.',
         };
     }
+    
+    const workflowVersion = WorkflowVersion.create({
+        workflowId: workflow.getId(),
+        createdById: session.getUserId(),
+        number: workflow.getNextVersionNumber(),
+    });
 
-    const workspace = await findWorkspaceById(workspaceId);
-
-    if (!workspace) {
-        return {
-            success: false,
-            message: 'Workspace not found.',
-        };
-    }
-
-    if (!workspace.isMember(session.getUserId())) {
-        return {
-            success: false,
-            message: 'You do not have permission to access this workspace.',
-        };
-    }
-
-    const latestWorkflowVersion = await findLatestWorkflowVersionByWorkflowId(workflowId);
-
-    let workflowVersion;
-
-    if (latestWorkflowVersion) {
-        workflowVersion = latestWorkflowVersion.fork({
-            forkedById: session.getUserId(),
-        });
-    } else {
-        workflowVersion = WorkflowVersion.create({
-            workflowId,
-            createdById: session.getUserId(),
-        });
-    }
+    workflow.incrementNextVersionNumber();
 
     await insertWorkflowVersion(workflowVersion);
+    await updateWorkflow(workflow);
 
     return {
         success: true,
