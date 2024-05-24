@@ -10,11 +10,6 @@ import {
     SectionActions,
 } from '~/components/section';
 
-import {
-    PrimaryButton,
-    DestructiveOutlineButton,
-} from '~/components/button';
-
 import EditWorkflowVersionButton from '~/components/edit-workflow-version-button';
 
 import {
@@ -28,6 +23,7 @@ import {
 
 import DateAgo from '~/components/date-ago';
 import WorkflowVersionStatus from '~/components/workflow-version-status';
+import DeleteWorkflowVersionModalButton from '~/components/delete-workflow-version-modal-button';
 
 import getWorkflowVersionAction from '~/actions/get-workflow-version-action';
 import getWorkflowAction from '~/actions/get-workflow-action';
@@ -80,7 +76,8 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                             <EditWorkflowVersionButton
                                 workflowVersionId={workflowVersion.id} />
                                 
-                            <DestructiveOutlineButton>Delete</DestructiveOutlineButton>
+                            <DeleteWorkflowVersionModalButton
+                                workflowVersion={workflowVersion} />
                         </SectionActions>
                     </SectionHeader>
 

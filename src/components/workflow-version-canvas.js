@@ -139,7 +139,7 @@ function WorkflowElement ({
     element,
 }) {
     return (
-        <div className="bg-surface text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer">
+        <div className="bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all">
             <span>{element.name}</span>
         </div>
     );

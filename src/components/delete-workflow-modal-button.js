@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import {
     useState, 
 } from 'react';
@@ -15,7 +13,6 @@ import {
 
 import {
     OutlineButton,
-    DestructiveOutlineButton,
     DestructiveButton, 
 } from '~/components/button';
 
@@ -23,17 +20,15 @@ import Error from '~/components/error';
 
 import deleteWorkflowAction from '~/actions/delete-workflow-action';
 
+import useNavigation from '~/hooks/use-navigation';
+
 export default function DeleteWorkflowModalButton ({ workflow }) {
-    const router = useRouter();
+    const { navigateToWorkspace } = useNavigation();
 
     const [isOpen, setIsOpen] = useState(false);
 
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
-
-    const navigateToWorkspace = () => {
-        router.push(`/workspace/${workflow.workspaceId}`);
-    };
 
     const onDeleteButtonClick = () => {
         setIsOpen(true);
@@ -61,10 +56,10 @@ export default function DeleteWorkflowModalButton ({ workflow }) {
 
     return (
         <>
-            <DestructiveOutlineButton
+            <OutlineButton
                 onClick={onDeleteButtonClick}>
                 Delete
-            </DestructiveOutlineButton>
+            </OutlineButton>
 
             {isOpen && (
                 <Modal>

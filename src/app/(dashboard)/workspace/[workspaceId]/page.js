@@ -1,29 +1,46 @@
 import Header from '~/components/header';
 import Container from '~/components/container';
 import DateAgo from '~/components/date-ago';
+
 import {
-    Placeholder, PlaceholderTitle, PlaceholderText, 
+    Placeholder,
+    PlaceholderTitle,
+    PlaceholderText, 
 } from '~/components/placeholder';
+
 import {
-    Section, SectionHeader, SectionTitle, SectionActions, 
+    Section,
+    SectionHeader,
+    SectionTitle,
+    SectionActions, 
 } from '~/components/section';
+
 import {
-    OutlineButton, 
-} from '~/components/button';
-import {
-    Details, DetailRow, DetailCell, DetailCellHeader, DetailCellText, 
+    Details,
+    DetailRow,
+    DetailCell,
+    DetailCellHeader,
+    DetailCellText, 
 } from '~/components/details';
+
 import {
-    WorkspaceMemberList, WorkspaceMemberItem, 
+    WorkspaceMemberList,
+    WorkspaceMemberItem, 
 } from '~/components/workspace-member-list';
+
 import {
-    WorkflowGrid, WorkflowGridItem, 
+    WorkflowGrid,
+    WorkflowGridItem, 
 } from '~/components/workflow-grid';
+
 import CreateWorkflowModalButton from '~/components/create-workflow-modal-button';
+import DeleteWorkspaceModalButton from '~/components/delete-workspace-modal-button';
+import ManageMembersModalButton from '~/components/manage-members-modal-button';
+import EditWorkspaceModalButton from '~/components/edit-workspace-modal-button';
+
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getUserAction from '~/actions/get-user-action';
 import getWorkflowsAction from '~/actions/get-workflows-action';
-import DeleteWorkspaceModalButton from '~/components/delete-workspace-modal-button';
 
 export const title = 'Workspace';
 
@@ -59,8 +76,11 @@ export default async function Workspace ({ params: { workspaceId } }) {
                             <CreateWorkflowModalButton
                                 workspaceId={workspace.id} />
 
-                            <OutlineButton>Manage Members</OutlineButton>
-                            <OutlineButton>Edit</OutlineButton>
+                            <ManageMembersModalButton />
+
+                            <EditWorkspaceModalButton
+                                workspace={workspace} />
+
                             <DeleteWorkspaceModalButton
                                 workspace={workspace} />
                         </SectionActions>

@@ -4,7 +4,7 @@ import getWorkflowAction from "~/actions/get-workflow-action";
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionStatus from "~/components/workflow-version-status";
-import { DestructiveButton, PrimaryButton } from "~/components/button";
+import { OutlineButton, PrimaryButton } from "~/components/button";
 
 import Link from 'next/link';
 import ButtonGroup from "~/components/button-group";
@@ -55,14 +55,14 @@ function WorkflowVersionHeaderButtons ({ workflowVersion }) {
             return (
                 <ButtonGroup>
                     <PrimaryButton>Activate</PrimaryButton>
-                    <DestructiveButton>Delete</DestructiveButton>
+                    <OutlineButton>Delete</OutlineButton>
                 </ButtonGroup>
             );
 
         case 'active':
             return (
                 <ButtonGroup>
-                    <DestructiveButton>Deactivate</DestructiveButton>
+                    <OutlineButton>Deactivate</OutlineButton>
                 </ButtonGroup>
             );
 

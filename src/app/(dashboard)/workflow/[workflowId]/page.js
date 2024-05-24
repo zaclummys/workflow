@@ -17,10 +17,6 @@ import {
 } from '~/components/section';
 
 import {
-    OutlineButton,
-} from '~/components/button';
-
-import {
     Details,
     DetailRow,
     DetailCell,
@@ -32,6 +28,7 @@ import DateAgo from '~/components/date-ago';
 
 import CreateWorkflowVersionButton from '~/components/create-workflow-version-button';
 import DeleteWorkflowModalButton from '~/components/delete-workflow-modal-button';
+import EditWorkflowModalButton from '~/components/edit-workflow-modal-button';
 
 import {
     WorkflowVersionGrid,
@@ -79,7 +76,8 @@ export default async function Workflow({ params: { workflowId } }) {
                             <CreateWorkflowVersionButton
                                 workflowId={workflow.id} />
 
-                            <OutlineButton>Edit</OutlineButton>
+                            <EditWorkflowModalButton
+                                workflow={workflow} />
 
                             <DeleteWorkflowModalButton
                                 workflow={workflow} />
