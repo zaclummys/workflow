@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 
 import {
@@ -13,8 +14,15 @@ import {
     ModalFooter,
 } from '~/components/modal';
 
-export default function WorkflowVersionModalButton () {
+import deleteWorkflowVersionAction from '~/actions/delete-workflow-version-action';
+
+import useNavigation from '~/hooks/use-navigation';
+
+export default function WorkflowVersionModalButton ({ workflowVersion }) {
+    const { navigateToWorkflow } = useNavigation();
+
     const [isOpen, setIsOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const onDeleteButtonClick = () => {
         setIsOpen(true);
@@ -22,6 +30,18 @@ export default function WorkflowVersionModalButton () {
 
     const onCancelButtonClick = () => {
         setIsOpen(false);
+    };
+
+    const onConfirmButtonClick = async () => {
+        setIsDeleting(true);
+        
+        try {
+            await deleteWorkflowVersionAction(workflowVersion.id);
+
+            navigateToWorkflow(workflowVersion.workflowId);
+        } catch {
+            setIsDeleting(false);
+        }
     };
 
     return (
@@ -43,11 +63,14 @@ export default function WorkflowVersionModalButton () {
 
                     <ModalFooter>
                         <OutlineButton
+                            disabled={isDeleting}
                             onClick={onCancelButtonClick}>
                             Cancel
                         </OutlineButton>
 
-                        <DestructiveButton>
+                        <DestructiveButton
+                            disabled={isDeleting}
+                            onClick={onConfirmButtonClick}>
                             Delete
                         </DestructiveButton>
                     </ModalFooter>

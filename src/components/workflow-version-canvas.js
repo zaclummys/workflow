@@ -11,7 +11,7 @@ export default function WorkflowVersionCanvas() {
     const maxTranslate = 1024;
     const minTranslate = -1024;
 
-    const onPointerDown = (event) => {
+    const onPointerDown = () => {
         setIsPointerDown(true);
     };
 
@@ -20,8 +20,10 @@ export default function WorkflowVersionCanvas() {
             return;
         }
 
+        const { movementX, movementY } = event;
+
         setTranslateX(translateX => {
-            const newTranslateX = translateX + event.movementX;
+            const newTranslateX = translateX + movementX;
 
             if (newTranslateX > maxTranslate) {
                 return maxTranslate;
@@ -33,7 +35,7 @@ export default function WorkflowVersionCanvas() {
         });
 
         setTranslateY(translateY => {
-            const newTranslateY = translateY + event.movementY;
+            const newTranslateY = translateY + movementY;
 
             if (newTranslateY > maxTranslate) {
                 return maxTranslate;
@@ -45,7 +47,7 @@ export default function WorkflowVersionCanvas() {
         });
     };
 
-    const onPointerUp = (event) => {
+    const onPointerUp = () => {
         setIsPointerDown(false);
     };
 

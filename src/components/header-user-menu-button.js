@@ -3,8 +3,15 @@
 import {
     useState, 
 } from 'react';
-import HeaderUserButton from './header-user-button';
-import HeaderUserMenu from './header-user-menu';
+
+import {
+    Menu,
+    MenuItem, 
+} from './menu';
+
+import UserColor from './user-color';
+
+import signOutAction from '~/actions/sign-out-action';
 
 export default function HeaderUserMenuButton ({ user }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -46,3 +53,52 @@ export default function HeaderUserMenuButton ({ user }) {
         </div>
     );
 }
+
+function HeaderUserButton ({
+    user,
+    onClick,
+}) {
+    if (!user) {
+        return null;
+    }
+
+    return (
+        <button
+            className="flex flex-row items-center gap-2 px-3 py-3 rounded hover:bg-[var(--surface-hover-layer)] active:bg-[var(--surface-press-layer)] transition-colors"
+            onClick={onClick}>
+            <UserColor
+                className="w-8 h-8"
+                user={user} />
+
+            <span className="text-base font-normal">
+                {user.name}
+            </span>
+        </button>
+    );
+}
+
+function HeaderUserMenu ({ onMenuClick }) {
+    const onSignOutButtonClick = async () => {
+        await signOutAction();
+    };
+
+    return (
+        <Menu
+            onClick={onMenuClick}>
+            <MenuItem>
+                Edit personal information
+            </MenuItem>
+
+            <MenuItem>
+                Change password
+            </MenuItem>
+
+            <MenuItem
+                className="text-danger"
+                onClick={onSignOutButtonClick}>
+                Sign Out
+            </MenuItem>
+        </Menu>
+    );
+}
+

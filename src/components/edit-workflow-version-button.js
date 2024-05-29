@@ -13,7 +13,7 @@ export default function EditWorkflowVersionButton ({ workflowVersionId }) {
     return (
         <PrimaryButton
             onClick={onButtonClick}>
-            Edit
+            Open
         </PrimaryButton>
     );
 }

@@ -1,6 +1,10 @@
 import Grid from '~/components/grid';
+
 import {
-    Card, CardTitle, CardText, CardLink, 
+    Card,
+    CardTitle,
+    CardText,
+    CardLink, 
 } from '~/components/card';
 
 export function WorkflowGrid ({ children }) {

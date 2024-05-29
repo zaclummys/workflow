@@ -1,5 +1,5 @@
 import { database } from '~/core/data/mongodb/client';
-import { WorkflowVersion } from '~/core/domain/workflow-version';
+import { WorkflowVariable, WorkflowVersion } from '~/core/domain/workflow-version';
 
 export async function insertWorkflowVersion (workflowVersion) {
     await database
@@ -28,6 +28,12 @@ export async function findWorkflowVersionByWorkflowId (workflowId) {
     return workflowVersionData.map(toWorkflowVersion);
 }
 
+export async function deleteWorkflowVersionById (id) {
+    await database
+        .collection('workflow-versions')
+        .deleteOne({ id });
+}
+
 export function fromWorkflowVersion (workflowVersion) {
     return {
         id: workflowVersion.getId(),
@@ -41,6 +47,28 @@ export function fromWorkflowVersion (workflowVersion) {
     };
 }
 
-export function toWorkflowVersion (workflowVersionData) {
-    return new WorkflowVersion(workflowVersionData);
+export function toWorkflowVersion ({
+    id,
+    number,
+    status,
+    elements,
+    variables,
+    workflowId,
+    createdAt,
+    createdById,
+}) {
+    return new WorkflowVersion({
+        id,
+        number,
+        status,
+        elements,
+        workflowId,
+        createdAt,
+        createdById,
+        variables: variables.map(toWorkflowVariable),
+    });
+}
+
+export function toWorkflowVariable (workflowVariableData) {
+    return new WorkflowVariable(workflowVariableData);
 }

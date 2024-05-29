@@ -29,12 +29,15 @@ import getWorkflowVersionAction from '~/actions/get-workflow-version-action';
 import getWorkflowAction from '~/actions/get-workflow-action';
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getUserAction from '~/actions/get-user-action';
+import getWorkflowExecutionsAction from '~/actions/get-workflow-executions-action';
 
 import {
     Placeholder,
     PlaceholderText,
     PlaceholderTitle,
 } from '~/components/placeholder';
+import ExecuteWorkflowVersionModalButton from '~/components/execute-workflow-version-modal-button';
+import { WorkflowExecutionGrid, WorkflowExecutionGridItem } from '~/components/workflow-execution-grid';
 
 export const title = 'Workflow Version';
 
@@ -63,6 +66,12 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
         return null;
     }
 
+    const { workflowExecutions } = await getWorkflowExecutionsAction(workflowVersionId);
+
+    if (!workflowExecutions) {
+        return null;
+    }
+
     return (
         <>
             <Header />
@@ -75,6 +84,9 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                         <SectionActions>
                             <EditWorkflowVersionButton
                                 workflowVersionId={workflowVersion.id} />
+
+                            <ExecuteWorkflowVersionModalButton
+                                workflowVersion={workflowVersion} />
                                 
                             <DeleteWorkflowVersionModalButton
                                 workflowVersion={workflowVersion} />
@@ -131,7 +143,8 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                 <Section>
                     <SectionTitle>Workflow Executions</SectionTitle>
 
-                    <Placeholder>
+                    {workflowExecutions.length === 0 ? (
+                        <Placeholder>
                         <PlaceholderTitle>
                             No workflow executions
                         </PlaceholderTitle>
@@ -140,6 +153,15 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                             You haven't yet run this workflow version. Do you want to execute it now?
                         </PlaceholderText>
                     </Placeholder>
+                    ) : (
+                        <WorkflowExecutionGrid>
+                            {workflowExecutions.map((workflowExecution) => (
+                                <WorkflowExecutionGridItem
+                                    key={workflowExecution.id}
+                                    workflowExecution={workflowExecution} />
+                            ))}
+                        </WorkflowExecutionGrid>
+                    )}                    
                 </Section>
             </Container>
         </>

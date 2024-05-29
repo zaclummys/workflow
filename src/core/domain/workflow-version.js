@@ -12,7 +12,43 @@ export class WorkflowVersion {
             createdById,
             id: randomUUID(),
             status: 'draft',
-            variables: [],
+            variables: [
+                WorkflowVariable.create({
+                    name: 'x',
+                    type: 'number',
+                    description: 'This is an input variable.',
+                    defaultValue: 1,
+                    markedAsInputOption: true,
+                    markedAsOutputOption: false,
+                }),
+
+                WorkflowVariable.create({
+                    name: 'y',
+                    type: 'string',
+                    description: 'This is another input variable.',
+                    defaultValue: 'abc',
+                    markedAsInputOption: true,
+                    markedAsOutputOption: false,
+                }),
+
+                WorkflowVariable.create({
+                    name: 'z',
+                    type: 'boolean',
+                    description: 'Guess what? An input variable.',
+                    defaultValue: false,
+                    markedAsInputOption: true,
+                    markedAsOutputOption: false,
+                }),
+
+                WorkflowVariable.create({
+                    name: 'output',
+                    type: 'number',
+                    description: 'This is an output variable.',
+                    defaultValue: 0,
+                    markedAsInputOption: false,
+                    markedAsOutputOption: true,
+                }),
+            ],
             elements: [
                 WorkflowStartElement.create(),
                 WorkflowEndElement.create(),
@@ -151,8 +187,8 @@ export class WorkflowVariable {
         type,
         description,
         defaultValue,
-        input,
-        output,
+        markedAsInputOption,
+        markedAsOutputOption,
     }) {
         return new WorkflowVariable({
             id: randomUUID(),
@@ -160,8 +196,8 @@ export class WorkflowVariable {
             type,
             description,
             defaultValue,
-            input,
-            output,
+            markedAsInputOption,
+            markedAsOutputOption,
         });
     }
 
@@ -190,16 +226,16 @@ export class WorkflowVariable {
             throw new Error('Description is required.');
         }
 
-        if (!defaultValue) {
-            throw new Error('Default value is required.');
+        if (typeof defaultValue !== type) {
+            throw new Error('Default value must be of the same type as the variable. Expected ' + type + ' but got ' + typeof defaultValue + '.');
         }
 
-        if (!markedAsInputOption) {
-            throw new Error('Marked as input option is required.');
+        if (typeof markedAsInputOption !== 'boolean') {
+            throw new Error('Marked as input option is invalid.');
         }
 
-        if (!markedAsOutputOption) {
-            throw new Error('Marked as output option is required.');
+        if (typeof markedAsOutputOption !== 'boolean') {
+            throw new Error('Marked as output option is invalid.');
         }
 
         this.id = id;
@@ -231,11 +267,11 @@ export class WorkflowVariable {
         return this.defaultValue;
     }
 
-    getMarkedAsInputOptionOption () {
+    getMarkedAsInputOption () {
         return this.markedAsInputOption;
     }
 
-    getMarkedAsOutputOptionOption () {
+    getMarkedAsOutputOption () {
         return this.markedAsOutputOption;
     }
 

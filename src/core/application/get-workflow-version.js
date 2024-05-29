@@ -1,7 +1,4 @@
 import { findWorkflowVersionById } from "~/core/data/mongodb/workflow-version";
-import { findWorkflowById } from "~/core/data/mongodb/workflow";
-import { findWorkspaceById } from "~/core/data/mongodb/workspace";
-import { findSessionByToken } from "~/core/data/mongodb/session";
 
 export default async function getWorkflowVersion ({ workflowVersionId }) {
     const workflowVersion = await findWorkflowVersionById(workflowVersionId);
@@ -19,6 +16,16 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
             id: workflowVersion.getId(),
             number: workflowVersion.getNumber(),
             status: workflowVersion.getStatus(),
+            variables: workflowVersion.getVariables()
+                .map(variable => ({
+                    id: variable.getId(),
+                    name: variable.getName(),
+                    type: variable.getType(),
+                    description: variable.getDescription(),
+                    defaultValue: variable.getDefaultValue(),
+                    markedAsInputOption: variable.getMarkedAsInputOption(),
+                    markedAsOutputOption: variable.getMarkedAsOutputOption(),
+                })),
             workflowId: workflowVersion.getWorkflowId(),
             createdAt: workflowVersion.getCreatedAt(),
             createdById: workflowVersion.getCreatedById(),
