@@ -14,7 +14,7 @@ export class WorkflowVersion {
             status: 'draft',
             variables: [
                 WorkflowVariable.create({
-                    name: 'x',
+                    name: 'x (1)',
                     type: 'number',
                     description: 'This is an input variable.',
                     defaultValue: 1,
@@ -23,7 +23,7 @@ export class WorkflowVersion {
                 }),
 
                 WorkflowVariable.create({
-                    name: 'y',
+                    name: 'y (abc)',
                     type: 'string',
                     description: 'This is another input variable.',
                     defaultValue: 'abc',
@@ -32,10 +32,10 @@ export class WorkflowVersion {
                 }),
 
                 WorkflowVariable.create({
-                    name: 'z',
+                    name: 'z (true)',
                     type: 'boolean',
                     description: 'Guess what? An input variable.',
-                    defaultValue: false,
+                    defaultValue: true,
                     markedAsInputOption: true,
                     markedAsOutputOption: false,
                 }),
@@ -210,6 +210,8 @@ export class WorkflowVariable {
         markedAsInputOption,
         markedAsOutputOption,
     }) {
+        const validTypes = ['number', 'string', 'boolean'];
+
         if (!id) {
             throw new Error('ID is required.');
         }
@@ -220,6 +222,10 @@ export class WorkflowVariable {
 
         if (!type) {
             throw new Error('Type is required.');
+        }
+
+        if (!validTypes.includes(type)) {
+            throw new Error(`Type must be one of ${validTypes.join(', ')}, got ${type}.`);
         }
 
         if (!description) {
@@ -309,6 +315,22 @@ export class WorkflowStartElement {
         this.nextElementId = nextElementId;
     }
 
+    getId () {
+        return this.id;
+    }
+
+    getType () {
+        return 'start';
+    }
+
+    getName () {
+        return 'Start';
+    }
+
+    getNextElementId () {
+        return this.nextElementId;
+    }
+
     clone () {
         return new WorkflowStartElement();
     }
@@ -329,6 +351,18 @@ export class WorkflowEndElement {
         }
 
         this.id = id;
+    }
+
+    getId () {
+        return this.id;
+    }
+
+    getType () {
+        return 'end';
+    }
+
+    getName () {
+        return 'End';
     }
 
     clone () {

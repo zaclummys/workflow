@@ -13,7 +13,7 @@ export default function DateAgo ({ date }) {
 
     return (
         <time
-            title={date.toLocaleDateString('en-US')}
+            title={date.toLocaleDateString('en-US') + ' ' + date.toLocaleTimeString('en-US')}
             dateTime={date.toISOString()}>
             {distance}
         </time>

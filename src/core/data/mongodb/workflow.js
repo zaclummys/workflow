@@ -26,15 +26,19 @@ export async function findWorkflowById (id) {
     return toWorkflow(workflowData);
 }
 
-export async function findWorkflowsByWorkspaceId (workspaceId) {
-    const workflowsData = await database
+export async function findWorkflowIdsByWorkspaceId (workspaceId) {
+    const workflowIdsData = await database
         .collection('workflows')
         .find({
             workspaceId, 
+        }, {
+            sort: {
+                createdAt: -1, 
+            },
         })
         .toArray();
 
-    return workflowsData.map(toWorkflow);
+    return workflowIdsData.map(workflowIdData => workflowIdData.id);
 }
 
 export async function updateWorkflow (workflow) {

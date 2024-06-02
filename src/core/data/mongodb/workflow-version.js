@@ -1,5 +1,5 @@
 import { database } from '~/core/data/mongodb/client';
-import { WorkflowVariable, WorkflowVersion } from '~/core/domain/workflow-version';
+import { WorkflowEndElement, WorkflowStartElement, WorkflowVariable, WorkflowVersion } from '~/core/domain/workflow-version';
 
 export async function insertWorkflowVersion (workflowVersion) {
     await database
@@ -19,13 +19,22 @@ export async function findWorkflowVersionById (id) {
     return toWorkflowVersion(workflowVersionData);
 }
 
-export async function findWorkflowVersionByWorkflowId (workflowId) {
+export async function findWorkflowVersionsByWorkflowId (workflowId) {
     const workflowVersionData = await database
         .collection('workflow-versions')
         .find({ workflowId }, { sort: { number: -1 } })
         .toArray();
 
     return workflowVersionData.map(toWorkflowVersion);
+}
+
+export async function updateWorkflowVersion (workflowVersion) {
+    await database
+        .collection('workflow-versions')
+        .updateOne(
+            { id: workflowVersion.getId() },
+            { $set: fromWorkflowVersion(workflowVersion) },
+        );
 }
 
 export async function deleteWorkflowVersionById (id) {
@@ -39,11 +48,20 @@ export function fromWorkflowVersion (workflowVersion) {
         id: workflowVersion.getId(),
         number: workflowVersion.getNumber(),
         status: workflowVersion.getStatus(),
-        elements: workflowVersion.getElements(),
+        elements: workflowVersion.getElements()
+            .map(fromWorkflowElement),
         variables: workflowVersion.getVariables(),
         workflowId: workflowVersion.getWorkflowId(),
         createdAt: workflowVersion.getCreatedAt(),
         createdById: workflowVersion.getCreatedById(),
+    };
+}
+
+export function fromWorkflowElement (workflowElement) {
+    return {
+        id: workflowElement.getId(),
+        type: workflowElement.getType(),
+        name: workflowElement.getName(),
     };
 }
 
@@ -61,7 +79,7 @@ export function toWorkflowVersion ({
         id,
         number,
         status,
-        elements,
+        elements: elements.map(toWorkflowElement),
         workflowId,
         createdAt,
         createdById,
@@ -71,4 +89,17 @@ export function toWorkflowVersion ({
 
 export function toWorkflowVariable (workflowVariableData) {
     return new WorkflowVariable(workflowVariableData);
+}
+
+export function toWorkflowElement (workflowElementData) {
+    switch (workflowElementData.type) {
+        case 'start':
+            return new WorkflowStartElement(workflowElementData);
+
+        case 'end':
+            return new WorkflowEndElement(workflowElementData);
+
+        default:
+            throw new Error(`Unknown element type: ${workflowElementData.type}`);
+    }
 }

@@ -14,8 +14,16 @@ export function Input(props) {
     return <input className="px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-all outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />
 }
 
-export function Label(props) {
-    return <label className="font-medium text-sm text-on-surface-variant" {...props} />;
+export function Radio (props) {
+    return <input type="radio" className="px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-all outline-none accent-primary disabled:opacity-[0.38]" {...props} />
+}
+
+export function Label (props) {
+    return <label className="font-medium text-sm text-on-surface-variant aria-disabled:opacity-[0.38]" {...props} />;
+}
+
+export function InlineLabel (props) {
+    return <label className="font-normal text-base aria-disabled:opacity-[0.38]" {...props} />;
 }
 
 export function Select(props) {
@@ -31,6 +39,6 @@ export function TextArea(props) {
 }
 
 export function Checkbox(props) {
-    return <input type="checkbox" className="w-4 h-4 border-none rounded accent-primary" {...props} />;
+    return <input type="checkbox" className="w-4 h-4 accent-primary" {...props} />;
 }
 

@@ -1,14 +1,38 @@
-import { findWorkflowVersionById } from "~/core/data/mongodb/workflow-version";
+import {
+    findWorkflowVersionById,
+} from "~/core/data/mongodb/workflow-version";
+
+import {
+    findUserById,
+} from "~/core/data/mongodb/user";
+
+import {
+    findWorkflowById,
+} from "~/core/data/mongodb/workflow";
+
+import {
+    findWorkspaceById,
+} from "~/core/data/mongodb/workspace";
 
 export default async function getWorkflowVersion ({ workflowVersionId }) {
     const workflowVersion = await findWorkflowVersionById(workflowVersionId);
 
     if (!workflowVersion) {
         return {
-            success: false,
-            message: 'Workflow version not found.',
+            success: false
         };
     }
+
+    const createdBy = await findUserById(workflowVersion.getCreatedById());
+    const workflow = await findWorkflowById(workflowVersion.getWorkflowId());
+
+    if (!workflow) {
+        return {
+            success: false
+        };
+    }
+
+    const workspace = await findWorkspaceById(workflow.getWorkspaceId());
 
     return {
         success: true,
@@ -16,6 +40,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
             id: workflowVersion.getId(),
             number: workflowVersion.getNumber(),
             status: workflowVersion.getStatus(),
+            elements: workflowVersion.getElements()
+                .map(element => ({
+                    id: element.getId(),
+                    name: element.getName(),
+                    type: element.getType(),
+                })),
+
             variables: workflowVersion.getVariables()
                 .map(variable => ({
                     id: variable.getId(),
@@ -23,12 +54,25 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                     type: variable.getType(),
                     description: variable.getDescription(),
                     defaultValue: variable.getDefaultValue(),
-                    markedAsInputOption: variable.getMarkedAsInputOption(),
-                    markedAsOutputOption: variable.getMarkedAsOutputOption(),
+                    markedAsInput: variable.getMarkedAsInputOption(),
+                    markedAsOutput: variable.getMarkedAsOutputOption(),
                 })),
-            workflowId: workflowVersion.getWorkflowId(),
+
+            workflow: {
+                id: workflow.getId(),
+                name: workflow.getName(),
+                workspace: {
+                    id: workspace.getId(),
+                    name: workspace.getName(),
+                },
+            },
+            
+            createdBy: {
+                id: createdBy.getId(),
+                name: createdBy.getName(),
+            },
+
             createdAt: workflowVersion.getCreatedAt(),
-            createdById: workflowVersion.getCreatedById(),
         },
     };
 }

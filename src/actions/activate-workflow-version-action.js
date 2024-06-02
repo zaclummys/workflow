@@ -1,3 +1,6 @@
+'use server';
+
+import { revalidatePath } from "next/cache";
 import { getSessionToken } from "./cookies";
 
 import activateWorkflowVersion from '~/core/application/activate-workflow-version'
@@ -5,8 +8,12 @@ import activateWorkflowVersion from '~/core/application/activate-workflow-versio
 export default async function activateWorkflowVersionAction (workflowVersionId) {
     const sessionToken = getSessionToken();
 
-    return activateWorkflowVersion({
+    const output = activateWorkflowVersion({
         sessionToken,
         workflowVersionId,
     });
+
+    revalidatePath(`/workflow-version/${workflowVersionId}`);
+
+    return output;
 }

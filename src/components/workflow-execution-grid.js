@@ -6,6 +6,7 @@ import {
     CardText,
     CardLink,
 } from './card';
+import WorkflowExecutionStatus from './workflow-execution-status';
 
 export function WorkflowExecutionGrid ({ children }) {
     return (
@@ -18,15 +19,21 @@ export function WorkflowExecutionGrid ({ children }) {
 export function WorkflowExecutionGridItem ({ workflowExecution }) {
     return (
         <Card>
-            <CardTitle>
-                abc
-            </CardTitle>
+            <div className="flex flex-row">
+                <CardTitle className="flex-grow">
+                    abc
+                </CardTitle>
+
+                <WorkflowExecutionStatus
+                    status={workflowExecution.status} />
+            </div>
 
             <CardText>
                 abc
             </CardText>
 
             <CardLink
+                title={`Go to Execution ${workflowExecution.id}`}
                 href={`/workflow-execution/${workflowExecution.id}`} />
         </Card>
     );

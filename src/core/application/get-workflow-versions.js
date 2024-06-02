@@ -1,7 +1,7 @@
-import { findWorkflowVersionByWorkflowId } from '~/core/data/mongodb/workflow-version';
+import { findWorkflowVersionsByWorkflowId } from '~/core/data/mongodb/workflow-version';
 
 export default async function getWorkflowVersions ({ workflowId }) {
-    const workflowVersions = await findWorkflowVersionByWorkflowId(workflowId);
+    const workflowVersions = await findWorkflowVersionsByWorkflowId(workflowId);
 
     return {
         success: true,

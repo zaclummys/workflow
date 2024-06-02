@@ -36,6 +36,16 @@ export async function findWorkspacesByUserId (userId) {
     return workspaces.map(toWorkspace);
 }
 
+export async function updateWorkspace (workspace) {
+    await database
+        .collection('workspaces')
+        .updateOne({
+            id: workspace.getId(), 
+        }, {
+            $set: fromWorkspace(workspace),
+        });
+}
+
 export async function deleteWorkspaceById (id) {
     await database
         .collection('workspaces')

@@ -35,6 +35,7 @@ export function WorkspaceGridItem ({ workspace }) {
                 members={workspace.members} />
 
             <CardLink
+                title={`Go to ${workspace.name}`}
                 href={`/workspace/${workspace.id}`} />
         </Card>
     );

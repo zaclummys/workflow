@@ -10,13 +10,15 @@ export default async function Header() {
     }
 
     return (
-        <header className="flex flex-row bg-surface text-on-surface px-6 py-2 h-20">
-            <div className="flex flex-row flex-grow">
-                <WorkflowLink />
-            </div>
+        <header className="bg-surface text-on-surface">
+            <div className="flex flex-row px-8 py-2 container mx-auto">
+                <div className="flex flex-row flex-grow">
+                    <WorkflowLink />
+                </div>
 
-            <HeaderUserMenuButton
-                user={currentUser} />
+                <HeaderUserMenuButton
+                    user={currentUser} />
+            </div>
         </header>
     );
 }

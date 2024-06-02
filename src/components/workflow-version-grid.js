@@ -10,6 +10,7 @@ import {
 } from '~/components/card';
 
 import getUserAction from '~/actions/get-user-action';
+import WorkflowVersionStatus from './workflow-version-status';
 
 export function WorkflowVersionGrid ({ children }) {
     return (
@@ -28,9 +29,14 @@ export async function WorkflowVersionGridItem ({ workflowVersion }) {
 
     return (
         <Card>
-            <CardTitle>
-                Version {workflowVersion.number}
-            </CardTitle>
+            <div className="flex flex-row">
+                <CardTitle className="flex-grow">
+                    Version {workflowVersion.number}
+                </CardTitle>
+
+                <WorkflowVersionStatus
+                    status={workflowVersion.status} />
+            </div>
 
             <CardText>
                 {workflowVersion.elements.length} element(s) - {workflowVersion.variables.length} variable(s)
@@ -41,6 +47,7 @@ export async function WorkflowVersionGridItem ({ workflowVersion }) {
             </CardText>
 
             <CardLink
+                title={`Go to Version ${workflowVersion.number}`}
                 href={`/workflow-version/${workflowVersion.id}`} />
         </Card>
     );

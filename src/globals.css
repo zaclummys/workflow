@@ -20,7 +20,7 @@ html {
     --danger-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.danger'));
 }
 
-:root {
+/* :root {
     --button-horizontal-padding: theme('spacing.4');
     --button-vertical-padding: theme('spacing.0');
     --button-height: theme('spacing.10');
@@ -36,7 +36,7 @@ html {
     --card-background: theme('colors.surface.DEFAULT');
     --card-horizontal-padding: theme('spacing.6');
     --card-vertical-padding: theme('spacing.4');
-}
+} */
 
 html {
     @apply bg-background text-on-background;
@@ -57,5 +57,15 @@ html {
             disabled:opacity-70
             disabled:pointer-events-none
             transition-colors;
+    }
+
+    .scrollbar-hidden {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+
+        /* Chrome, Safari and Opera */
+        &::-webkit-scrollbar {
+            display: none;
+        }
     }
 }

@@ -70,10 +70,17 @@ export default function ExecuteWorkflowVersionModalButton({
 
     return (
         <>
-            <OutlineButton
-                onClick={onExecuteButtonClick}>
-                Execute
-            </OutlineButton>
+            {workflowVersion.status === 'active' ? (
+                <OutlineButton
+                    onClick={onExecuteButtonClick}>
+                    Execute
+                </OutlineButton>
+            ) : (
+                <OutlineButton
+                    disabled>
+                    Execute
+                </OutlineButton>
+            )}
 
             {open && (
                 <Modal>
@@ -90,7 +97,7 @@ export default function ExecuteWorkflowVersionModalButton({
                             {error}
                         </Error>
                     )}
-                    
+
                     <ModalFooter>
                         <OutlineButton
                             disabled={pending}
@@ -110,7 +117,7 @@ export default function ExecuteWorkflowVersionModalButton({
     );
 }
 
-function WorkflowVariablesForm ({
+function WorkflowVariablesForm({
     id,
     workflowVersion,
 }) {
@@ -174,7 +181,7 @@ function WorkflowVariablesForm ({
     )
 }
 
-function WorkflowVariableField ({
+function WorkflowVariableField({
     variable,
     onValueChange,
 }) {

@@ -1,25 +1,25 @@
+import Link from 'next/link';
+
 import { ArrowLeftIcon } from "lucide-react";
 
-import getWorkflowAction from "~/actions/get-workflow-action";
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionStatus from "~/components/workflow-version-status";
-import { OutlineButton, PrimaryButton } from "~/components/button";
 
-import Link from 'next/link';
 import ButtonGroup from "~/components/button-group";
 import WorkflowVersionCanvas from "~/components/workflow-version-canvas";
+
+import {
+    ActivateWorkflowVersionButton,
+    DeactivateWorkflowVersionButton,
+} from "~/components/toggle-workflow-version-button";
+
+import VariablesWorkflowSidebar from "~/components/variables-workflow-sidebar";
 
 export default async function EditWorkflowVersion ({ params: { workflowVersionId } }) {
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {
-        return null;
-    }
-
-    const { workflow } = await getWorkflowAction(workflowVersion.workflowId);
-
-    if (!workflow) {
         return null;
     }
 
@@ -30,10 +30,18 @@ export default async function EditWorkflowVersion ({ params: { workflowVersionId
                     <GoBackLink
                         workflowVersionId={workflowVersionId} />
 
-                    <div className="flex flex-row gap-5">
-                        <span>
-                            {workflow.name} - Version {workflowVersion.number}
-                        </span>
+                    <div className="flex flex-row gap-4">
+                        <div className="flex flex-row gap-2">
+                            <span>
+                                Version {workflowVersion.number}
+                            </span>
+
+                            <span className="text-on-surface-variant">/</span>
+
+                            <span className="text-on-surface-variant">
+                                {workflowVersion.workflow.name}
+                            </span>
+                        </div>
 
                         <WorkflowVersionStatus
                             status={workflowVersion.status} />
@@ -44,7 +52,8 @@ export default async function EditWorkflowVersion ({ params: { workflowVersionId
                     workflowVersion={workflowVersion} />
             </header>
 
-            <WorkflowVersionCanvas />
+            <WorkflowVersionCanvas
+                workflowVersion={workflowVersion} />
         </div>
     );
 }
@@ -54,22 +63,24 @@ function WorkflowVersionHeaderButtons ({ workflowVersion }) {
         case 'draft':
             return (
                 <ButtonGroup>
-                    <PrimaryButton>Activate</PrimaryButton>
-                    <OutlineButton>Delete</OutlineButton>
+                    <ActivateWorkflowVersionButton
+                        workflowVersionId={workflowVersion.id} />
                 </ButtonGroup>
             );
 
         case 'active':
             return (
                 <ButtonGroup>
-                    <OutlineButton>Deactivate</OutlineButton>
+                    <DeactivateWorkflowVersionButton
+                        workflowVersionId={workflowVersion.id} />
                 </ButtonGroup>
             );
 
         case 'inactive':
             return (
                 <ButtonGroup>
-                    <PrimaryButton>Activate</PrimaryButton>
+                    <ActivateWorkflowVersionButton
+                        workflowVersionId={workflowVersion.id} />
                 </ButtonGroup>
             );
 
@@ -80,7 +91,9 @@ function WorkflowVersionHeaderButtons ({ workflowVersion }) {
 
 function GoBackLink ({ workflowVersionId }) {
     return (
-        <Link href={`/workflow-version/${workflowVersionId}`}>
+        <Link
+            title="Go back"
+            href={`/workflow-version/${workflowVersionId}`}>
             <ArrowLeftIcon className="w-6 h-6" />
         </Link>
     );

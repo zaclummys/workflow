@@ -1,5 +1,8 @@
-import { findSessionByToken } from "../data/mongodb/session";
-import { findWorkflowExecutionById } from "../data/mongodb/workflow-execution";
+import { findSessionByToken } from "~/core/data/mongodb/session";
+import { findUserById } from "~/core/data/mongodb/user";
+import { findWorkflowExecutionById } from "~/core/data/mongodb/workflow-execution";
+import { findWorkflowVersionById } from "~/core/data/mongodb/workflow-version";
+import { findWorkflowById } from "~/core/data/mongodb/workflow";
 
 export default async function getWorkflowExecution ({
     workflowExecutionId,
@@ -21,6 +24,30 @@ export default async function getWorkflowExecution ({
         };
     }
 
+    const executedBy = await findUserById(workflowExecution.getExecutedById());
+
+    if (!executedBy) {
+        return {
+            success: false,
+        }
+    }
+
+    const workflowVersion = await findWorkflowVersionById(workflowExecution.getWorkflowVersionId());
+
+    if (!workflowVersion) {
+        return {
+            success: false,
+        }
+    }
+
+    const workflow = await findWorkflowById(workflowVersion.getWorkflowId());
+
+    if (!workflow) {
+        return {
+            success: false,
+        }
+    }
+
     return {
         success: true,
         workflowExecution: {
@@ -28,10 +55,23 @@ export default async function getWorkflowExecution ({
             status: workflowExecution.getStatus(),
             startedAt: workflowExecution.getStartedAt(),
             finishedAt: workflowExecution.getFinishedAt(),
-            workflowVersionId: workflowExecution.getWorkflowVersionId(),
-            executedById: workflowExecution.getExecutedById(),
+
             inputValues: workflowExecution.getInputValues(),
             outputValues: workflowExecution.getOutputValues(),
-        }
+
+            workflowVersion: {
+                id: workflowVersion.getId(),
+                number: workflowVersion.getNumber(),
+                workflow: {
+                    id: workflow.getId(),
+                    name: workflow.getName(),
+                },
+            },
+            
+            executedBy: {
+                id: executedBy.getId(),
+                name: executedBy.getName(),
+            },
+        },
     };
 }

@@ -36,20 +36,28 @@ export default function WorkflowVersionModalButton ({ workflowVersion }) {
         setIsDeleting(true);
         
         try {
-            await deleteWorkflowVersionAction(workflowVersion.id);
+            const { success } = await deleteWorkflowVersionAction(workflowVersion.id);
 
-            navigateToWorkflow(workflowVersion.workflowId);
-        } catch {
+            if (success) {
+                navigateToWorkflow(workflowVersion.workflow.id);
+            }
+        } finally {
             setIsDeleting(false);
         }
     };
 
     return (
         <>
-            <OutlineButton
-                onClick={onDeleteButtonClick}>
-                Delete
-            </OutlineButton>
+            {workflowVersion.status !== 'active' ? (
+                <OutlineButton
+                    onClick={onDeleteButtonClick}>
+                    Delete
+                </OutlineButton>
+            ) : (
+                <OutlineButton disabled>
+                    Delete
+                </OutlineButton>
+            )}
 
             {isOpen && (
                 <Modal>

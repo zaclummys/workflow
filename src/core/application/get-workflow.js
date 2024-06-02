@@ -2,6 +2,14 @@ import {
     findWorkflowById, 
 } from '~/core/data/mongodb/workflow';
 
+import {
+    findUserById, 
+} from '~/core/data/mongodb/user';
+
+import {
+    findWorkspaceById, 
+} from '~/core/data/mongodb/workspace';
+
 export default async function getWorkflow ({ workflowId }) {
     const workflow = await findWorkflowById(workflowId);
 
@@ -11,6 +19,9 @@ export default async function getWorkflow ({ workflowId }) {
         };
     }
 
+    const createdBy = await findUserById(workflow.getCreatedById());
+    const workspace = await findWorkspaceById(workflow.getWorkspaceId());
+
     return {
         success: true,
         workflow: {
@@ -18,8 +29,16 @@ export default async function getWorkflow ({ workflowId }) {
             name: workflow.getName(),
             description: workflow.getDescription(),
             createdAt: workflow.getCreatedAt(),
-            createdById: workflow.getCreatedById(),
-            workspaceId: workflow.getWorkspaceId(),
+
+            createdBy: {
+                id: createdBy.getId(),
+                name: createdBy.getName(),
+            },
+
+            workspace: {
+                id: workspace.getId(),
+                name: workspace.getName(),
+            },
         },
     }
 }

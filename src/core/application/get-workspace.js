@@ -1,24 +1,23 @@
-import canAccessWorkspace from '~/core/authorization/can-access-workspace';
 import {
     findWorkspaceById, 
 } from '~/core/data/mongodb/workspace';
 
+import {
+    findUserById, 
+} from '~/core/data/mongodb/user';
+
 export default async function getWorkspace ({
     workspaceId,
-    sessionToken,
 }) {
-    const canCurrentUserAccessWorkspace = await canAccessWorkspace({
-        workspaceId,
-        sessionToken,
-    });
+    const workspace = await findWorkspaceById(workspaceId);
 
-    if (!canCurrentUserAccessWorkspace) {
+    if (!workspace) {
         return {
             success: false,
         };
     }
 
-    const workspace = await findWorkspaceById(workspaceId);
+    const createdBy = await findUserById(workspace.getCreatedById());
     
     return {
         success: true,
@@ -27,7 +26,10 @@ export default async function getWorkspace ({
             name: workspace.getName(),
             description: workspace.getDescription(),
             createdAt: workspace.getCreatedAt(),
-            createdById: workspace.getCreatedById(),
+            createdBy: {
+                id: createdBy.getId(),
+                name: createdBy.getName(),
+            },
             members: workspace.getMembers()
                 .map(member => ({
                     userId: member.getUserId(),

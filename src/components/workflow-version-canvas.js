@@ -2,7 +2,14 @@
 
 import { useState } from 'react';
 
-export default function WorkflowVersionCanvas() {
+import VariablesWorkflowSidebar from './variables-workflow-sidebar';
+
+export default function WorkflowVersionCanvas ({
+    workflowVersion,
+    onElementClick,
+}) {
+    const [isVariablesSidebarOpen, setIsVariablesSidebarOpen] = useState(false);
+
     const [isPointerDown, setIsPointerDown] = useState(false);
 
     const [translateX, setTranslateX] = useState(0);
@@ -13,6 +20,10 @@ export default function WorkflowVersionCanvas() {
 
     const onPointerDown = () => {
         setIsPointerDown(true);
+    };
+
+    const onPointerUp = () => {
+        setIsPointerDown(false);
     };
 
     const onPointerMove = (event) => {
@@ -47,21 +58,21 @@ export default function WorkflowVersionCanvas() {
         });
     };
 
-    const onPointerUp = () => {
-        setIsPointerDown(false);
+    const findElementById = (elementId) => {
+        return workflowVersion.elements.find(element => element.id === elementId);
     };
 
-    const elements = [
-        {
-            id: 1,
-            name: 'Workflow Start',
-        },
+    const handleElementClick = (event) => {
+        const element = findElementById(event.target.dataset.elementId);
+        console.log(element)
+        if (!element) {
+            return;
+        }
 
-        {
-            id: 2,
-            name: 'Workflow End',
-        },
-    ];
+        if (element.type === 'start') {
+            setIsVariablesSidebarOpen(true);
+        }
+    }
 
     return (
         <div className="w-full h-full bg-background text-outline-variant">
@@ -77,14 +88,21 @@ export default function WorkflowVersionCanvas() {
                 <Viewport
                     translateX={translateX}
                     translateY={translateY}>
-                        {elements.map(element => (
+                        {workflowVersion.elements.map(element => (
                                 <WorkflowElement
                                     key={element.id}
-                                    element={element} />
+                                    element={element}
+                                    onClick={handleElementClick} />
                             ))
                         }
                 </Viewport>
             </Pane>
+
+            {isVariablesSidebarOpen && (
+                <VariablesWorkflowSidebar
+                    workflowVersion={workflowVersion}
+                    onCloseButtonClick={() => setIsVariablesSidebarOpen(false)}/>
+            )}
         </div>
     );
 }
@@ -112,7 +130,7 @@ function Pane({
 }) {
     return (
         <div
-            className="w-full h-full overflow-hidden"
+            className="relative w-full h-full overflow-hidden"
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
             onPointerMove={onPointerMove}>
@@ -139,9 +157,13 @@ function Viewport({
 
 function WorkflowElement ({
     element,
+    onClick,
 }) {
     return (
-        <div className="bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all">
+        <div
+            data-element-id={element.id}
+            className="bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all"
+            onClick={onClick}>
             <span>{element.name}</span>
         </div>
     );

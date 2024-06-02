@@ -2,16 +2,17 @@ import { randomUUID } from 'crypto';
 
 export class WorkflowExecution {
     static create ({
+        inputValues,
         workflowVersionId,
         executedById,
     }) {
         return new WorkflowExecution({
             id: randomUUID(),
-            status: 'running',
-            inputValues: [],
+            status: 'pending',
+            inputValues,
             outputValues: [],
             workflowVersionId,
-            startedAt: new Date(),
+            startedAt: null,
             finishedAt: null,
             executedById,
             workflowVersionId,
@@ -84,5 +85,17 @@ export class WorkflowExecution {
 
     getExecutedById () {
         return this.executedById;
+    }
+
+    setStatus (status) {
+        this.status = status;
+    }
+
+    setStartedAt (startedAt) {
+        this.startedAt = startedAt;
+    }
+
+    setFinishedAt (finishedAt) {
+        this.finishedAt = finishedAt;
     }
 }

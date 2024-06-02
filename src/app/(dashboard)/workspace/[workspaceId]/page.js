@@ -39,8 +39,8 @@ import ManageMembersModalButton from '~/components/manage-members-modal-button';
 import EditWorkspaceModalButton from '~/components/edit-workspace-modal-button';
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
-import getUserAction from '~/actions/get-user-action';
 import getWorkflowsAction from '~/actions/get-workflows-action';
+import { OutlineButton } from '~/components/button';
 
 export const title = 'Workspace';
 
@@ -51,15 +51,9 @@ export default async function Workspace ({ params: { workspaceId } }) {
         return null;
     }
 
-    const { user } = await getUserAction(workspace.createdById);
+    const { workflowIds } = await getWorkflowsAction(workspaceId);
 
-    if (!user) {
-        return null;
-    }
-
-    const { workflows } = await getWorkflowsAction(workspaceId);
-
-    if (!workflows) {
+    if (!workflowIds) {
         return null;
     }
 
@@ -82,7 +76,8 @@ export default async function Workspace ({ params: { workspaceId } }) {
                                 workspace={workspace} />
 
                             <DeleteWorkspaceModalButton
-                                workspace={workspace} />
+                                workspace={workspace}
+                                hasWorkflows={workflowIds.length > 0} />                            
                         </SectionActions>
                     </SectionHeader>
 
@@ -109,7 +104,7 @@ export default async function Workspace ({ params: { workspaceId } }) {
 
                             <DetailCell>
                                 <DetailCellHeader>Created By</DetailCellHeader>
-                                <DetailCellText>{user.name}</DetailCellText>
+                                <DetailCellText>{workspace.createdBy.name}</DetailCellText>
                             </DetailCell>
                         </DetailRow>
 
@@ -125,7 +120,7 @@ export default async function Workspace ({ params: { workspaceId } }) {
                 <Section>
                     <SectionTitle>Workflows</SectionTitle>
 
-                    {workflows.length === 0 ? (
+                    {workflowIds.length === 0 ? (
                         <Placeholder>
                             <PlaceholderTitle>No workflow</PlaceholderTitle>
                             <PlaceholderText>
@@ -134,10 +129,10 @@ export default async function Workspace ({ params: { workspaceId } }) {
                         </Placeholder>
                     ) : (
                         <WorkflowGrid>
-                            {workflows.map(workflow => (
+                            {workflowIds.map(workflowId => (
                                 <WorkflowGridItem
-                                    key={workflow.id}
-                                    workflow={workflow} />
+                                    key={workflowId}
+                                    workflowId={workflowId} />
                             ))}
                         </WorkflowGrid>
                     )}

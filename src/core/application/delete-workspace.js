@@ -8,7 +8,7 @@ import {
 } from '~/core/data/mongodb/workspace';
 
 import {
-    findWorkflowsByWorkspaceId, 
+    findWorkflowIdsByWorkspaceId, 
 } from '~/core/data/mongodb/workflow';
 
 export default async function deleteWorkspace ({ workspaceId }) {
@@ -21,7 +21,7 @@ export default async function deleteWorkspace ({ workspaceId }) {
         };
     }
 
-    const workflows = await findWorkflowsByWorkspaceId(workspaceId);
+    const workflows = await findWorkflowIdsByWorkspaceId(workspaceId);
 
     if (workflows.length > 0) {
         return {

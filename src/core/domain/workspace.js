@@ -66,6 +66,22 @@ export class Workspace {
         return this.members;
     }
 
+    setName (name) {
+        if (!name) {
+            throw new Error('Workspace name is required');
+        }
+
+        this.name = name;
+    }
+
+    setDescription (description) {
+        if (!description) {
+            throw new Error('Workspace description is required');
+        }
+        
+        this.description = description;
+    }
+
     /**
      * Checks if a user is the owner of the workspace.
      * 

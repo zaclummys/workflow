@@ -49,18 +49,6 @@ export default async function Workflow({ params: { workflowId } }) {
         return null;
     }
 
-    const { workspace } = await getWorkspaceAction(workflow.workspaceId);
-
-    if (!workspace) {
-        return null;
-    }
-
-    const { user } = await getUserAction(workspace.createdById);
-
-    if (!user) {
-        return null;
-    }
-
     const { workflowVersions } = await getWorkflowVersionsAction(workflowId);
 
     return (
@@ -80,7 +68,8 @@ export default async function Workflow({ params: { workflowId } }) {
                                 workflow={workflow} />
 
                             <DeleteWorkflowModalButton
-                                workflow={workflow} />
+                                workflow={workflow}
+                                disabled={workflowVersions.length > 0} />
                         </SectionActions>
                     </SectionHeader>
 
@@ -93,8 +82,8 @@ export default async function Workflow({ params: { workflowId } }) {
 
                                 <Link
                                     className="font-medium"
-                                    href={`/workspace/${workspace.id}`}>
-                                    {workspace.name}
+                                    href={`/workspace/${workflow.workspace.id}`}>
+                                    {workflow.workspace.name}
                                 </Link>
                             </DetailCell>
 
@@ -113,7 +102,7 @@ export default async function Workflow({ params: { workflowId } }) {
                                 </DetailCellHeader>
 
                                 <DetailCellText>
-                                    {user.name}
+                                    {workflow.createdBy.name}
                                 </DetailCellText>
                             </DetailCell>
                         </DetailRow>

@@ -17,7 +17,7 @@ export async function findWorkflowExecutionById (id) {
 export async function findWorkflowExecutionsByVersionId (workflowVersionId) {
     const workflowExecutionsData = await database
         .collection('workflow-executions')
-        .find({ workflowVersionId })
+        .find({ workflowVersionId }, { sort: { startedAt: -1 } })
         .toArray();
 
     return workflowExecutionsData.map(toWorkflowExecution);
@@ -27,6 +27,15 @@ export async function insertWorkflowExecution (workflowExecution) {
     await database
         .collection('workflow-executions')
         .insertOne(fromWorkflowExecution(workflowExecution));
+}
+
+export async function updateWorkflowExecution (workflowExecution) {
+    await database
+        .collection('workflow-executions')
+        .updateOne(
+            { id: workflowExecution.getId() },
+            { $set: fromWorkflowExecution(workflowExecution) }
+        );
 }
 
 export async function deleteWorkflowExecutionById (id) {

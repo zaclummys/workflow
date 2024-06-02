@@ -16,19 +16,19 @@ import {
     DestructiveButton, 
 } from '~/components/button';
 
-import Error from '~/components/error';
-
 import deleteWorkflowAction from '~/actions/delete-workflow-action';
 
 import useNavigation from '~/hooks/use-navigation';
 
-export default function DeleteWorkflowModalButton ({ workflow }) {
+export default function DeleteWorkflowModalButton ({
+    workflow,
+    disabled,
+}) {
     const { navigateToWorkspace } = useNavigation();
 
     const [isOpen, setIsOpen] = useState(false);
 
     const [pending, setPending] = useState(false);
-    const [error, setError] = useState(null);
 
     const onDeleteButtonClick = () => {
         setIsOpen(true);
@@ -42,12 +42,10 @@ export default function DeleteWorkflowModalButton ({ workflow }) {
         setPending(true);
 
         try {
-            const { success, message } = await deleteWorkflowAction(workflow.id);
+            const { success } = await deleteWorkflowAction(workflow.id);
 
             if (success) {
-                navigateToWorkspace();
-            } else {
-                setError(message);
+                navigateToWorkspace(workflow.workspace.id);
             }
         } finally {
             setPending(false);
@@ -56,10 +54,16 @@ export default function DeleteWorkflowModalButton ({ workflow }) {
 
     return (
         <>
-            <OutlineButton
-                onClick={onDeleteButtonClick}>
-                Delete
-            </OutlineButton>
+            {disabled ? (
+                <OutlineButton disabled>
+                    Delete
+                </OutlineButton>
+            ) : (
+                <OutlineButton
+                    onClick={onDeleteButtonClick}>
+                    Delete
+                </OutlineButton>
+            )}
 
             {isOpen && (
                 <Modal>
@@ -68,14 +72,8 @@ export default function DeleteWorkflowModalButton ({ workflow }) {
                     </ModalTitle>
 
                     <ModalText>
-                        Are you sure you want to delete {workflow.name}?
+                        Are you sure you want to delete <span className="font-medium">{workflow.name}</span>?
                     </ModalText>
-
-                    {error && (
-                        <Error>
-                            {error}
-                        </Error>
-                    )}
 
                     <ModalFooter>
                         <OutlineButton

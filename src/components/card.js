@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { twMerge } from 'tailwind-merge';
+
 export function Card ({ children }) {
     return (
         <div
@@ -9,9 +11,9 @@ export function Card ({ children }) {
     );
 }
 
-export function CardTitle ({ children }) {
+export function CardTitle ({ className, children }) {
     return (
-        <span className="text-base font-medium">
+        <span className={twMerge('text-base font-medium', className)}>
             {children}
         </span>
     );
@@ -41,10 +43,10 @@ export function CardSectionTitle ({ children }) {
     );
 }
 
-export function CardLink ({ href }) {
+export function CardLink (props) {
     return (
         <Link
-            href={href}
+            {...props}
             className="absolute inset-0"
         />
     );

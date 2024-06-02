@@ -48,24 +48,6 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
         return null;
     }
 
-    const { workflow } = await getWorkflowAction(workflowVersion.workflowId);
-
-    if (!workflow) {
-        return null;
-    }
-
-    const { workspace } = await getWorkspaceAction(workflow.workspaceId);
-
-    if (!workspace) {
-        return null;
-    }
-
-    const { user } = await getUserAction(workflowVersion.createdById);
-
-    if (!user) {
-        return null;
-    }
-
     const { workflowExecutions } = await getWorkflowExecutionsAction(workflowVersionId);
 
     if (!workflowExecutions) {
@@ -79,7 +61,7 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
             <Container>
                 <Section>
                     <SectionHeader>
-                        <SectionTitle>{workflow.name} - Version {workflowVersion.number}</SectionTitle>
+                        <SectionTitle>{workflowVersion.workflow.name} - Version {workflowVersion.number}</SectionTitle>
 
                         <SectionActions>
                             <EditWorkflowVersionButton
@@ -107,8 +89,8 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                                 
                                 <Link
                                     className="font-medium"
-                                    href={`/workflow/${workflow.id}`}>
-                                    {workflow.name}
+                                    href={`/workflow/${workflowVersion.workflow.id}`}>
+                                    {workflowVersion.workflow.name}
                                 </Link>
                             </DetailCell>
 
@@ -117,8 +99,8 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                                 
                                 <Link
                                     className="font-medium"
-                                    href={`/workspace/${workspace.id}`}>
-                                    {workspace.name}
+                                    href={`/workspace/${workflowVersion.workflow.workspace.id}`}>
+                                    {workflowVersion.workflow.workspace.name}
                                 </Link>
                             </DetailCell>
 
@@ -133,7 +115,7 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                                 <DetailCellHeader>Created by</DetailCellHeader>
                                 
                                 <DetailCellText>
-                                    {user.name}
+                                    {workflowVersion.createdBy.name}
                                 </DetailCellText>
                             </DetailCell>
                         </DetailRow>

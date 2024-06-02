@@ -1,4 +1,7 @@
 import Grid from '~/components/grid';
+import DateAgo from '~/components/date-ago';
+
+import getWorkflowAction from '~/actions/get-workflow-action';
 
 import {
     Card,
@@ -15,7 +18,13 @@ export function WorkflowGrid ({ children }) {
     );
 }
 
-export function WorkflowGridItem ({ workflow }) {
+export async function WorkflowGridItem ({ workflowId }) {
+    const { workflow } = await getWorkflowAction(workflowId);
+
+    if (!workflow) {
+        return null;
+    }
+    
     return (
         <Card>
             <CardTitle>
@@ -26,7 +35,12 @@ export function WorkflowGridItem ({ workflow }) {
                 {workflow.description}
             </CardText>
 
+            <CardText>
+                Created <DateAgo date={workflow.createdAt} /> by {workflow.createdBy.name}
+            </CardText>
+
             <CardLink
+                title={`Go to ${workflow.name}`}
                 href={`/workflow/${workflow.id}`} />
         </Card>
     );

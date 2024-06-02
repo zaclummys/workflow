@@ -4,7 +4,7 @@ import {
     BadgeCheck,
 } from 'lucide-react';
 
-export default function WorkflowVersionStatus({ status }) {
+export default function WorkflowExecutionStatus({ status }) {
     switch (status) {
         case 'success':
             return (
@@ -30,6 +30,15 @@ export default function WorkflowVersionStatus({ status }) {
                     <Badge className="w-5" />
 
                     Running
+                </span>
+            );
+
+        case 'pending':
+            return (
+                <span className="flex flex-row items-center gap-2 text-sm font-medium text-neutral">
+                    <Badge className="w-5" />
+
+                    Pending
                 </span>
             );
 
