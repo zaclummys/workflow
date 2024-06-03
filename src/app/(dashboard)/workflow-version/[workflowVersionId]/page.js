@@ -23,12 +23,9 @@ import {
 
 import DateAgo from '~/components/date-ago';
 import WorkflowVersionStatus from '~/components/workflow-version-status';
-import DeleteWorkflowVersionModalButton from '~/components/delete-workflow-version-modal-button';
+import DeleteWorkflowVersionModalButton from '~/components/modal-buttons/delete-workflow-version-modal-button';
 
 import getWorkflowVersionAction from '~/actions/get-workflow-version-action';
-import getWorkflowAction from '~/actions/get-workflow-action';
-import getWorkspaceAction from '~/actions/get-workspace-action';
-import getUserAction from '~/actions/get-user-action';
 import getWorkflowExecutionsAction from '~/actions/get-workflow-executions-action';
 
 import {
@@ -36,7 +33,7 @@ import {
     PlaceholderText,
     PlaceholderTitle,
 } from '~/components/placeholder';
-import ExecuteWorkflowVersionModalButton from '~/components/execute-workflow-version-modal-button';
+import ExecuteWorkflowVersionModalButton from '~/components/modal-buttons/execute-workflow-version-modal-button';
 import { WorkflowExecutionGrid, WorkflowExecutionGridItem } from '~/components/workflow-execution-grid';
 
 export const title = 'Workflow Version';
@@ -127,14 +124,14 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
 
                     {workflowExecutions.length === 0 ? (
                         <Placeholder>
-                        <PlaceholderTitle>
-                            No workflow executions
-                        </PlaceholderTitle>
+                            <PlaceholderTitle>
+                                No workflow executions
+                            </PlaceholderTitle>
 
-                        <PlaceholderText>
-                            You haven't yet run this workflow version. Do you want to execute it now?
-                        </PlaceholderText>
-                    </Placeholder>
+                            <PlaceholderText>
+                                You haven't yet run this workflow version. Do you want to execute it now?
+                            </PlaceholderText>
+                        </Placeholder>
                     ) : (
                         <WorkflowExecutionGrid>
                             {workflowExecutions.map((workflowExecution) => (

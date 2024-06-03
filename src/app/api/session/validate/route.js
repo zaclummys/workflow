@@ -6,13 +6,11 @@ import validateSession from '~/core/application/validate-session';
 export async function POST (request) {
     const { sessionToken } = await request.json();
 
-    const { isSessionValid } = await validateSession({
+    const { success } = await validateSession({
         sessionToken: sessionToken,
     });
 
-    throw new Error('a');
-
     return NextResponse.json({
-        isSessionValid,
+        success,
     });
 }

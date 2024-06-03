@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 
-import VariablesWorkflowSidebar from './variables-workflow-sidebar';
+import VariablesWorkflowSidebar from './workflow-sidebars/variables-workflow-sidebar';
 
 export default function WorkflowVersionCanvas ({
     workflowVersion,
-    onElementClick,
 }) {
     const [isVariablesSidebarOpen, setIsVariablesSidebarOpen] = useState(false);
 
@@ -63,8 +62,8 @@ export default function WorkflowVersionCanvas ({
     };
 
     const handleElementClick = (event) => {
-        const element = findElementById(event.target.dataset.elementId);
-        console.log(element)
+        const element = findElementById(event.currentTarget.dataset.elementId);
+        
         if (!element) {
             return;
         }
@@ -88,13 +87,12 @@ export default function WorkflowVersionCanvas ({
                 <Viewport
                     translateX={translateX}
                     translateY={translateY}>
-                        {workflowVersion.elements.map(element => (
-                                <WorkflowElement
-                                    key={element.id}
-                                    element={element}
-                                    onClick={handleElementClick} />
-                            ))
-                        }
+                    {workflowVersion.elements.map(element => (
+                        <WorkflowElement
+                            key={element.id}
+                            element={element}
+                            onClick={handleElementClick} />
+                    ))}
                 </Viewport>
             </Pane>
 
@@ -148,7 +146,7 @@ function Viewport({
         <div
             className="flex flex-col items-center gap-4 p-10"
             style={{
-                transform: `translate(${translateX}px, ${translateY}px)`
+                transform: `translate(${translateX}px, ${translateY}px)`,
             }}>
             {children}
         </div>

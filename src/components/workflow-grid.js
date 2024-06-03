@@ -36,6 +36,10 @@ export async function WorkflowGridItem ({ workflowId }) {
             </CardText>
 
             <CardText>
+                {workflow.numberOfVersions} version(s)
+            </CardText>
+
+            <CardText>
                 Created <DateAgo date={workflow.createdAt} /> by {workflow.createdBy.name}
             </CardText>
 

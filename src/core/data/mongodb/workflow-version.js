@@ -19,13 +19,19 @@ export async function findWorkflowVersionById (id) {
     return toWorkflowVersion(workflowVersionData);
 }
 
-export async function findWorkflowVersionsByWorkflowId (workflowId) {
-    const workflowVersionData = await database
+export async function findWorkflowVersionIdsByWorkflowId (workflowId) {
+    const workflowVersionIdsData = await database
         .collection('workflow-versions')
         .find({ workflowId }, { sort: { number: -1 } })
         .toArray();
 
-    return workflowVersionData.map(toWorkflowVersion);
+    return workflowVersionIdsData.map(workflowVersionIdData => workflowVersionIdData.id);
+}
+
+export async function countWorkflowVersionsByWorkflowId (workflowId) {
+    return database
+        .collection('workflow-versions')
+        .countDocuments({ workflowId });
 }
 
 export async function updateWorkflowVersion (workflowVersion) {

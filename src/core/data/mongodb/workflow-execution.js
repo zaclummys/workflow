@@ -23,6 +23,11 @@ export async function findWorkflowExecutionsByVersionId (workflowVersionId) {
     return workflowExecutionsData.map(toWorkflowExecution);
 }
 
+export async function countWorkflowExecutionsByVersionId (workflowVersionId) {
+    return database
+        .collection('workflow-executions')
+        .countDocuments({ workflowVersionId });
+}
 export async function insertWorkflowExecution (workflowExecution) {
     await database
         .collection('workflow-executions')

@@ -21,7 +21,7 @@ import {
     PlaceholderText,
 } from '~/components/placeholder';
 
-import NewWorkspaceModalButton from '~/components/create-workspace-modal-button';
+import NewWorkspaceModalButton from '~/components/modal-buttons/create-workspace-modal-button';
 
 export const title = 'Workspaces';
 

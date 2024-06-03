@@ -9,7 +9,7 @@ import {
     CardLink, 
 } from '~/components/card';
 
-import getUserAction from '~/actions/get-user-action';
+import getWorkflowVersionAction from '~/actions/get-workflow-version-action';
 import WorkflowVersionStatus from './workflow-version-status';
 
 export function WorkflowVersionGrid ({ children }) {
@@ -20,10 +20,10 @@ export function WorkflowVersionGrid ({ children }) {
     );
 }
 
-export async function WorkflowVersionGridItem ({ workflowVersion }) {
-    const { user } = await getUserAction(workflowVersion.createdById);
+export async function WorkflowVersionGridItem ({ workflowVersionId }) {
+    const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
-    if (!user) {
+    if (!workflowVersion) {
         return null;
     }
 
@@ -43,7 +43,11 @@ export async function WorkflowVersionGridItem ({ workflowVersion }) {
             </CardText>
 
             <CardText>
-                Created <DateAgo date={workflowVersion.createdAt} /> by {user.name}
+                {workflowVersion.numberOfExecutions} execution(s)
+            </CardText>
+
+            <CardText>
+                Created <DateAgo date={workflowVersion.createdAt} /> by {workflowVersion.createdBy.name}
             </CardText>
 
             <CardLink

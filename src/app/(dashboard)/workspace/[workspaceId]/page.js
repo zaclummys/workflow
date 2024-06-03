@@ -33,14 +33,13 @@ import {
     WorkflowGridItem, 
 } from '~/components/workflow-grid';
 
-import CreateWorkflowModalButton from '~/components/create-workflow-modal-button';
-import DeleteWorkspaceModalButton from '~/components/delete-workspace-modal-button';
-import ManageMembersModalButton from '~/components/manage-members-modal-button';
-import EditWorkspaceModalButton from '~/components/edit-workspace-modal-button';
+import CreateWorkflowModalButton from '~/components/modal-buttons/create-workflow-modal-button';
+import DeleteWorkspaceModalButton from '~/components/modal-buttons/delete-workspace-modal-button';
+import ManageMembersModalButton from '~/components/modal-buttons/manage-members-modal-button';
+import EditWorkspaceModalButton from '~/components/modal-buttons/edit-workspace-modal-button';
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getWorkflowsAction from '~/actions/get-workflows-action';
-import { OutlineButton } from '~/components/button';
 
 export const title = 'Workspace';
 

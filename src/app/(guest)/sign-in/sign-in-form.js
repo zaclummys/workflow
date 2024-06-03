@@ -2,38 +2,55 @@
 
 import {
     useId, 
+    useState,
 } from 'react';
+
+import useNavigation from '~/hooks/use-navigation';
+
 import {
-    useRouter, 
-} from 'next/navigation';
-import {
-    Form, Field, Label, Input, 
+    Form,
+    Field,
+    Label,
+    Input, 
 } from '~/components/form';
+
 import {
     PrimaryButton, 
 } from "~/components/button";
+
 import signInAction from '~/actions/sign-in-action';
-import useForm from '~/hooks/use-form';
 
 export default function SignInForm () {    
-    const router = useRouter();
+    const { navigateToHome } = useNavigation();
+
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState(null);
 
     const emailId = useId();
-
     const passwordId = useId();
 
-    const { pending, error, onSubmit } = useForm(async (event) => {
-        return signInAction({
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        setPending(true);
+        setError(null);
+
+        const { success, message } = await signInAction({
             email: event.target.email.value,
             password: event.target.password.value,
         });
-    }, () => {
-        router.replace('/');
-    });
+
+        if (success) {
+            navigateToHome();
+        } else {
+            setPending(false);
+            setError(message);
+        }
+    }
 
     return (        
         <Form
-            onSubmit={onSubmit}>
+            onSubmit={handleSubmit}>
             <Field>
                 <Label htmlFor={emailId}>
                     Email

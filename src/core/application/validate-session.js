@@ -11,7 +11,7 @@ export default async function validateSession ({ sessionToken }) {
 
     if (!session) {
         return {
-            isSessionValid: false,
+            success: false,
         };
     }
 
@@ -19,11 +19,11 @@ export default async function validateSession ({ sessionToken }) {
 
     if (!user) {
         return {
-            isSessionValid: false,
+            success: false,
         };
     }
 
     return {
-        isSessionValid: true,
+        success: true,
     };
 }

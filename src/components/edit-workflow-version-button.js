@@ -5,14 +5,10 @@ import { PrimaryButton } from '~/components/button';
 
 export default function EditWorkflowVersionButton ({ workflowVersionId }) {
     const { navigateToEditWorkflowVersion } = useNavigation();
-
-    const onButtonClick = () => {
-        navigateToEditWorkflowVersion(workflowVersionId);
-    };
-
+    
     return (
         <PrimaryButton
-            onClick={onButtonClick}>
+            onClick={() => navigateToEditWorkflowVersion(workflowVersionId)}>
             Open
         </PrimaryButton>
     );

@@ -4,7 +4,7 @@ export function Modal ({ children }) {
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50" />
 
             <div className="fixed inset-0 flex items-center justify-center z-50">
-                <div className="flex flex-col gap-4 px-4 py-4 bg-surface text-on-surface rounded w-full max-w-3xl">
+                <div className="flex flex-col gap-4 p-4 bg-surface text-on-surface rounded-md w-full max-w-3xl">
                     { children }
                 </div>
             </div>

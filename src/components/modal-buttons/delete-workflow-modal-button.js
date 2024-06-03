@@ -1,28 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import {
+    useState,
+} from 'react';
+
+import {
+    Modal,
+    ModalTitle,
+    ModalFooter,
+    ModalText,
+} from '~/components/modal';
 
 import {
     OutlineButton,
     DestructiveButton,
 } from '~/components/button';
 
-import {
-    Modal,
-    ModalTitle,
-    ModalText,
-    ModalFooter,
-} from '~/components/modal';
+import Tooltip from '~/components/tooltip';
 
-import deleteWorkflowVersionAction from '~/actions/delete-workflow-version-action';
+import deleteWorkflowAction from '~/actions/delete-workflow-action';
 
 import useNavigation from '~/hooks/use-navigation';
 
-export default function WorkflowVersionModalButton ({ workflowVersion }) {
-    const { navigateToWorkflow } = useNavigation();
+export default function DeleteWorkflowModalButton({
+    workflow,
+    hasWorkflowVersions,
+}) {
+    const { navigateToWorkspace } = useNavigation();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
+
+    const [pending, setPending] = useState(false);
 
     const onDeleteButtonClick = () => {
         setIsOpen(true);
@@ -33,28 +41,31 @@ export default function WorkflowVersionModalButton ({ workflowVersion }) {
     };
 
     const onConfirmButtonClick = async () => {
-        setIsDeleting(true);
-        
+        setPending(true);
+
         try {
-            const { success } = await deleteWorkflowVersionAction(workflowVersion.id);
+            const { success } = await deleteWorkflowAction(workflow.id);
 
             if (success) {
-                navigateToWorkflow(workflowVersion.workflow.id);
+                navigateToWorkspace(workflow.workspace.id);
             }
         } finally {
-            setIsDeleting(false);
+            setPending(false);
         }
     };
 
     return (
         <>
-            {workflowVersion.status !== 'active' ? (
+            {hasWorkflowVersions ? (
+                <Tooltip
+                    text="Cannot delete a workflow with versions">
+                    <OutlineButton disabled>
+                        Delete
+                    </OutlineButton>
+                </Tooltip>
+            ) : (
                 <OutlineButton
                     onClick={onDeleteButtonClick}>
-                    Delete
-                </OutlineButton>
-            ) : (
-                <OutlineButton disabled>
                     Delete
                 </OutlineButton>
             )}
@@ -62,24 +73,24 @@ export default function WorkflowVersionModalButton ({ workflowVersion }) {
             {isOpen && (
                 <Modal>
                     <ModalTitle>
-                        Delete Workflow Version
+                        Delete Workflow
                     </ModalTitle>
 
                     <ModalText>
-                        Are you sure you want to delete this version?
+                        Are you sure you want to delete <span className="font-medium">{workflow.name}</span>?
                     </ModalText>
 
                     <ModalFooter>
                         <OutlineButton
-                            disabled={isDeleting}
+                            disabled={pending}
                             onClick={onCancelButtonClick}>
                             Cancel
                         </OutlineButton>
 
                         <DestructiveButton
-                            disabled={isDeleting}
+                            disabled={pending}
                             onClick={onConfirmButtonClick}>
-                            Delete
+                            Confirm
                         </DestructiveButton>
                     </ModalFooter>
                 </Modal>

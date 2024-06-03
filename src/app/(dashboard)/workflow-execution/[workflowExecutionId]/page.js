@@ -5,7 +5,6 @@ import Container from "~/components/container";
 
 import {
     Section,
-    SectionHeader,
     SectionTitle,
 } from "~/components/section";
 

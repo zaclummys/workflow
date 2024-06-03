@@ -8,7 +8,7 @@ import {
     Modal,
     ModalTitle,
     ModalFooter,
-} from './modal';
+} from '../modal';
 
 export default function ManageMembersModalButton () {
     const [isOpen, setIsOpen] = useState(false);

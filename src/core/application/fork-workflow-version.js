@@ -38,7 +38,7 @@ export default async function forkWorkflowVersion ({
         };
     }
 
-    const workflow = await findWorkflowById(workflowVersion.getWorkflowId();
+    const workflow = await findWorkflowById(workflowVersion.getWorkflowId());
 
     if (!workflow) {
         return {

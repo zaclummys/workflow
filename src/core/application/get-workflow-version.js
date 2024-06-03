@@ -13,13 +13,14 @@ import {
 import {
     findWorkspaceById,
 } from "~/core/data/mongodb/workspace";
+import { countWorkflowExecutionsByVersionId } from "../data/mongodb/workflow-execution";
 
 export default async function getWorkflowVersion ({ workflowVersionId }) {
     const workflowVersion = await findWorkflowVersionById(workflowVersionId);
 
     if (!workflowVersion) {
         return {
-            success: false
+            success: false,
         };
     }
 
@@ -28,11 +29,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
 
     if (!workflow) {
         return {
-            success: false
+            success: false,
         };
     }
 
     const workspace = await findWorkspaceById(workflow.getWorkspaceId());
+
+    const numberOfExecutions = await countWorkflowExecutionsByVersionId(workflowVersion.getId());
 
     return {
         success: true,
@@ -73,6 +76,8 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
             },
 
             createdAt: workflowVersion.getCreatedAt(),
+
+            numberOfExecutions,
         },
     };
 }

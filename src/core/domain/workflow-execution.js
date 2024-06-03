@@ -11,7 +11,6 @@ export class WorkflowExecution {
             status: 'pending',
             inputValues,
             outputValues: [],
-            workflowVersionId,
             startedAt: null,
             finishedAt: null,
             executedById,

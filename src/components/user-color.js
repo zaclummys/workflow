@@ -4,32 +4,32 @@ import {
 
 function getBackgroundClassName (color) {
     switch (color) {
-    case 'red':
-        return 'bg-user-red';
+        case 'red':
+            return 'bg-user-red';
 
-    case 'orange':
-        return 'bg-user-orange';
+        case 'orange':
+            return 'bg-user-orange';
 
-    case 'yellow':
-        return 'bg-user-yellow';
+        case 'yellow':
+            return 'bg-user-yellow';
 
-    case 'green':
-        return 'bg-user-green';
+        case 'green':
+            return 'bg-user-green';
 
-    case 'indigo':
-        return 'bg-user-indigo';
+        case 'indigo':
+            return 'bg-user-indigo';
 
-    case 'purple':
-        return 'bg-user-purple';
+        case 'purple':
+            return 'bg-user-purple';
 
-    case 'pink':
-        return 'bg-user-pink';
+        case 'pink':
+            return 'bg-user-pink';
 
-    case 'blue':
-        return 'bg-user-blue';
-        
-    default:
-        return 'bg-user-gray';
+        case 'blue':
+            return 'bg-user-blue';
+            
+        default:
+            return 'bg-user-gray';
     }
 }
 

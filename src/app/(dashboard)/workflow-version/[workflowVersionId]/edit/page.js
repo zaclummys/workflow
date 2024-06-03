@@ -14,8 +14,6 @@ import {
     DeactivateWorkflowVersionButton,
 } from "~/components/toggle-workflow-version-button";
 
-import VariablesWorkflowSidebar from "~/components/variables-workflow-sidebar";
-
 export default async function EditWorkflowVersion ({ params: { workflowVersionId } }) {
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 

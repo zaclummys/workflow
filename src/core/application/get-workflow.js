@@ -10,6 +10,10 @@ import {
     findWorkspaceById, 
 } from '~/core/data/mongodb/workspace';
 
+import {
+    countWorkflowVersionsByWorkflowId,
+} from '~/core/data/mongodb/workflow-version';
+
 export default async function getWorkflow ({ workflowId }) {
     const workflow = await findWorkflowById(workflowId);
 
@@ -18,6 +22,8 @@ export default async function getWorkflow ({ workflowId }) {
             success: false,
         };
     }
+    
+    const numberOfVersions = await countWorkflowVersionsByWorkflowId(workflow.getId());
 
     const createdBy = await findUserById(workflow.getCreatedById());
     const workspace = await findWorkspaceById(workflow.getWorkspaceId());
@@ -39,6 +45,8 @@ export default async function getWorkflow ({ workflowId }) {
                 id: workspace.getId(),
                 name: workspace.getName(),
             },
+
+            numberOfVersions,
         },
     }
 }

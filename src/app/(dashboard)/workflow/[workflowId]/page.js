@@ -26,9 +26,9 @@ import {
 
 import DateAgo from '~/components/date-ago';
 
-import CreateWorkflowVersionButton from '~/components/create-workflow-version-button';
-import DeleteWorkflowModalButton from '~/components/delete-workflow-modal-button';
-import EditWorkflowModalButton from '~/components/edit-workflow-modal-button';
+import CreateWorkflowVersionModalButton from '~/components/create-workflow-version-button';
+import DeleteWorkflowModalButton from '~/components/modal-buttons/delete-workflow-modal-button';
+import EditWorkflowModalButton from '~/components/modal-buttons/edit-workflow-modal-button';
 
 import {
     WorkflowVersionGrid,
@@ -36,9 +36,7 @@ import {
 } from '~/components/workflow-version-grid';
 
 import getWorkflowAction from '~/actions/get-workflow-action';
-import getWorkflowVersionsAction from '~/actions/get-workflow-versions-action';
-import getWorkspaceAction from '~/actions/get-workspace-action';
-import getUserAction from '~/actions/get-user-action';
+import getWorkflowVersionIdsAction from '~/actions/get-workflow-versions-action';
 
 export const title = 'Workflow';
 
@@ -49,7 +47,7 @@ export default async function Workflow({ params: { workflowId } }) {
         return null;
     }
 
-    const { workflowVersions } = await getWorkflowVersionsAction(workflowId);
+    const { workflowVersionIds } = await getWorkflowVersionIdsAction(workflowId);
 
     return (
         <>
@@ -61,7 +59,7 @@ export default async function Workflow({ params: { workflowId } }) {
                         <SectionTitle>{workflow.name}</SectionTitle>
 
                         <SectionActions>
-                            <CreateWorkflowVersionButton
+                            <CreateWorkflowVersionModalButton
                                 workflowId={workflow.id} />
 
                             <EditWorkflowModalButton
@@ -69,7 +67,7 @@ export default async function Workflow({ params: { workflowId } }) {
 
                             <DeleteWorkflowModalButton
                                 workflow={workflow}
-                                disabled={workflowVersions.length > 0} />
+                                hasWorkflowVersions={workflowVersionIds.length > 0} />
                         </SectionActions>
                     </SectionHeader>
 
@@ -81,7 +79,7 @@ export default async function Workflow({ params: { workflowId } }) {
                                 </DetailCellHeader>
 
                                 <Link
-                                    className="font-medium"
+                                    className="font-medium "
                                     href={`/workspace/${workflow.workspace.id}`}>
                                     {workflow.workspace.name}
                                 </Link>
@@ -124,7 +122,7 @@ export default async function Workflow({ params: { workflowId } }) {
                 <Section>
                     <SectionTitle>Workflow Versions</SectionTitle>
 
-                    {workflowVersions.length === 0 ? (
+                    {workflowVersionIds.length === 0 ? (
                         <Placeholder>
                             <PlaceholderTitle>No workflow versions</PlaceholderTitle>
 
@@ -134,10 +132,10 @@ export default async function Workflow({ params: { workflowId } }) {
                         </Placeholder>
                     ) : (
                         <WorkflowVersionGrid>
-                            {workflowVersions.map(workflowVersion => (
+                            {workflowVersionIds.map(workflowVersionId => (
                                 <WorkflowVersionGridItem
-                                    key={workflowVersion.id}
-                                    workflowVersion={workflowVersion} />
+                                    key={workflowVersionId}
+                                    workflowVersionId={workflowVersionId} />
                             ))}
                         </WorkflowVersionGrid>
                     )}

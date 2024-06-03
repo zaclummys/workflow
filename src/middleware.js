@@ -23,11 +23,10 @@ async function validateSession ({ sessionToken }) {
         };
     }
 
-    const { isSessionValid } = await response.json();
+    const { success } = await response.json();
 
     return {
-        success: true,
-        isSessionValid,
+        success,
     };
 }
 
@@ -54,7 +53,9 @@ function redirectToHome (request) {
 }
 
 export default async function middleware (request) {
-    return null;
+    if (process.env.NODE_ENV === 'development') {
+        return NextResponse.next();
+    }
     
     if (request.nextUrl.pathname === '/favicon.ico') {
         return NextResponse.next();
@@ -67,15 +68,11 @@ export default async function middleware (request) {
             return redirectToSignInDeletingSessionCookie(request);
         }
 
-        const { success, isSessionValid } = await validateSession({
+        const { success } = await validateSession({
             sessionToken: sessionTokenCookie.value,
         });
 
         if (!success) {
-            return null;
-        }
-
-        if (!isSessionValid) {
             return redirectToSignInDeletingSessionCookie(request);
         }
 

@@ -11,7 +11,7 @@ import {
     Modal,
     ModalTitle,
     ModalFooter,
-} from './modal';
+} from '../modal';
 
 export default function EditWorkflowModalButton () {
     const [isOpen, setIsOpen] = useState(false);

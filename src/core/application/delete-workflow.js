@@ -6,7 +6,7 @@ export default async function deleteWorkflow ({ workflowId }) {
 
     if (!workflow) {
         return {
-            success: false
+            success: false,
         };
     }
 
@@ -14,7 +14,7 @@ export default async function deleteWorkflow ({ workflowId }) {
 
     if (workflowVersions.length > 0) {
         return {
-            success: false
+            success: false,
         };
     }
 

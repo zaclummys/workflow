@@ -4,7 +4,7 @@ import { findWorkflowVersionById } from '~/core/data/mongodb/workflow-version';
 import {
     findWorkflowExecutionById,
     insertWorkflowExecution,
-    updateWorkflowExecution
+    updateWorkflowExecution,
 } from '~/core/data/mongodb/workflow-execution';
 
 import { WorkflowExecution } from '~/core/domain/workflow-execution';
@@ -81,4 +81,4 @@ async function runWorkflowExecution (workflowExecutionId) {
     }
 }
 
-const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms) => new global.Promise(resolve => setTimeout(resolve, ms));
