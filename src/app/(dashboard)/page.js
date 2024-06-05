@@ -26,7 +26,7 @@ import NewWorkspaceModalButton from '~/components/modal-buttons/create-workspace
 export const title = 'Workspaces';
 
 export default async function Workspaces() {
-    const { workspaces } = await getWorkspacesAction();
+    const { workspaceIds } = await getWorkspacesAction();
 
     return (
         <>
@@ -41,7 +41,7 @@ export default async function Workspaces() {
                         </SectionActions>
                     </SectionHeader>
 
-                    {workspaces.length === 0 ? (
+                    {workspaceIds.length === 0 ? (
                         <Placeholder>
                             <PlaceholderTitle>
                                 No workspaces
@@ -53,10 +53,10 @@ export default async function Workspaces() {
                         </Placeholder>
                     ) : (
                         <WorkspaceGrid>
-                            {workspaces.map(workspace => (
+                            {workspaceIds.map(workspaceId => (
                                 <WorkspaceGridItem
-                                    key={workspace.id}
-                                    workspace={workspace} />
+                                    key={workspaceId}
+                                    workspaceId={workspaceId} />
                             ))}
                         </WorkspaceGrid>
                     )}

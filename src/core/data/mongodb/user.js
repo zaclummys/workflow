@@ -25,6 +25,19 @@ export async function findUserById (id) {
     return toUser(userData);
 }
 
+export async function findUsersByIds (ids) {
+    const userData = await database
+        .collection('users')
+        .find({
+            id: {
+                $in: ids,
+            },
+        })
+        .toArray();
+
+    return userData.map(toUser);
+}
+
 export async function findUserByEmail (email) {
     const userData = await database
         .collection('users')

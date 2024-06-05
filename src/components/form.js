@@ -1,17 +1,19 @@
-export function Form(props) {
-    return <form className="flex flex-col gap-4" {...props} />
+import { twMerge } from "tailwind-merge";
+
+export function Form({ className, ...props }) {
+    return <form className={twMerge("flex flex-col gap-4", className)} {...props} />
 }
 
 export function Field({ children }) {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col flex-grow gap-2">
             {children}
         </div>
     );
 }
 
 export function Input(props) {
-    return <input className="px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-all outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />
+    return <input className="h-10 px-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded-md transition-all outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />
 }
 
 export function Radio (props) {

@@ -2,15 +2,28 @@
 
 import { useState } from 'react';
 
-import { OutlineButton } from '~/components/button';
+import { OutlineButton, PrimaryButton } from '~/components/button';
 
 import {
     Modal,
     ModalTitle,
     ModalFooter,
-} from '../modal';
+    ModalSubtitle,
+} from '~/components/modal';
 
-export default function ManageMembersModalButton () {
+import {
+    Form,
+    Field,
+    Label,
+    Input,
+} from '~/components/form';
+
+import {
+    ManageWorkspaceMemberList,
+    ManageWorkspaceMemberItem,
+} from '~/components/manage-workspace-member-list';
+
+export default function ManageMembersModalButton({ workspace }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const onManageMembersButtonClick = () => {
@@ -34,6 +47,29 @@ export default function ManageMembersModalButton () {
                         Manage Members
                     </ModalTitle>
 
+                    <span>
+                        Workspace members have full access to workflows, workflow versions and workflow executions.
+                    </span>
+
+                    <ModalSubtitle>
+                        Add member
+                    </ModalSubtitle>
+
+                    <AddMemberForm />
+
+                    <ModalSubtitle>
+                        Members
+                    </ModalSubtitle>
+
+                    <ManageWorkspaceMemberList>
+                        {workspace.members.map((member) => (
+                            <ManageWorkspaceMemberItem
+                                key={member.user.id}
+                                member={member}
+                                workspace={workspace} />
+                        ))}
+                    </ManageWorkspaceMemberList>
+
                     <ModalFooter>
                         <OutlineButton
                             onClick={onCloseButtonClick}>
@@ -43,5 +79,33 @@ export default function ManageMembersModalButton () {
                 </Modal>
             )}
         </>
+    );
+}
+
+function AddMemberForm () {
+    const onSubmit = event => {
+        event.preventDefault();
+
+        console.log(event)
+    };
+
+    return (
+        <Form
+            className="flex-row items-end"
+            onSubmit={onSubmit}>
+            <Field>
+                <Label>
+                    Email
+                </Label>
+
+                <Input
+                    type="email" />
+            </Field>
+
+            <OutlineButton
+                type="submit">
+                Add
+            </OutlineButton>
+        </Form>
     );
 }

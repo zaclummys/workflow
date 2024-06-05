@@ -43,13 +43,11 @@ export default function DeleteWorkflowModalButton({
     const onConfirmButtonClick = async () => {
         setPending(true);
 
-        try {
-            const { success } = await deleteWorkflowAction(workflow.id);
+        const { success } = await deleteWorkflowAction(workflow.id);
 
-            if (success) {
-                navigateToWorkspace(workflow.workspace.id);
-            }
-        } finally {
+        if (success) {
+            navigateToWorkspace(workflow.workspace.id);
+        } else {
             setPending(false);
         }
     };

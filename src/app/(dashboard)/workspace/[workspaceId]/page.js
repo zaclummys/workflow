@@ -5,14 +5,14 @@ import DateAgo from '~/components/date-ago';
 import {
     Placeholder,
     PlaceholderTitle,
-    PlaceholderText, 
+    PlaceholderText,
 } from '~/components/placeholder';
 
 import {
     Section,
     SectionHeader,
     SectionTitle,
-    SectionActions, 
+    SectionActions,
 } from '~/components/section';
 
 import {
@@ -20,17 +20,17 @@ import {
     DetailRow,
     DetailCell,
     DetailCellHeader,
-    DetailCellText, 
+    DetailCellText,
 } from '~/components/details';
 
 import {
-    WorkspaceMemberList,
-    WorkspaceMemberItem, 
-} from '~/components/workspace-member-list';
+    WorkspaceMemberColorList,
+    WorkspaceMemberColorItem,
+} from '~/components/workspace-member-color-list';
 
 import {
     WorkflowGrid,
-    WorkflowGridItem, 
+    WorkflowGridItem,
 } from '~/components/workflow-grid';
 
 import CreateWorkflowModalButton from '~/components/modal-buttons/create-workflow-modal-button';
@@ -38,12 +38,14 @@ import DeleteWorkspaceModalButton from '~/components/modal-buttons/delete-worksp
 import ManageMembersModalButton from '~/components/modal-buttons/manage-members-modal-button';
 import EditWorkspaceModalButton from '~/components/modal-buttons/edit-workspace-modal-button';
 
+
+
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getWorkflowsAction from '~/actions/get-workflows-action';
 
 export const title = 'Workspace';
 
-export default async function Workspace ({ params: { workspaceId } }) {
+export default async function Workspace({ params: { workspaceId } }) {
     const { workspace } = await getWorkspaceAction(workspaceId);
 
     if (!workspace) {
@@ -69,14 +71,15 @@ export default async function Workspace ({ params: { workspaceId } }) {
                             <CreateWorkflowModalButton
                                 workspaceId={workspace.id} />
 
-                            <ManageMembersModalButton />
-
-                            <EditWorkspaceModalButton
+                            <ManageMembersModalButton
                                 workspace={workspace} />
 
-                            <DeleteWorkspaceModalButton
-                                workspace={workspace}
-                                hasWorkflows={workflowIds.length > 0} />                            
+                                <EditWorkspaceModalButton
+                                    workspace={workspace} />
+
+                                <DeleteWorkspaceModalButton
+                                    workspace={workspace}
+                                    hasWorkflows={workflowIds.length > 0} />
                         </SectionActions>
                     </SectionHeader>
 
@@ -84,14 +87,14 @@ export default async function Workspace ({ params: { workspaceId } }) {
                         <DetailRow>
                             <DetailCell>
                                 <DetailCellHeader>Members</DetailCellHeader>
-                                
-                                <WorkspaceMemberList>
+
+                                <WorkspaceMemberColorList>
                                     {workspace.members.map(member => (
-                                        <WorkspaceMemberItem
+                                        <WorkspaceMemberColorItem
                                             key={member.userId}
                                             member={member} />
                                     ))}
-                                </WorkspaceMemberList>
+                                </WorkspaceMemberColorList>
                             </DetailCell>
 
                             <DetailCell>
@@ -111,7 +114,7 @@ export default async function Workspace ({ params: { workspaceId } }) {
                             <DetailCell>
                                 <DetailCellHeader>Description</DetailCellHeader>
                                 <DetailCellText>{workspace.description}</DetailCellText>
-                            </DetailCell>                            
+                            </DetailCell>
                         </DetailRow>
                     </Details>
                 </Section>
@@ -123,7 +126,7 @@ export default async function Workspace ({ params: { workspaceId } }) {
                         <Placeholder>
                             <PlaceholderTitle>No workflow</PlaceholderTitle>
                             <PlaceholderText>
-                                You haven't created any workflow yet. Do you want to create one? 
+                                You haven't created any workflow yet. Do you want to create one?
                             </PlaceholderText>
                         </Placeholder>
                     ) : (

@@ -69,3 +69,8 @@ html {
         }
     }
 }
+
+button:focus,
+input:focus {
+    @apply outline-none;
+}

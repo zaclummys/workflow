@@ -1,3 +1,5 @@
+import { twMerge } from "tailwind-merge";
+
 export function Modal ({ children }) {
     return (
         <>
@@ -20,6 +22,14 @@ export function ModalTitle ({ children }) {
     );
 }
 
+export function ModalSubtitle ({ children }) {
+    return (
+        <span className="font-normal text-lg">
+            { children }
+        </span>
+    );
+}
+
 export function ModalText ({ children }) {
     return (
         <span>
@@ -28,9 +38,9 @@ export function ModalText ({ children }) {
     );
 }
 
-export function ModalFooter ({ children }) {
+export function ModalFooter ({ className, children }) {
     return (
-        <div className="flex flex-row justify-between">
+        <div className={twMerge("flex flex-row justify-between", className)}>
             { children }
         </div>
     );

@@ -14,9 +14,7 @@ export async function insertWorkspace (workspace) {
 export async function findWorkspaceById (id) {
     const workspace = await database
         .collection('workspaces')
-        .findOne({
-            id, 
-        });
+        .findOne({ id });
 
     if (workspace == null) {
         return null;
@@ -25,15 +23,15 @@ export async function findWorkspaceById (id) {
     return toWorkspace(workspace);
 }
 
-export async function findWorkspacesByUserId (userId) {
-    const workspaces = await database
+export async function findWorkspaceIdsByUserId (userId) {
+    const workspaceIdsData = await database
         .collection('workspaces')
         .find({
             'members.userId': userId, 
         })
         .toArray();
 
-    return workspaces.map(toWorkspace);
+    return workspaceIdsData.map(workspaceIdData => workspaceIdData.id);
 }
 
 export async function updateWorkspace (workspace) {

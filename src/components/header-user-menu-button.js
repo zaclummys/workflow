@@ -44,7 +44,7 @@ export default function HeaderUserMenuButton ({ user }) {
                         className="fixed inset-0 bg-black bg-opacity-50"
                         onClick={onBackdropClick} />
                     
-                    <div className="absolute right-0 top-0">
+                    <div className="absolute right-0 top-0 z-10">
                         <HeaderUserMenu
                             onMenuClick={onMenuClick} />
                     </div>

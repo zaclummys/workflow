@@ -1,4 +1,5 @@
 import Grid from '~/components/grid';
+
 import {
     Card,
     CardTitle,
@@ -7,10 +8,13 @@ import {
     CardSectionTitle,
     CardLink, 
 } from '~/components/card';
+
 import {
-    WorkspaceMemberList,
-    WorkspaceMemberItem, 
-} from '~/components/workspace-member-list';
+    WorkspaceMemberColorList,
+    WorkspaceMemberColorItem, 
+} from '~/components/workspace-member-color-list';
+
+import getWorkspaceAction from '~/actions/get-workspace-action';
 
 export function WorkspaceGrid ({ children }) {
     return (
@@ -20,7 +24,13 @@ export function WorkspaceGrid ({ children }) {
     );
 }
 
-export function WorkspaceGridItem ({ workspace }) {
+export async function WorkspaceGridItem ({ workspaceId }) {
+    const { workspace } = await getWorkspaceAction(workspaceId);
+
+    if (!workspace) {
+        return null;
+    }
+
     return (
         <Card>
             <CardTitle>
@@ -48,13 +58,13 @@ function WorkspaceMemberSection ({ members }) {
                 Members ({members.length})
             </CardSectionTitle>
 
-            <WorkspaceMemberList>
+            <WorkspaceMemberColorList>
                 {members.map(member => (
-                    <WorkspaceMemberItem
-                        key={member.userId}
+                    <WorkspaceMemberColorItem
+                        key={member.user.id}
                         member={member} />
                 ))}
-            </WorkspaceMemberList>
+            </WorkspaceMemberColorList>
         </CardSection>
     );
 }

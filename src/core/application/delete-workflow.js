@@ -1,5 +1,5 @@
 import { findWorkflowById, deleteWorkflowById } from '~/core/data/mongodb/workflow';
-import { findWorkflowVersionsByWorkflowId } from '~/core/data/mongodb/workflow-version';
+import { countWorkflowVersionsByWorkflowId } from '~/core/data/mongodb/workflow-version';
 
 export default async function deleteWorkflow ({ workflowId }) {
     const workflow = await findWorkflowById(workflowId);
@@ -10,9 +10,9 @@ export default async function deleteWorkflow ({ workflowId }) {
         };
     }
 
-    const workflowVersions = await findWorkflowVersionsByWorkflowId(workflowId);
+    const numberOfWorkflowVersions = await countWorkflowVersionsByWorkflowId(workflowId);
 
-    if (workflowVersions.length > 0) {
+    if (numberOfWorkflowVersions > 0) {
         return {
             success: false,
         };
