@@ -67,7 +67,10 @@ async function runWorkflowExecution (workflowExecutionId) {
     
         await updateWorkflowExecution(workflowExecution);
 
-        await wait(5000);
+        runWorkflowExecutionLoop({
+            workflowExecution,
+            workflowVersion,
+        });
     
         workflowExecution.setStatus('success');
         workflowExecution.setFinishedAt(new Date());
@@ -78,6 +81,44 @@ async function runWorkflowExecution (workflowExecutionId) {
         workflowExecution.setFinishedAt(new Date());
     
         await updateWorkflowExecution(workflowExecution);
+    }
+}
+
+function runWorkflowExecutionLoop ({
+    workflowExecution,
+    workflowVersion,
+}) {
+    const context = {
+        values: workflowExecution.getInputValues()
+            .map(inputValue => ({
+                value: inputValue.getValue(),
+
+                setValue (value) {
+                    
+                getVariableId () {
+                    return inputValue.getVariableId();
+                },
+            })),
+
+        findVariableById (variableId) {
+            return context.values.find(value => variableId === value.variableId);
+        },
+
+        setVar
+    };
+
+    const startElement = workflowVersion.getStartElement();
+
+    let currentElementId = startElement.getNextElementId();
+
+    while (true) {
+        const element = workflowVersion.findElementById(currentElementId);
+
+        if (!element) {
+            throw new Error(`Element not found: ${currentElementId}`);
+        }
+
+        element.execute(context);
     }
 }
 

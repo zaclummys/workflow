@@ -98,3 +98,67 @@ export class WorkflowExecution {
         this.finishedAt = finishedAt;
     }
 }
+
+export class WorkflowExecutionInputValue {
+    static create ({
+        variableId,
+        value,
+    }) {
+        return new WorkflowExecutionInputValue({
+            variableId,
+            value,
+        });
+    }
+
+    constructor ({
+        variableId,
+        value,
+    }) {
+        if (!variableId) {
+            throw new Error('Variable ID is required');
+        }
+
+        this.variableId = variableId;
+        this.value = value;
+    }
+
+    getVariableId () {
+        return this.variableId;
+    }
+
+    getValue () {
+        return this.value;
+    }
+}
+
+export class WorkflowExecutionOutputValue {
+    static create ({
+        variableId,
+        value,
+    }) {
+        return new WorkflowExecutionOutputValue({
+            variableId,
+            value,
+        });
+    }
+
+    constructor ({
+        variableId,
+        value,
+    }) {
+        if (!variableId) {
+            throw new Error('Variable ID is required');
+        }
+
+        this.variableId = variableId;
+        this.value = value;
+    }
+
+    getVariableId () {
+        return this.variableId;
+    }
+
+    getValue () {
+        return this.value;
+    }
+}

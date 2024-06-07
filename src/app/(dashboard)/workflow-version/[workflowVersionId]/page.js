@@ -45,9 +45,9 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
         return null;
     }
 
-    const { workflowExecutions } = await getWorkflowExecutionsAction(workflowVersionId);
+    const { workflowExecutionIds } = await getWorkflowExecutionsAction(workflowVersionId);
 
-    if (!workflowExecutions) {
+    if (!workflowExecutionIds) {
         return null;
     }
 
@@ -122,7 +122,7 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                 <Section>
                     <SectionTitle>Workflow Executions</SectionTitle>
 
-                    {workflowExecutions.length === 0 ? (
+                    {workflowExecutionIds.length === 0 ? (
                         <Placeholder>
                             <PlaceholderTitle>
                                 No workflow executions
@@ -134,10 +134,10 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                         </Placeholder>
                     ) : (
                         <WorkflowExecutionGrid>
-                            {workflowExecutions.map((workflowExecution) => (
+                            {workflowExecutionIds.map(workflowExecutionId => (
                                 <WorkflowExecutionGridItem
-                                    key={workflowExecution.id}
-                                    workflowExecution={workflowExecution} />
+                                    key={workflowExecutionId}
+                                    workflowExecutionId={workflowExecutionId} />
                             ))}
                         </WorkflowExecutionGrid>
                     )}                    

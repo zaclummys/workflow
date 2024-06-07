@@ -12,6 +12,12 @@ export async function insertWorkflow (workflow) {
         .insertOne(fromWorkflow(workflow));
 }
 
+/**
+ * Find a workflow by ID.
+ * 
+ * @param {string} id
+ * @returns {Promise<Workflow | null>}
+ */
 export async function findWorkflowById (id) {
     const workflowData = await database
         .collection('workflows')

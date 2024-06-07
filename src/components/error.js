@@ -1,6 +1,6 @@
 export default function Error ({ children }) {
     return (
-        <span className="text-danger">
+        <span className="text-sm text-danger">
             {children}
         </span>
     );

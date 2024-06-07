@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { OutlineButton, PrimaryButton } from '~/components/button';
+import { OutlineButton } from '~/components/button';
 
 import {
     Modal,
@@ -18,10 +18,14 @@ import {
     Input,
 } from '~/components/form';
 
+import Error from '~/components/error';
+
 import {
-    ManageWorkspaceMemberList,
-    ManageWorkspaceMemberItem,
-} from '~/components/manage-workspace-member-list';
+    WorkspaceMemberList,
+    WorkspaceMemberItem,
+} from '~/components/workspace-member-list';
+
+import addMemberToWorkspaceAction from '~/actions/add-member-to-workspace-action';
 
 export default function ManageMembersModalButton({ workspace }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -55,20 +59,21 @@ export default function ManageMembersModalButton({ workspace }) {
                         Add member
                     </ModalSubtitle>
 
-                    <AddMemberForm />
+                    <AddMemberForm
+                        workspaceId={workspace.id} />
 
                     <ModalSubtitle>
                         Members
                     </ModalSubtitle>
 
-                    <ManageWorkspaceMemberList>
+                    <WorkspaceMemberList>
                         {workspace.members.map((member) => (
-                            <ManageWorkspaceMemberItem
+                            <WorkspaceMemberItem
                                 key={member.user.id}
                                 member={member}
                                 workspace={workspace} />
                         ))}
-                    </ManageWorkspaceMemberList>
+                    </WorkspaceMemberList>
 
                     <ModalFooter>
                         <OutlineButton
@@ -82,30 +87,65 @@ export default function ManageMembersModalButton({ workspace }) {
     );
 }
 
-function AddMemberForm () {
-    const onSubmit = event => {
+function AddMemberForm({ workspaceId }) {
+    const [isAdding, setIsAdding] = useState(false);
+    const [error, setError] = useState(null);
+
+    const [email, setEmail] = useState('');
+
+    const onSubmit = async (event) => {
         event.preventDefault();
 
-        console.log(event)
+        setIsAdding(true);
+        setError(null);
+
+        const { success, message } = await addMemberToWorkspaceAction({
+            email: email,
+            workspaceId: workspaceId,
+        });
+
+        if (success) {
+            setEmail('');
+        } else {
+            setError(message);
+        }
+
+        setIsAdding(false);
+    };
+
+    const onEmailChange = (event) => {
+        setEmail(event.target.value);
     };
 
     return (
         <Form
-            className="flex-row items-end"
             onSubmit={onSubmit}>
-            <Field>
-                <Label>
-                    Email
-                </Label>
+            <div className="flex flex-row items-end gap-4">
+                <Field>
+                    <Label>
+                        Email
+                    </Label>
 
-                <Input
-                    type="email" />
-            </Field>
+                    <Input
+                        disabled={isAdding}
+                        required
+                        type="email"
+                        value={email}
+                        onChange={onEmailChange} />
+                </Field>
 
-            <OutlineButton
-                type="submit">
-                Add
-            </OutlineButton>
+                <OutlineButton
+                    disabled={isAdding}
+                    type="submit">
+                    Add
+                </OutlineButton>
+            </div>
+
+            {error && (
+                <Error>
+                    {error}
+                </Error>
+            )}
         </Form>
     );
 }

@@ -23,10 +23,7 @@ import {
     DetailCellText,
 } from '~/components/details';
 
-import {
-    WorkspaceMemberColorList,
-    WorkspaceMemberColorItem,
-} from '~/components/workspace-member-color-list';
+import WorkspaceMemberColorList from '~/components/workspace-member-color-list';
 
 import {
     WorkflowGrid,
@@ -74,12 +71,12 @@ export default async function Workspace({ params: { workspaceId } }) {
                             <ManageMembersModalButton
                                 workspace={workspace} />
 
-                                <EditWorkspaceModalButton
-                                    workspace={workspace} />
+                            <EditWorkspaceModalButton
+                                workspace={workspace} />
 
-                                <DeleteWorkspaceModalButton
-                                    workspace={workspace}
-                                    hasWorkflows={workflowIds.length > 0} />
+                            <DeleteWorkspaceModalButton
+                                workspace={workspace}
+                                hasWorkflows={workflowIds.length > 0} />
                         </SectionActions>
                     </SectionHeader>
 
@@ -88,13 +85,8 @@ export default async function Workspace({ params: { workspaceId } }) {
                             <DetailCell>
                                 <DetailCellHeader>Members</DetailCellHeader>
 
-                                <WorkspaceMemberColorList>
-                                    {workspace.members.map(member => (
-                                        <WorkspaceMemberColorItem
-                                            key={member.userId}
-                                            member={member} />
-                                    ))}
-                                </WorkspaceMemberColorList>
+                                <WorkspaceMemberColorList
+                                    members={workspace.members} />
                             </DetailCell>
 
                             <DetailCell>

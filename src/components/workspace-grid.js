@@ -9,10 +9,7 @@ import {
     CardLink, 
 } from '~/components/card';
 
-import {
-    WorkspaceMemberColorList,
-    WorkspaceMemberColorItem, 
-} from '~/components/workspace-member-color-list';
+import WorkspaceMemberColorList from '~/components/workspace-member-color-list';
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
 
@@ -58,13 +55,8 @@ function WorkspaceMemberSection ({ members }) {
                 Members ({members.length})
             </CardSectionTitle>
 
-            <WorkspaceMemberColorList>
-                {members.map(member => (
-                    <WorkspaceMemberColorItem
-                        key={member.user.id}
-                        member={member} />
-                ))}
-            </WorkspaceMemberColorList>
+            <WorkspaceMemberColorList
+                members={workspace.members} />
         </CardSection>
     );
 }

@@ -1,5 +1,5 @@
 import { findSessionByToken } from "../data/mongodb/session";
-import { findWorkflowExecutionsByVersionId } from "../data/mongodb/workflow-execution";
+import { findWorkflowExecutionIdsByVersionId } from "../data/mongodb/workflow-execution";
 
 export default async function getWorkflowExecutions ({
     workflowVersionId,
@@ -13,15 +13,10 @@ export default async function getWorkflowExecutions ({
         };
     }
 
-    const workflowExecutions = await findWorkflowExecutionsByVersionId(workflowVersionId);
+    const workflowExecutionIds = await findWorkflowExecutionIdsByVersionId(workflowVersionId);
 
     return {
         success: true,
-        workflowExecutions: workflowExecutions.map(workflowExecution => ({
-            id: workflowExecution.id,
-            status: workflowExecution.status,
-            startedAt: workflowExecution.startedAt,
-            completedAt: workflowExecution.completedAt,
-        })),
+        workflowExecutionIds,
     };
 }

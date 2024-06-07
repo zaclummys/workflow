@@ -104,8 +104,19 @@ export class Workspace {
         });
     }
 
-    addMember () {}
-    removeMember () {}
+    addMember (userId) {
+        if (!this.isMember(userId)) {
+            const memberToBeAdded = WorkspaceMember.create({ userId });
+
+            this.members.push(memberToBeAdded);
+        }
+    }
+
+    removeMember (userId) {
+        if (!this.isOwner(userId)) {
+            this.members = this.members.filter(member => userId !== member.getUserId());
+        }
+    }
 }
 
 export class WorkspaceMember {

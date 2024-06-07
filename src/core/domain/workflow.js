@@ -97,4 +97,12 @@ export class Workflow {
     incrementNextVersionNumber () {
         this.nextVersionNumber += 1;
     }
+
+    setName (name) {
+        this.name = name;
+    }
+
+    setDescription (description) {
+        this.description = description
+    }
 }

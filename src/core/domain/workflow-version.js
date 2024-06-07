@@ -167,6 +167,14 @@ export class WorkflowVersion {
         this.elements = this.elements.filter(element => idToBeRemoved !== element.getId());
     }
 
+    getStartElement () {
+        return this.elements.find(element => element instanceof StartElement);
+    }
+
+    findElementById (elementId) {
+        return this.elements.find(element => elementId === element.getId());
+    }
+
     fork ({
         number,
         createdById,
@@ -372,17 +380,23 @@ export class WorkflowEndElement {
 
 export class WorkflowIfElement {
     static create ({
-        conditions,   
+        conditions,
+        nextElementIdIfTrue,
+        nextElementIdIfFalse,
     }) {
         return new WorkflowIfElement({
             id: randomUUID(),
             conditions,
+            nextElementIdIfTrue,
+            nextElementIdIfFalse,
         });
     }
 
     constructor ({
         id,
         conditions,
+        nextElementIdIfTrue,
+        nextElementIdIfFalse,
     }) {
         if (!id) {
             throw new Error('ID is required.');
@@ -392,8 +406,18 @@ export class WorkflowIfElement {
             throw new Error('Conditions are required.');
         }
 
+        if (!nextElementIdIfTrue) {
+            throw new Error('Next element ID if true is required.');
+        }
+
+        if (!nextElementIdIfFalse) {
+            throw new Error('Next element ID if false is required.');
+        }
+
         this.id = id;
         this.conditions = conditions;
+        this.nextElementIdIfTrue = nextElementIdIfTrue;
+        this.nextElementIdIfFalse = nextElementIdIfFalse;
     }
 
     getId () {
@@ -402,6 +426,16 @@ export class WorkflowIfElement {
 
     getConditions () {
         return this.conditions;
+    }
+
+    execute (context) {
+        for (const condition of this.conditions) {
+            if (condition.evaluate(context)) {
+                return this.nextElementIdIfTrue;
+            }
+        }
+
+        return this.nextElementIdIfFalse;
     }
 
     clone () {
@@ -470,6 +504,33 @@ export class WorkflowCondition {
         return this.value;
     }
 
+    evaluate (context) {
+        const variableValue = context.getVariableValue(this.variableId);
+
+        switch (this.operation) {
+            case 'equal':
+                return variableValue === this.value;
+
+            case 'not-equal':
+                return variableValue !== this.value;
+
+            case 'greater-than':
+                return variableValue > this.value;
+
+            case 'less-than':
+                return variableValue < this.value;
+
+            case 'greater-than-or-equal':
+                return variableValue >= this.value;
+
+            case 'less-than':
+                return variableValue <= this.value;
+
+            default:
+                throw new Error('Unknown operation: ' + this.operation);
+        }
+    }
+
     clone () {
         return new WorkflowCondition({
             id: this.id,
@@ -532,6 +593,14 @@ export class WorkflowAssignElement {
 
     getAssignments () {
         return this.assignments;
+    }
+
+    execute (context) {
+        for (const assignment of this.assignments) {
+            assignment.execute(context);
+        }
+
+        return this.nextElementId;
     }
 
     clone () {
@@ -602,6 +671,28 @@ export class WorkflowAssignment {
         return this.value;
     }
 
+    execute (context) {
+        context.setVariableValue(this.variableId, this.evaluateOperation());
+    }
+
+    evaluateOperation () {
+        const variableValue = context.getVariableValue(this.variableId);
+
+        switch (this.operation) {
+            case 'set':
+                return this.value;
+
+            case 'increment':
+                return variableValue + this.value;
+
+            case 'decrement':
+                return variableValue - this.value;
+
+            default:
+                throw new Error('Unknown operation: ' + this.operation);
+        }
+    }
+
     clone () {
         return new WorkflowAssignment({
             id: this.id,
@@ -611,3 +702,4 @@ export class WorkflowAssignment {
         });
     }
 }
+

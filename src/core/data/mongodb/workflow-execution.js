@@ -14,13 +14,13 @@ export async function findWorkflowExecutionById (id) {
     return toWorkflowExecution(workflowExecutionData);
 }
 
-export async function findWorkflowExecutionsByVersionId (workflowVersionId) {
-    const workflowExecutionsData = await database
+export async function findWorkflowExecutionIdsByVersionId (workflowVersionId) {
+    const workflowExecutionIdsData = await database
         .collection('workflow-executions')
         .find({ workflowVersionId }, { sort: { startedAt: -1 } })
         .toArray();
 
-    return workflowExecutionsData.map(toWorkflowExecution);
+    return workflowExecutionIdsData.map(workflowExecutionIdData => workflowExecutionIdData.id);
 }
 
 export async function countWorkflowExecutionsByVersionId (workflowVersionId) {

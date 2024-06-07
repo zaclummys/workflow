@@ -1,4 +1,5 @@
 import Grid from './grid';
+import DateAgo from './date-ago';
 
 import {
     Card,
@@ -6,7 +7,10 @@ import {
     CardText,
     CardLink,
 } from './card';
+
 import WorkflowExecutionStatus from './workflow-execution-status';
+
+import getWorkflowExecutionAction from '~/actions/get-workflow-execution-action';
 
 export function WorkflowExecutionGrid ({ children }) {
     return (
@@ -16,12 +20,18 @@ export function WorkflowExecutionGrid ({ children }) {
     );
 }
 
-export function WorkflowExecutionGridItem ({ workflowExecution }) {
+export async function WorkflowExecutionGridItem ({ workflowExecutionId }) {
+    const { workflowExecution } = await getWorkflowExecutionAction(workflowExecutionId);
+
+    if (!workflowExecution) {
+        return null;
+    }
+
     return (
         <Card>
             <div className="flex flex-row">
                 <CardTitle className="flex-grow">
-                    abc
+                    Workflow Execution
                 </CardTitle>
 
                 <WorkflowExecutionStatus
@@ -29,11 +39,15 @@ export function WorkflowExecutionGridItem ({ workflowExecution }) {
             </div>
 
             <CardText>
-                abc
+                {workflowExecution.id}
+            </CardText>
+
+            <CardText>
+                Started <DateAgo date={workflowExecution.startedAt} /> &bull; Finished <DateAgo date={workflowExecution.finishedAt} />
             </CardText>
 
             <CardLink
-                title={`Go to Execution ${workflowExecution.id}`}
+                title={`Go to Workflow Execution ${workflowExecution.id}`}
                 href={`/workflow-execution/${workflowExecution.id}`} />
         </Card>
     );
