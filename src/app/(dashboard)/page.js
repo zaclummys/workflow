@@ -60,7 +60,6 @@ export default async function Workspaces() {
                             ))}
                         </WorkspaceGrid>
                     )}
-
                 </Section>
             </Container>
         </>

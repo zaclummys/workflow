@@ -21,6 +21,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
     if (!workflowVersion) {
         return {
             success: false,
+            message: 'Workflow version not found.',
         };
     }
 
@@ -44,11 +45,46 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
             number: workflowVersion.getNumber(),
             status: workflowVersion.getStatus(),
             elements: workflowVersion.getElements()
-                .map(element => ({
-                    id: element.getId(),
-                    name: element.getName(),
-                    type: element.getType(),
-                })),
+                .map(element => {
+                    switch (element.getType()) {
+                        case 'start':
+                            return {
+                                id: element.getId(),
+                                type: element.getType(),
+                                name: element.getName(),
+                                nextElementId: element.getNextElementId(),
+                            };
+
+                        case 'assign':
+                            return {
+                                id: element.getId(),
+                                type: element.getType(),
+                                name: element.getName(),
+                                description: element.getDescription(),
+                                nextElementId: element.getNextElementId(),
+                            };
+                        
+                        case 'end':
+                            return {
+                                id: element.getId(),
+                                type: element.getType(),
+                                name: element.getName(),
+                            };
+
+                        case 'if':
+                            return {
+                                id: element.getId(),
+                                type: element.getType(),
+                                name: element.getName(),
+                                description: element.getDescription(),
+                                nextElementId: element.getNextElementId(),
+                                conditions: [],
+                            }
+
+                        default:
+                            return null;
+                    }
+                }),
 
             variables: workflowVersion.getVariables()
                 .map(variable => ({

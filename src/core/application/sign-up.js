@@ -31,5 +31,6 @@ export default async function signUp ({
 
     return {
         success: true,
+        userId: user.getId(),
     };
 }

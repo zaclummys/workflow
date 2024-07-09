@@ -38,10 +38,8 @@ export default async function createWorkflowVersion ({
     const workflowVersion = WorkflowVersion.create({
         workflowId: workflow.getId(),
         createdById: session.getUserId(),
-        number: workflow.getNextVersionNumber(),
+        number: workflow.takeNextVersionNumber(),
     });
-
-    workflow.incrementNextVersionNumber();
 
     await insertWorkflowVersion(workflowVersion);
     await updateWorkflow(workflow);

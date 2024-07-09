@@ -1,8 +1,10 @@
 import {
     randomUUID, 
 } from 'crypto';
+
 import {
-    hash, verify, 
+    hash,
+    verify, 
 } from 'argon2';
 
 export class User {
@@ -121,11 +123,7 @@ export class UserColor {
     
     constructor (name) {
         if (!name) {
-            throw new Error('Name cannot be empty');
-        }
-
-        if (typeof name !== 'string') {
-            throw new Error('Name must be a string');
+            throw new Error('Name is required');
         }
 
         if (!UserColor.colors.includes(name)) {

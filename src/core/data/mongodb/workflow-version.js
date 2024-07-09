@@ -1,5 +1,11 @@
 import { database } from '~/core/data/mongodb/client';
-import { WorkflowEndElement, WorkflowStartElement, WorkflowVariable, WorkflowVersion } from '~/core/domain/workflow-version';
+import {
+    WorkflowStartElement,
+    WorkflowVariable,
+    WorkflowAssignElement,
+    WorkflowIfElement,
+    WorkflowVersion,
+} from '~/core/domain/workflow-version';
 
 export async function insertWorkflowVersion (workflowVersion) {
     await database
@@ -64,11 +70,33 @@ export function fromWorkflowVersion (workflowVersion) {
 }
 
 export function fromWorkflowElement (workflowElement) {
-    return {
-        id: workflowElement.getId(),
-        type: workflowElement.getType(),
-        name: workflowElement.getName(),
-    };
+    switch (workflowElement.getType()) {
+        case 'start':
+            return {
+                id: workflowElement.getId(),
+                type: workflowElement.getType(),
+                nextElementId: workflowElement.getNextElementId(),
+            };
+
+        case 'assign':
+            return {
+                id: workflowElement.getId(),
+                type: workflowElement.getType(),
+                name: workflowElement.getName(),
+                description: workflowElement.getDescription(),
+                nextElementId: workflowElement.getNextElementId(),
+            };
+
+        case 'if':
+            return {
+                id: workflowElement.getId(),
+                type: workflowElement.getType(),
+                name: workflowElement.getName(),
+            };
+
+        default:
+            throw new Error(`Unknown element type: ${workflowElement.getType()}`);
+    }
 }
 
 export function toWorkflowVersion ({
@@ -102,8 +130,11 @@ export function toWorkflowElement (workflowElementData) {
         case 'start':
             return new WorkflowStartElement(workflowElementData);
 
-        case 'end':
-            return new WorkflowEndElement(workflowElementData);
+        case 'assign':
+            return new WorkflowAssignElement(workflowElementData);
+
+        case 'if':
+            return new WorkflowVariable(workflowElementData);
 
         default:
             throw new Error(`Unknown element type: ${workflowElementData.type}`);

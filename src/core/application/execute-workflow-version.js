@@ -19,6 +19,7 @@ export default async function executeWorkflowVersion ({
     if (!session) {
         return {
             success: false,
+            message: 'Invalid session token',
         };
     }
 
@@ -27,6 +28,7 @@ export default async function executeWorkflowVersion ({
     if (!workflowVersion) {
         return {
             success: false,
+            message: 'Workflow version not found',
         };
     }
 
@@ -38,88 +40,29 @@ export default async function executeWorkflowVersion ({
 
     await insertWorkflowExecution(workflowExecution);
 
-    runWorkflowExecution(workflowExecution.getId());
-
-    return {
-        success: true,
-        workflowExecutionId: workflowExecution.getId(),
-    };
-}
-
-async function runWorkflowExecution (workflowExecutionId) {
-    await wait(5000);
-
-    const workflowExecution = await findWorkflowExecutionById(workflowExecutionId);
-
-    if (!workflowExecution) {
-        return;
-    }
-
-    const workflowVersion = await findWorkflowVersionById(workflowExecution.getWorkflowVersionId());
-
-    if (!workflowVersion) {
-        return;
-    }
-
     try {
         workflowExecution.setStatus('running');
         workflowExecution.setStartedAt(new Date());
     
         await updateWorkflowExecution(workflowExecution);
 
-        runWorkflowExecutionLoop({
-            workflowExecution,
-            workflowVersion,
-        });
+        workflowVersion.execute();
     
         workflowExecution.setStatus('success');
         workflowExecution.setFinishedAt(new Date());
     
         await updateWorkflowExecution(workflowExecution);
     } catch (error) {
+        console.error(error);
+        
         workflowExecution.setStatus('error');
         workflowExecution.setFinishedAt(new Date());
     
         await updateWorkflowExecution(workflowExecution);
     }
-}
 
-function runWorkflowExecutionLoop ({
-    workflowExecution,
-    workflowVersion,
-}) {
-    const context = {
-        values: workflowExecution.getInputValues()
-            .map(inputValue => ({
-                value: inputValue.getValue(),
-
-                setValue (value) {
-                    
-                getVariableId () {
-                    return inputValue.getVariableId();
-                },
-            })),
-
-        findVariableById (variableId) {
-            return context.values.find(value => variableId === value.variableId);
-        },
-
-        setVar
+    return {
+        success: true,
+        workflowExecutionId: workflowExecution.getId(),
     };
-
-    const startElement = workflowVersion.getStartElement();
-
-    let currentElementId = startElement.getNextElementId();
-
-    while (true) {
-        const element = workflowVersion.findElementById(currentElementId);
-
-        if (!element) {
-            throw new Error(`Element not found: ${currentElementId}`);
-        }
-
-        element.execute(context);
-    }
 }
-
-const wait = (ms) => new global.Promise(resolve => setTimeout(resolve, ms));

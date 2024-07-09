@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 
 export class WorkflowExecution {
     static create ({
-        inputValues,
+        inputValues = [],
         workflowVersionId,
         executedById,
     }) {
@@ -42,6 +42,14 @@ export class WorkflowExecution {
 
         if (!executedById) {
             throw new Error('Executed By ID is required');
+        }
+
+        if (!inputValues) {
+            throw new Error('Input Values is required');
+        }
+
+        if (!outputValues) {
+            throw new Error('Output Values is required');
         }
 
         this.id = id;

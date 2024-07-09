@@ -18,7 +18,6 @@ if (!uri) {
 }
 
 const client = new MongoClient(uri, {
-    monitorCommands: true,
     serverApi: {
         strict: true,
         deprecationErrors: true,

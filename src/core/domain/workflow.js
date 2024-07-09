@@ -42,7 +42,7 @@ export class Workflow {
         }
 
         if (!nextVersionNumber) {
-            throw new Error('Next version number is required');
+            throw new Error('Next Version Number is required');
         }
 
         if (!workspaceId) {
@@ -54,7 +54,7 @@ export class Workflow {
         }
 
         if (!createdAt) {
-            throw new Error('Created at is required');
+            throw new Error('Created At is required');
         }
 
         this.id = id;
@@ -94,8 +94,12 @@ export class Workflow {
         return this.nextVersionNumber;
     }
 
-    incrementNextVersionNumber () {
+    takeNextVersionNumber () {
+        const nextVersionNumber = this.nextVersionNumber;
+
         this.nextVersionNumber += 1;
+
+        return nextVersionNumber;
     }
 
     setName (name) {

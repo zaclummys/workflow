@@ -20,45 +20,11 @@ html {
     --danger-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.danger'));
 }
 
-/* :root {
-    --button-horizontal-padding: theme('spacing.4');
-    --button-vertical-padding: theme('spacing.0');
-    --button-height: theme('spacing.10');
-    --button-border-radius: theme('borderRadius.md');
-
-    --menu-border-radius: theme('borderRadius.DEFAULT');
-    --menu-background: theme('colors.surface.high');
-    --menu-item-horizontal-padding: theme('spacing.6');
-    --menu-item-vertical-padding: theme('spacing.3');
-
-    --card-gap: theme('spacing.4');
-    --card-border-radius: theme('borderRadius.md');
-    --card-background: theme('colors.surface.DEFAULT');
-    --card-horizontal-padding: theme('spacing.6');
-    --card-vertical-padding: theme('spacing.4');
-} */
-
 html {
     @apply bg-background text-on-background;
 }
 
 @layer components {
-    .button {
-        @apply
-            flex
-            items-center
-            justify-center
-            text-sm
-            font-medium
-            h-10
-            px-4
-            py-0
-            rounded-md
-            disabled:opacity-70
-            disabled:pointer-events-none
-            transition-colors;
-    }
-
     .scrollbar-hidden {
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none; /* Firefox */

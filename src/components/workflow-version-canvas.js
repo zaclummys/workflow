@@ -3,8 +3,9 @@
 import { useState } from 'react';
 
 import VariablesWorkflowSidebar from './workflow-sidebars/variables-workflow-sidebar';
+import { Menu, MenuItem } from '~/components/menu';
 
-export default function WorkflowVersionCanvas ({
+export default function WorkflowVersionCanvas({
     workflowVersion,
 }) {
     const [isVariablesSidebarOpen, setIsVariablesSidebarOpen] = useState(false);
@@ -57,13 +58,17 @@ export default function WorkflowVersionCanvas ({
         });
     };
 
+    const findElementByType = (elementType) => {
+        return workflowVersion.elements.find(element => element.type === elementType);
+    };
+
     const findElementById = (elementId) => {
         return workflowVersion.elements.find(element => element.id === elementId);
     };
 
     const handleElementClick = (event) => {
         const element = findElementById(event.currentTarget.dataset.elementId);
-        
+
         if (!element) {
             return;
         }
@@ -72,6 +77,8 @@ export default function WorkflowVersionCanvas ({
             setIsVariablesSidebarOpen(true);
         }
     }
+
+    const startElement = findElementByType('start');
 
     return (
         <div className="w-full h-full bg-background text-outline-variant">
@@ -87,19 +94,17 @@ export default function WorkflowVersionCanvas ({
                 <Viewport
                     translateX={translateX}
                     translateY={translateY}>
-                    {workflowVersion.elements.map(element => (
-                        <WorkflowElement
-                            key={element.id}
-                            element={element}
-                            onClick={handleElementClick} />
-                    ))}
+                    <WorkflowElement
+                        findElementById={findElementById}
+                        element={startElement}
+                        workflowVersionId={workflowVersion.id} />
                 </Viewport>
             </Pane>
 
             {isVariablesSidebarOpen && (
                 <VariablesWorkflowSidebar
                     workflowVersion={workflowVersion}
-                    onCloseButtonClick={() => setIsVariablesSidebarOpen(false)}/>
+                    onCloseButtonClick={() => setIsVariablesSidebarOpen(false)} />
             )}
         </div>
     );
@@ -153,16 +158,122 @@ function Viewport({
     )
 }
 
-function WorkflowElement ({
+function WorkflowElement({
+    element,
+    findElementById,
+    workflowVersionId,
+}) {
+    const nextElement = findElementById(element.nextElementId);
+
+    return (
+        <>
+            <WorkflowElementButton
+                element={element} />
+
+            {element.type !== "end" && (
+                <AddWorkflowElementButtonMenu
+                    referenceElementId={element.id}
+                    workflowVersionId={workflowVersionId} />
+            )}
+
+            {nextElement && (
+                <WorkflowElement
+                    element={nextElement}
+                    findElementById={findElementById}
+                    workflowVersionId={workflowVersionId} />
+            )}
+        </>
+    );
+}
+
+function WorkflowElementButton({
     element,
     onClick,
 }) {
     return (
         <div
-            data-element-id={element.id}
             className="bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all"
             onClick={onClick}>
             <span>{element.name}</span>
         </div>
     );
+}
+
+import { CirclePlus, Split, Equal, X } from 'lucide-react';
+
+import addElementToWorkflowVersion from '~/actions/add-element-to-workflow-version-action';
+
+function AddWorkflowElementButtonMenu({
+    referenceElementId,
+    referenceBranchType,
+    ifBranchType,
+    workflowVersionId,
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleAddButtonClick = () => {
+        setIsOpen(true);
+    };
+
+    const handleCloseButtonClick = () => {
+        setIsOpen(false);
+    };
+
+    const handleIfItemClick = () => {
+        addElementToWorkflowVersion({
+            elementData: {
+                type: "if",
+                name: "New If Element",
+            },
+            referenceElementId,
+            referenceBranchType,
+            ifBranchType,
+            workflowVersionId,
+        });
+    };
+
+    const handleAssignMenuItemClick = () => {
+        addElementToWorkflowVersion({
+            elementData: {
+                type: "assign",
+                name: "New Assign Element",
+            },
+            referenceElementId,
+            referenceBranchType,
+            ifBranchType,
+            workflowVersionId,
+        });
+    };
+
+    return (
+        <div className="flex flex-col items-center gap-2">
+            {isOpen ? (
+                <Menu>
+                    <MenuItem>
+                        <Split className="w-4 h-4" />
+
+                        <span>If</span>
+                    </MenuItem>
+
+                    <MenuItem
+                        onClick={handleAssignMenuItemClick}>
+                        <Equal className="w-4 h-4" />
+
+                        <span>Assign</span>
+                    </MenuItem>
+
+                    <MenuItem
+                        onClick={handleCloseButtonClick}>
+                        <X className="w-4 h-4" />
+
+                        <span>Close</span>
+                    </MenuItem>
+                </Menu>
+            ) : (
+                <CirclePlus
+                    className="w-6 h-6 cursor-pointer hover:text-primary transition-colors"
+                    onClick={handleAddButtonClick} />
+            )}
+        </div>
+    )
 }

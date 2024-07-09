@@ -6,14 +6,14 @@ import {
     CardText,
     CardSection,
     CardSectionTitle,
-    CardLink, 
+    CardLink,
 } from '~/components/card';
 
 import WorkspaceMemberColorList from '~/components/workspace-member-color-list';
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
 
-export function WorkspaceGrid ({ children }) {
+export function WorkspaceGrid({ children }) {
     return (
         <Grid>
             {children}
@@ -21,7 +21,7 @@ export function WorkspaceGrid ({ children }) {
     );
 }
 
-export async function WorkspaceGridItem ({ workspaceId }) {
+export async function WorkspaceGridItem({ workspaceId }) {
     const { workspace } = await getWorkspaceAction(workspaceId);
 
     if (!workspace) {
@@ -38,8 +38,14 @@ export async function WorkspaceGridItem ({ workspaceId }) {
                 {workspace.description}
             </CardText>
 
-            <WorkspaceMemberSection
-                members={workspace.members} />
+            <CardSection>
+                <CardSectionTitle>
+                    Members ({workspace.members.length})
+                </CardSectionTitle>
+
+                <WorkspaceMemberColorList
+                    members={workspace.members} />
+            </CardSection>
 
             <CardLink
                 title={`Go to ${workspace.name}`}
@@ -47,18 +53,4 @@ export async function WorkspaceGridItem ({ workspaceId }) {
         </Card>
     );
 }
-
-function WorkspaceMemberSection ({ members }) {
-    return (
-        <CardSection>
-            <CardSectionTitle>
-                Members ({members.length})
-            </CardSectionTitle>
-
-            <WorkspaceMemberColorList
-                members={workspace.members} />
-        </CardSection>
-    );
-}
-
 
