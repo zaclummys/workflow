@@ -1,22 +1,27 @@
 'use server';
 
+import { revalidatePath } from "next/cache";
 import { getSessionToken } from "./cookies";
 
 import addElementToWorkflowVersion from "~/core/application/add-element-to-workflow-version";
 
 export default async function addElementToWorkflowVersionAction ({
     elementData,
-    referenceElementId,
-    referenceBranchType,
+    previousElementId,
+    previousElementBranch,
     workflowVersionId,
 }) {
     const sessionToken = getSessionToken();
 
-    return addElementToWorkflowVersion({
+    const output = addElementToWorkflowVersion({
         elementData,
-        referenceElementId,
-        referenceBranchType,
+        previousElementId,
+        previousElementBranch,
         workflowVersionId,
         sessionToken,
     });
+
+    revalidatePath(`/workflow-version/${workflowVersionId}`);
+
+    return output;
 }

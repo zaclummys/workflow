@@ -27,5 +27,9 @@ export default function useNavigation () {
         navigateToWorkflowExecution: (workflowExecutionId) => {
             router.push(`/workflow-execution/${workflowExecutionId}`);
         },
+
+        replaceBySignIn: () => {
+            router.replace('/sign-in');
+        },
     };
 }

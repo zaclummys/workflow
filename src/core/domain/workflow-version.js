@@ -141,10 +141,7 @@ export class WorkflowVersion {
             throw new Error(`Previous element not found: ${previousElementId}`);
         }
 
-        previousElement.connect({
-            element,
-            branch: previousElementBranch,
-        });
+        previousElement.connect(element, previousElementBranch);
         
         this.elements.push(element);
     }
@@ -187,16 +184,12 @@ export class WorkflowVersion {
         loop:
         for (currIteration = 0; currIteration < maxIterations; currIteration++) {
             if (!currentElement) {
-                throw new Error('Expected an element.');
+                break;
             }
 
             switch (currentElement.constructor) {
                 case WorkflowStartElement: {
                     currentElement = this.findElementById(currentElement.getNextElementId());
-                }
-
-                case WorkflowEndElement: {
-                    break loop;
                 }
 
                 case WorkflowIfElement: {
@@ -441,7 +434,7 @@ export class WorkflowStartElement {
         this.nextElementId = nextElementId;
     }
 
-    connect ({ element }) {
+    connect (element) {
         element.setDefaultNextElementId(this.getNextElementId());
         this.setNextElementId(element.getId());
     }
@@ -484,10 +477,6 @@ export class WorkflowIfElement {
             throw new Error('Name is required.');
         }
 
-        if (!description) {
-            throw new Error('Description is required.');
-        }
-
         if (!strategy) {
             throw new Error('Strategy is required.');
         }
@@ -511,6 +500,14 @@ export class WorkflowIfElement {
 
     getId() {
         return this.id;
+    }
+
+    getName () {
+        return this.name;
+    }
+
+    getDescription() {
+        return this.description;
     }
 
     getStrategy() {
@@ -541,7 +538,7 @@ export class WorkflowIfElement {
         this.setNextElementIdIfTrue(defaultNextElementId);
     }
 
-    connect ({ element, branch }) {
+    connect (element, branch) {
         switch (branch) {
             case 'true':
                 element.setDefaultNextElementId(this.getNextElementIdIfTrue());
@@ -705,7 +702,7 @@ export class WorkflowAssignElement {
         this.setNextElementId(defaultNextElementId);
     }
 
-    connect ({ element }) {
+    connect (element) {
         element.setDefaultNextElementId(this.getNextElementId());
         this.setNextElementId(element.getId());
     }

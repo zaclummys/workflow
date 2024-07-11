@@ -1,17 +1,18 @@
 'use client';
 
 import {
-    useId, 
+    useId,
+    useState, 
 } from 'react';
-import {
-    useRouter, 
-} from 'next/navigation';
+
 import {
     Form, Field, Label, Input, 
 } from '~/components/form';
+
 import {
     PrimaryButton, 
 } from "~/components/button";
+
 import {
     SignBox,
     SignBoxHeader,
@@ -21,34 +22,45 @@ import {
     SignBoxFooterText,
     SignBoxFooterLink, 
 } from "~/components/sign-box";
+
 import signUpAction from "~/actions/sign-up-action";
-import useForm from '~/hooks/use-form';
+
+import useNavigation from '~/hooks/use-navigation';
 
 export const title = 'Sign Up';
 
 export default function SignUp() {
-    const router = useRouter();
+    const { replaceBySignIn } = useNavigation();
 
     const nameId = useId();
-
     const emailId = useId();
-
     const passwordId = useId();
 
-    const {
-        pending,
-        error,
+    const [pending, setPending] = useState(false);
+    const [error, setError] = useState(null);
 
-        onSubmit,
-    } = useForm(async (event) => {
-        return signUpAction({
-            name: event.target.name.value,
-            email: event.target.email.value,
-            password: event.target.password.value,
-        });
-    }, () => {
-        router.replace('/sign-in');
-    });
+    const onSubmit = async (event) => {
+        event.preventDefault();
+
+        setPending(true);
+        setError(null);
+
+        try {
+            const { success, message } = await signUpAction({
+                name: event.target.name.value,
+                email: event.target.email.value,
+                password: event.target.password.value,
+            });
+
+            if (success) {
+                replaceBySignIn();
+            } else {
+                setError(message);
+            }
+        } catch {
+            setError('An error occurred while signing up. Please try again later.');
+        }
+    }
 
     return (
         <SignBox>
@@ -94,19 +106,20 @@ export default function SignUp() {
                         disabled={pending}
                         type="password"
                         name="password"
-                        minLength="1"
+                        minLength="8"
                         maxLength="255"
                         required />
                 </Field>
 
-                <PrimaryButton disabled={pending}>
+                <PrimaryButton
+                    disabled={pending}>
                     Sign Up
                 </PrimaryButton>
 
                 {error && (
-                    <span className="text-danger">
+                    <Error>
                         {error}
-                    </span>
+                    </Error>
                 )}
             </Form>
 

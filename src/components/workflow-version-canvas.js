@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import VariablesWorkflowSidebar from './workflow-sidebars/variables-workflow-sidebar';
 import { Menu, MenuItem } from '~/components/menu';
@@ -15,8 +15,8 @@ export default function WorkflowVersionCanvas({
     const [translateX, setTranslateX] = useState(0);
     const [translateY, setTranslateY] = useState(0);
 
-    const maxTranslate = 1024;
-    const minTranslate = -1024;
+    const maxTranslateX = 1024;
+    const minTranslateX = -1024;
 
     const onPointerDown = () => {
         setIsPointerDown(true);
@@ -36,10 +36,10 @@ export default function WorkflowVersionCanvas({
         setTranslateX(translateX => {
             const newTranslateX = translateX + movementX;
 
-            if (newTranslateX > maxTranslate) {
-                return maxTranslate;
-            } else if (newTranslateX < minTranslate) {
-                return minTranslate;
+            if (newTranslateX > maxTranslateX) {
+                return maxTranslateX;
+            } else if (newTranslateX < minTranslateX) {
+                return minTranslateX;
             } else {
                 return newTranslateX;
             }
@@ -48,10 +48,8 @@ export default function WorkflowVersionCanvas({
         setTranslateY(translateY => {
             const newTranslateY = translateY + movementY;
 
-            if (newTranslateY > maxTranslate) {
-                return maxTranslate;
-            } else if (newTranslateY < minTranslate) {
-                return minTranslate;
+            if (newTranslateY > 0) {
+                return 0;
             } else {
                 return newTranslateY;
             }
@@ -163,24 +161,52 @@ function WorkflowElement({
     findElementById,
     workflowVersionId,
 }) {
+    if (!element) return null;
+
     const nextElement = findElementById(element.nextElementId);
 
     return (
-        <>
+        <>        
             <WorkflowElementButton
                 element={element} />
 
-            {element.type !== "end" && (
-                <AddWorkflowElementButtonMenu
-                    referenceElementId={element.id}
-                    workflowVersionId={workflowVersionId} />
-            )}
+            {element.type === 'if' ? (
+                <div className="grid grid-cols-2 w-full">                    
+                    <div className="flex flex-col gap-4 items-center">
+                        <AddWorkflowElementButtonMenu
+                            previousElementBranch="false"
+                            previousElementId={element.id}
+                            workflowVersionId={workflowVersionId} />
 
-            {nextElement && (
-                <WorkflowElement
-                    element={nextElement}
-                    findElementById={findElementById}
-                    workflowVersionId={workflowVersionId} />
+                        <WorkflowElement
+                            element={findElementById(element.nextElementIdIfFalse)}
+                            findElementById={findElementById}
+                            workflowVersionId={workflowVersionId} />
+                    </div>
+
+                    <div className="flex flex-col gap-4 items-center">
+                        <AddWorkflowElementButtonMenu
+                            previousElementBranch="true"
+                            previousElementId={element.id}
+                            workflowVersionId={workflowVersionId} />
+
+                        <WorkflowElement
+                            element={findElementById(element.nextElementIdIfTrue)}
+                            findElementById={findElementById}
+                            workflowVersionId={workflowVersionId} />
+                    </div>
+                </div>
+            ) : (
+                <>                            
+                    <AddWorkflowElementButtonMenu
+                        previousElementId={element.id}
+                        workflowVersionId={workflowVersionId} />
+
+                    <WorkflowElement
+                        element={nextElement}
+                        findElementById={findElementById}
+                        workflowVersionId={workflowVersionId} />
+                </>
             )}
         </>
     );
@@ -192,7 +218,7 @@ function WorkflowElementButton({
 }) {
     return (
         <div
-            className="bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all"
+            className="inline-flex bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all"
             onClick={onClick}>
             <span>{element.name}</span>
         </div>
@@ -204,12 +230,12 @@ import { CirclePlus, Split, Equal, X } from 'lucide-react';
 import addElementToWorkflowVersion from '~/actions/add-element-to-workflow-version-action';
 
 function AddWorkflowElementButtonMenu({
-    referenceElementId,
-    referenceBranchType,
-    ifBranchType,
+    previousElementId,
+    previousElementBranch,
     workflowVersionId,
 }) {
     const [isOpen, setIsOpen] = useState(false);
+    const [isPending, setIsPending] = useState(false);
 
     const handleAddButtonClick = () => {
         setIsOpen(true);
@@ -219,56 +245,90 @@ function AddWorkflowElementButtonMenu({
         setIsOpen(false);
     };
 
-    const handleIfItemClick = () => {
-        addElementToWorkflowVersion({
+    const handleIfMenuItemClick = async (event) => {
+        setIsPending(true);
+
+        await addElementToWorkflowVersion({
             elementData: {
                 type: "if",
                 name: "New If Element",
+                strategy: "all",
+                conditions: [],
             },
-            referenceElementId,
-            referenceBranchType,
-            ifBranchType,
+            previousElementId,
+            previousElementBranch,
             workflowVersionId,
         });
+
+        setIsPending(false);
+        setIsOpen(false);
     };
 
-    const handleAssignMenuItemClick = () => {
-        addElementToWorkflowVersion({
+    const handleAssignMenuItemClick = async (event) => {
+        setIsPending(true);
+
+        await addElementToWorkflowVersion({
             elementData: {
                 type: "assign",
                 name: "New Assign Element",
             },
-            referenceElementId,
-            referenceBranchType,
-            ifBranchType,
+            previousElementId,
+            previousElementBranch,
             workflowVersionId,
         });
+
+        setIsPending(false);
+        setIsOpen(false);
+    };
+
+    const handleMenuBackgroundClick = () => {
+        setIsOpen(false);
     };
 
     return (
         <div className="flex flex-col items-center gap-2">
+            {previousElementBranch === 'true' && (
+                <span className="text-sm">True</span>
+            )}
+
+            {previousElementBranch === 'false' && (
+                <span className="text-sm">False</span>
+            )}
+
             {isOpen ? (
-                <Menu>
-                    <MenuItem>
-                        <Split className="w-4 h-4" />
+                <>
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-50"
+                        onClick={handleMenuBackgroundClick} />
 
-                        <span>If</span>
-                    </MenuItem>
+                    <Menu
+                        className="z-50"
+                        onClick={event => event.stopPropagation()}>
+                        <MenuItem
+                            disabled={isPending}
+                            onClick={handleIfMenuItemClick}>
+                            <Split className="w-4 h-4" />
 
-                    <MenuItem
-                        onClick={handleAssignMenuItemClick}>
-                        <Equal className="w-4 h-4" />
+                            <span>If</span>
+                        </MenuItem>
 
-                        <span>Assign</span>
-                    </MenuItem>
+                        <MenuItem
+                            disabled={isPending}
+                            onClick={handleAssignMenuItemClick}>
+                            <Equal className="w-4 h-4" />
 
-                    <MenuItem
-                        onClick={handleCloseButtonClick}>
-                        <X className="w-4 h-4" />
+                            <span>Assign</span>
+                        </MenuItem>
 
-                        <span>Close</span>
-                    </MenuItem>
-                </Menu>
+                        <MenuItem
+                            disabled={isPending}
+                            onClick={handleCloseButtonClick}>
+                            <X className="w-4 h-4" />
+
+                            <span>Close</span>
+                        </MenuItem>
+                    </Menu>
+                </>
             ) : (
                 <CirclePlus
                     className="w-6 h-6 cursor-pointer hover:text-primary transition-colors"

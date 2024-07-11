@@ -5,6 +5,7 @@ import {
     WorkflowAssignElement,
     WorkflowIfElement,
     WorkflowVersion,
+    WorkflowAssignment,
 } from '~/core/domain/workflow-version';
 
 export async function insertWorkflowVersion (workflowVersion) {
@@ -84,6 +85,8 @@ export function fromWorkflowElement (workflowElement) {
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
                 description: workflowElement.getDescription(),
+                assignments: workflowElement.getAssignments()
+                    .map(fromWorkflowAssignment),
                 nextElementId: workflowElement.getNextElementId(),
             };
 
@@ -92,11 +95,28 @@ export function fromWorkflowElement (workflowElement) {
                 id: workflowElement.getId(),
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
+                strategy: workflowElement.getStrategy(),
+                conditions: workflowElement.getConditions()
+                    .map(fromWorkflowCondition),
+                nextElementIdIfTrue: workflowElement.getNextElementIdIfTrue(),
+                nextElementIdIfFalse: workflowElement.getNextElementIdIfFalse(),
             };
 
         default:
             throw new Error(`Unknown element type: ${workflowElement.getType()}`);
     }
+}
+
+function fromWorkflowCondition (workflowCondition) {
+    return {};
+}
+
+function fromWorkflowAssignment (workflowAssignment) {
+    return {
+        id: workflowAssignment.getId(),
+        variableId: workflowAssignment.getVariableId(),
+        value: workflowAssignment.getValue(),
+    };
 }
 
 export function toWorkflowVersion ({
@@ -131,12 +151,19 @@ export function toWorkflowElement (workflowElementData) {
             return new WorkflowStartElement(workflowElementData);
 
         case 'assign':
-            return new WorkflowAssignElement(workflowElementData);
+            return new WorkflowAssignElement({
+                ...workflowElementData,
+                assignments: workflowElementData.assignments.map(toWorkflowAssignment),
+            });
 
         case 'if':
-            return new WorkflowVariable(workflowElementData);
+            return new WorkflowIfElement(workflowElementData);
 
         default:
             throw new Error(`Unknown element type: ${workflowElementData.type}`);
     }
+}
+
+export function toWorkflowAssignment (workflowAssignmentData) {
+    return new WorkflowAssignment(workflowAssignmentData);
 }

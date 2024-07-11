@@ -5,8 +5,6 @@ import { ArrowLeftIcon } from "lucide-react";
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionStatus from "~/components/workflow-version-status";
-
-import ButtonGroup from "~/components/button-group";
 import WorkflowVersionCanvas from "~/components/workflow-version-canvas";
 
 import {
@@ -46,45 +44,19 @@ export default async function EditWorkflowVersion ({ params: { workflowVersionId
                     </div>
                 </div>
 
-                <WorkflowVersionHeaderButtons
-                    workflowVersion={workflowVersion} />
+                {workflowVersion.status === 'active' ? (
+                    <DeactivateWorkflowVersionButton
+                        workflowVersionId={workflowVersion.id} />
+                ) : (
+                    <ActivateWorkflowVersionButton
+                        workflowVersionId={workflowVersion.id} />
+                )}
             </header>
 
             <WorkflowVersionCanvas
                 workflowVersion={workflowVersion} />
         </div>
     );
-}
-
-function WorkflowVersionHeaderButtons ({ workflowVersion }) {
-    switch (workflowVersion.status) {
-        case 'draft':
-            return (
-                <ButtonGroup>
-                    <ActivateWorkflowVersionButton
-                        workflowVersionId={workflowVersion.id} />
-                </ButtonGroup>
-            );
-
-        case 'active':
-            return (
-                <ButtonGroup>
-                    <DeactivateWorkflowVersionButton
-                        workflowVersionId={workflowVersion.id} />
-                </ButtonGroup>
-            );
-
-        case 'inactive':
-            return (
-                <ButtonGroup>
-                    <ActivateWorkflowVersionButton
-                        workflowVersionId={workflowVersion.id} />
-                </ButtonGroup>
-            );
-
-        default:
-            return null;
-    }
 }
 
 function GoBackLink ({ workflowVersionId }) {

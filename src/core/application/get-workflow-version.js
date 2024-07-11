@@ -63,13 +63,6 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 description: element.getDescription(),
                                 nextElementId: element.getNextElementId(),
                             };
-                        
-                        case 'end':
-                            return {
-                                id: element.getId(),
-                                type: element.getType(),
-                                name: element.getName(),
-                            };
 
                         case 'if':
                             return {
@@ -77,8 +70,10 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 type: element.getType(),
                                 name: element.getName(),
                                 description: element.getDescription(),
-                                nextElementId: element.getNextElementId(),
-                                conditions: [],
+                                nextElementIdIfTrue: element.getNextElementIdIfTrue(),
+                                nextElementIdIfFalse: element.getNextElementIdIfFalse(),
+                                strategy: element.getStrategy(),
+                                conditions: element.getConditions(),
                             }
 
                         default:
