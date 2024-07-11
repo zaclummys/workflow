@@ -1,9 +1,5 @@
-import {
-    database, 
-} from './client.js';
-import {
-    Session, 
-} from '../../domain/session.js';
+import { database } from './client';
+import { Session } from '~/core/domain/session';
 
 export async function insertSession (session) {
     await database

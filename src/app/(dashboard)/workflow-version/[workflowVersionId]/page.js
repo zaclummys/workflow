@@ -34,6 +34,7 @@ import {
     PlaceholderTitle,
 } from '~/components/placeholder';
 import ExecuteWorkflowVersionModalButton from '~/components/modal-buttons/execute-workflow-version-modal-button';
+import ForkWorkflowVersionModalButton from '~/components/modal-buttons/fork-workflow-version-modal-button';
 import { WorkflowExecutionGrid, WorkflowExecutionGridItem } from '~/components/workflow-execution-grid';
 
 export const title = 'Workflow Version';
@@ -63,6 +64,9 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                         <SectionActions>
                             <EditWorkflowVersionButton
                                 workflowVersionId={workflowVersion.id} />
+
+                            <ForkWorkflowVersionModalButton
+                                workflowVersion={workflowVersion} />
 
                             <ExecuteWorkflowVersionModalButton
                                 workflowVersion={workflowVersion} />

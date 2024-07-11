@@ -1,21 +1,31 @@
-import { findWorkflowById, deleteWorkflowById } from '~/core/data/mongodb/workflow';
+import { findSessionByToken } from '~/core/data/mongodb/session';
+import { deleteWorkflowById } from '~/core/data/mongodb/workflow';
 import { countWorkflowVersionsByWorkflowId } from '~/core/data/mongodb/workflow-version';
 
-export default async function deleteWorkflow ({ workflowId }) {
-    const workflow = await findWorkflowById(workflowId);
-
-    if (!workflow) {
+export default async function deleteWorkflow ({
+    workflowId,
+    sessionToken,
+}) {
+    if (!workflowId || !sessionToken) {
         return {
             success: false,
         };
     }
 
-    const numberOfWorkflowVersions = await countWorkflowVersionsByWorkflowId(workflowId);
+    const session = await findSessionByToken(sessionToken);
 
-    if (numberOfWorkflowVersions > 0) {
+    if (!session) {
         return {
             success: false,
         };
+    }
+
+    const amountOfWorkflowVersions = await countWorkflowVersionsByWorkflowId(workflowId);
+
+    if (amountOfWorkflowVersions > 0) {
+        return {
+            success: false,
+        }
     }
 
     await deleteWorkflowById(workflowId);

@@ -65,6 +65,12 @@ export async function deleteWorkflowById (id) {
         });
 }
 
+export async function countWorkflowsByWorkspaceId (workspaceId) {
+    return database
+        .collection('workflows')
+        .countDocuments({ workspaceId });
+}
+
 export function fromWorkflow (workflow) {
     return {
         id: workflow.getId(),

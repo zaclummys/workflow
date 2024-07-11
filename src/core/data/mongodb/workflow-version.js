@@ -56,6 +56,12 @@ export async function deleteWorkflowVersionById (id) {
         .deleteOne({ id });
 }
 
+export async function deleteWorkflowVersionsByWorkflowId (workflowId) {
+    await database
+        .collection('workflow-versions')
+        .deleteMany({ workflowId });
+}
+
 export function fromWorkflowVersion (workflowVersion) {
     return {
         id: workflowVersion.getId(),

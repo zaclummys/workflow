@@ -1,11 +1,17 @@
 import { findSessionByToken } from "../data/mongodb/session";
-import { deleteWorkflowExecutionByVersionId } from "../data/mongodb/workflow-execution";
+import { countWorkflowExecutionsByVersionId } from "../data/mongodb/workflow-execution";
 import { deleteWorkflowVersionById } from "../data/mongodb/workflow-version";
 
 export default async function deleteWorkflowVersion ({
     workflowVersionId,
     sessionToken,
 }) {
+    if (!workflowVersionId || !sessionToken) {
+        return {
+            success: false,
+        };
+    }
+
     const session = await findSessionByToken(sessionToken);
 
     if (!session) {
@@ -14,8 +20,14 @@ export default async function deleteWorkflowVersion ({
         };
     }
 
-    // TODO: Implement transactions
-    await deleteWorkflowExecutionByVersionId(workflowVersionId);
+    const amountOfWorkflowExecutions = countWorkflowExecutionsByVersionId(workflowVersionId);
+
+    if (amountOfWorkflowExecutions > 0) {
+        return {
+            success: false,
+        };
+    }
+
     await deleteWorkflowVersionById(workflowVersionId);
 
     return {
