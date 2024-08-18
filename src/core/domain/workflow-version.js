@@ -28,7 +28,6 @@ export class WorkflowVersion {
         status,
         variables,
         elements,
-        connections,
         workflowId,
         forkedFromId,
         createdAt,
@@ -66,12 +65,38 @@ export class WorkflowVersion {
             throw new Error('Created by ID is required.');
         }
 
+        const elementIds = elements.map(element => element.getId());
+
+        for (const element of elements) {
+            if (element instanceof WorkflowIfElement) {
+                const nextElementIdIfTrue = element.getNextElementIdIfTrue();
+                const nextElementIdIfFalse = element.getNextElementIdIfFalse();
+
+                const nextElementIdIfTrueExists = elementIds.includes(nextElementIdIfTrue);
+                const nextElementIdIfFalseExists = elementIds.includes(nextElementIdIfFalse);
+
+                if (nextElementIdIfTrue && !nextElementIdIfTrueExists) {
+                    throw new Error(`Next Element ID If True does not exist: ${nextElementIdIfTrue}`)
+                }
+
+                if (nextElementIdIfFalse && !nextElementIdIfFalseExists) {
+                    throw new Error(`Next Element ID If False does not exist: ${nextElementIdIfFalse}`)
+                }
+            } else {
+                const nextElementId = element.getNextElementId();
+                const nextElementIdIfExists = elementIds.includes(nextElementId);
+
+                if (nextElementId && !nextElementIdIfExists) {
+                    throw new Error(`Next Element ID does not exist: ${nextElementId}`)
+                }
+            }
+        }
+
         this.id = id;
         this.number = number;
         this.status = status;
         this.variables = variables;
         this.elements = elements;
-        this.connections = connections;
         this.workflowId = workflowId;
         this.forkedFromId = forkedFromId;
         this.createdAt = createdAt;
@@ -141,9 +166,126 @@ export class WorkflowVersion {
             throw new Error(`Previous element not found: ${previousElementId}`);
         }
 
-        previousElement.connect(element, previousElementBranch);
+        if (previousElement instanceof WorkflowIfElement) {
+            switch (previousElementBranch) {
+                case 'true':
+                    element.setDefaultNextElementId(previousElement.getNextElementIdIfTrue());
+                    previousElement.setNextElementIdIfTrue(element.getId());
+                break;
+    
+                case 'false':
+                    element.setDefaultNextElementId(previousElement.getNextElementIdIfFalse());
+                    previousElement.setNextElementIdIfFalse(element.getId());
+                break;
+    
+                default:
+                    throw new Error(`Invalid branch: ${previousElementBranch}.`);
+            }
+        } else {
+            element.setDefaultNextElementId(previousElement.getNextElementId());
+            previousElement.setNextElementId(element.getId());
+        }
         
         this.elements.push(element);
+    }
+
+    editElement ({
+        elementId,
+        elementData,
+    }) {
+        const element = this.findElementById(elementId);
+
+        if (!element) {
+            throw new Error(`Element not found: ${elementId}`);
+        }
+
+        element.edit(elementData);
+    }
+
+    removeElement ({
+        elementId,
+        elementBranchToKeep,
+    }) {
+        if (!elementId) {
+            throw new Error('Element ID was not provided');
+        }
+
+        const element = this.findElementById(elementId);
+
+        if (!element) {
+            throw new Error(`Element not found: ${elementId}`);
+        }
+
+        if (element instanceof WorkflowStartElement) {
+            throw new Error('Cannot remove a start element.');
+        }
+
+        let elementIdToKeep;
+
+        if (element instanceof WorkflowIfElement) {
+            const nextElementIdIfFalse = element.getNextElementIdIfFalse();
+            const nextElementIdIfTrue = element.getNextElementIdIfTrue();
+
+            switch (elementBranchToKeep) {
+                case 'true':
+                    if (nextElementIdIfFalse) {
+                        this.removeElement({
+                            elementId: nextElementIdIfFalse,
+                        });
+                    }
+
+                    elementIdToKeep = element.getNextElementIdIfTrue();
+                break;
+
+                case 'false':
+                    if (nextElementIdIfTrue) {
+                        this.removeElement({
+                            elementId: nextElementIdIfTrue,
+                        });
+                    }
+
+                    elementIdToKeep = element.getNextElementIdIfFalse();
+                break;
+
+                default:
+                    if (nextElementIdIfFalse) {
+                        this.removeElement({
+                            elementId: nextElementIdIfFalse,
+                        });
+                    }
+
+                    if (nextElementIdIfTrue) {
+                        this.removeElement({
+                            elementId: nextElementIdIfTrue,
+                        });
+                    }
+                break;
+            }
+        } else {
+            if (elementBranchToKeep) {
+                throw new Error('Cannot specify branch to keep in this type of element');
+            }
+
+            elementIdToKeep = element.getNextElementId();
+        }
+
+        this.elements.forEach(candidatePreviousElement => {
+            if (candidatePreviousElement instanceof WorkflowIfElement) {
+                if (elementId === candidatePreviousElement.getNextElementIdIfTrue()) {
+                    candidatePreviousElement.setNextElementIdIfTrue(elementIdToKeep);
+                }
+                
+                if (elementId === candidatePreviousElement.getNextElementIdIfFalse()) {
+                    candidatePreviousElement.setNextElementIdIfFalse(elementIdToKeep);
+                }
+            } else {
+                if (elementId === candidatePreviousElement.getNextElementId()) {
+                    candidatePreviousElement.setNextElementId(elementIdToKeep);
+                }
+            }
+        });
+
+        this.elements = this.elements.filter(element => elementId !== element.getId());
     }
 
     removeVariableById(idToBeRemoved) {
@@ -341,11 +483,6 @@ export class WorkflowStartElement {
         this.nextElementId = nextElementId;
     }
 
-    connect (element) {
-        element.setDefaultNextElementId(this.getNextElementId());
-        this.setNextElementId(element.getId());
-    }
-
     clone() {
         return new WorkflowStartElement();
     }
@@ -442,24 +579,19 @@ export class WorkflowIfElement {
     }
 
     setDefaultNextElementId (defaultNextElementId) {
-        this.setNextElementIdIfTrue(defaultNextElementId);
+        this.nextElementIdIfTrue = defaultNextElementId;
     }
 
-    connect (element, branch) {
-        switch (branch) {
-            case 'true':
-                element.setDefaultNextElementId(this.getNextElementIdIfTrue());
-                this.setNextElementIdIfTrue(element.getId());
-            break;
-
-            case 'false':
-                element.setDefaultNextElementId(this.getNextElementIdIfFalse());
-                this.setNextElementIdIfFalse(element.getId());
-            break;
-
-            default:
-                throw new Error('Invalid branch.');
-        }
+    edit ({
+        name,
+        description,
+        strategy,
+        conditions,
+    }) {
+        this.name = name;
+        this.description = description;
+        this.strategy = strategy;
+        this.conditions = conditions;
     }
 
     clone() {
@@ -606,12 +738,17 @@ export class WorkflowAssignElement {
     }
 
     setDefaultNextElementId (defaultNextElementId) {
-        this.setNextElementId(defaultNextElementId);
+        this.nextElementId = defaultNextElementId;
     }
 
-    connect (element) {
-        element.setDefaultNextElementId(this.getNextElementId());
-        this.setNextElementId(element.getId());
+    edit ({
+        name,
+        description,
+        assignments,
+    }) {
+        this.name = name;
+        this.description = description;
+        this.assignments = assignments;
     }
 
     clone() {
@@ -689,112 +826,5 @@ export class WorkflowAssignment {
             operation: this.operation,
             value: this.value,
         });
-    }
-}
-
-export class WorkflowConnection {
-    static create ({
-        previousElementId,
-        nextElementId,
-    }) {
-        return new WorkflowConnection({
-            id: randomUUID(),
-            previousElementId,
-            nextElementId,
-        });
-    }
-
-    constructor ({
-        id,
-        previousElementId,
-        nextElementId,
-    }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
-        if (!previousElementId) {
-            throw new Error('Previous element ID is required.');
-        }
-
-        if (!nextElementId) {
-            throw new Error('Next element ID is required.');
-        }
-
-        this.id = id;
-        this.previousElementId = previousElementId;
-        this.nextElementId = nextElementId;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getPreviousElementId() {
-        return this.previousElementId;
-    }
-
-    getNextElementId() {
-        return this.nextElementId;
-    }
-
-}
-
-export class WorkflowBranchConnection {
-    static create ({
-        previousElementId,
-        nextElementIdIfTrue,
-        nextElementIdIfFalse,
-    }) {
-        return new WorkflowBranchConnection({
-            id: randomUUID(),
-            previousElementId,
-            nextElementIdIfTrue,
-            nextElementIdIfFalse,
-        });
-    }
-
-    constructor ({
-        id,
-        previousElementId,
-        nextElementIdIfTrue,
-        nextElementIdIfFalse,
-    }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
-        if (!previousElementId) {
-            throw new Error('Previous element ID is required.');
-        }
-
-        if (!nextElementIdIfTrue) {
-            throw new Error('Next element ID if true is required.');
-        }
-
-        if (!nextElementIdIfFalse) {
-            throw new Error('Next element ID if false is required.');
-        }
-
-        this.id = id;
-        this.previousElementId = previousElementId;
-        this.nextElementIdIfTrue = nextElementIdIfTrue;
-        this.nextElementIdIfFalse = nextElementIdIfFalse;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getPreviousElementId() {
-        return this.previousElementId;
-    }
-
-    getNextElementIdIfTrue() {
-        return this.nextElementIdIfTrue;
-    }
-
-    getNextElementIdIfFalse() {
-        return this.nextElementIdIfFalse;
     }
 }
