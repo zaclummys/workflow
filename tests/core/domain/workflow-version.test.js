@@ -4,9 +4,9 @@ import {
     WorkflowVersion,
     WorkflowStartElement,
     WorkflowIfElement,
-    WorkflowAssignElement,
     WorkflowCondition,
-    WorkflowConnection,
+    WorkflowAssignElement,
+    WorkflowAssignment,
 } from '~/core/domain/workflow-version';
 
 
@@ -758,55 +758,159 @@ describe('Workflow Version', async () => {
     });
 
     describe('Edit element', () => {
-        it('Edit assign element', () => {
-            const assignElement = new WorkflowAssignElement({
-                id: 'workflow-assign-element-1',
-                name: 'Assign 1',
-                assignments: [],
-            });
-
+        it.fails('Cannot edit start element', () => {
             const workflowVersion = createWorkflowVersion([
-                assignElement,
+                new WorkflowStartElement({
+                    id: 'workflow-start-element-1',
+                }),
             ]);
 
             workflowVersion.editElement({
-                elementId: 'workflow-assign-element-1',
-                elementData: {
-                    name: 'Updated Assign',
-                    description: 'Updated assign description',
+                elementId: 'workflow-start-element-1',
+            });
+        });
+        
+        describe('Edit assignment element', () => {
+            it('Without assignments', () => {
+                const assignElement = new WorkflowAssignElement({
+                    id: 'workflow-assign-element-1',
+                    name: 'Assign 1',
                     assignments: [],
-                },
+                });
+    
+                const workflowVersion = createWorkflowVersion([
+                    assignElement,
+                ]);
+    
+                workflowVersion.editElement({
+                    elementId: 'workflow-assign-element-1',
+                    elementData: {
+                        name: 'Updated Assign',
+                        description: 'Updated assign description',
+                        assignments: [],
+                    },
+                });
+    
+                expect(assignElement.getName()).toBe('Updated Assign');
+                expect(assignElement.getDescription()).toBe('Updated assign description');
+                expect(assignElement.getAssignments()).toEqual([]);
             });
 
-            expect(assignElement.getName()).toBe('Updated Assign');
-            expect(assignElement.getDescription()).toBe('Updated assign description');
-            expect(assignElement.getAssignments()).toEqual([]);
-        });
+            it('With assignments', () => {
+                const assignElement = new WorkflowAssignElement({
+                    id: 'workflow-assign-element-1',
+                    name: 'Assign 1',
+                    assignments: [
+                        new WorkflowAssignment({
+                            variableId: 'variable-1',
+                            operator: 'equals',
+                            value: 'abc',
+                        }),
+                    ],
+                });
+    
+                const workflowVersion = createWorkflowVersion([
+                    assignElement,
+                ]);
+    
+                workflowVersion.editElement({
+                    elementId: 'workflow-assign-element-1',
+                    elementData: {
+                        name: 'Updated Assign',
+                        description: 'Updated assign description',
+                        assignments: [
+                            {
+                                variableId: 'variable-1',
+                                operator: 'equals',
+                                value: 'def',
+                            }
+                        ],
+                    },
+                });
+    
+                expect(assignElement.getName()).toBe('Updated Assign');
+                expect(assignElement.getDescription()).toBe('Updated assign description');
+                expect(assignElement.getAssignments()).toStrictEqual([
+                    new WorkflowAssignment({
+                        variableId: 'variable-1',
+                        operator: 'equals',
+                        value: 'def',
+                    }),
+                ]);
+            });
+        })
 
-        it('Edit if element', () => {
-            const ifElement = new WorkflowIfElement({
-                id: 'workflow-if-element-1',
-                name: 'If',
-                strategy: 'all',
-                conditions: [],
-            })
-
-            const workflowVersion = createWorkflowVersion([
-                ifElement,
-            ]);
-
-            workflowVersion.editElement({
-                elementId: 'workflow-if-element-1',
-                elementData: {
-                    name: 'Updated If',
-                    description: 'Updated if description',
+        describe('Edit if element', () => {
+            it('Without conditions', () => {
+                const ifElement = new WorkflowIfElement({
+                    id: 'workflow-if-element-1',
+                    name: 'If',
+                    strategy: 'all',
                     conditions: [],
-                },
+                })
+    
+                const workflowVersion = createWorkflowVersion([
+                    ifElement,
+                ]);
+    
+                workflowVersion.editElement({
+                    elementId: 'workflow-if-element-1',
+                    elementData: {
+                        name: 'Updated If',
+                        description: 'Updated if description',
+                        conditions: [],
+                    },
+                });
+    
+                expect(ifElement.getName()).toBe('Updated If');
+                expect(ifElement.getDescription()).toBe('Updated if description');
+                expect(ifElement.getConditions()).toEqual([]);
             });
 
-            expect(ifElement.getName()).toBe('Updated If');
-            expect(ifElement.getDescription()).toBe('Updated if description');
-            expect(ifElement.getConditions()).toEqual([]);
-        });
+            it('With conditions', () => {
+                const ifElement = new WorkflowIfElement({
+                    id: 'workflow-if-element-1',
+                    name: 'If',
+                    strategy: 'all',
+                    conditions: [
+                        new WorkflowCondition({
+                            variableId: 'variable-1',
+                            operator: 'equals',
+                            value: 'abc',
+                        }),
+                    ],
+                })
+    
+                const workflowVersion = createWorkflowVersion([
+                    ifElement,
+                ]);
+    
+                workflowVersion.editElement({
+                    elementId: 'workflow-if-element-1',
+                    elementData: {
+                        name: 'Updated If',
+                        description: 'Updated if description',
+                        conditions: [
+                            {
+                                variableId: 'variable-1',
+                                operator: 'equals',
+                                value: 'def',
+                            }
+                        ],
+                    },
+                });
+    
+                expect(ifElement.getName()).toBe('Updated If');
+                expect(ifElement.getDescription()).toBe('Updated if description');
+                expect(ifElement.getConditions()).toStrictEqual([
+                    new WorkflowCondition({
+                        variableId: 'variable-1',
+                        operator: 'equals',
+                        value: 'def',
+                    }),
+                ]);
+            });
+        })
+        
     })
 });

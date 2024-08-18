@@ -199,6 +199,10 @@ export class WorkflowVersion {
             throw new Error(`Element not found: ${elementId}`);
         }
 
+        if (element instanceof WorkflowStartElement) {
+            throw new Error('Cannot edit a start element.');
+        }
+
         element.edit(elementData);
     }
 
@@ -591,7 +595,7 @@ export class WorkflowIfElement {
         this.name = name;
         this.description = description;
         this.strategy = strategy;
-        this.conditions = conditions;
+        this.conditions = conditions.map(condition => new WorkflowCondition(condition));
     }
 
     clone() {
@@ -605,42 +609,35 @@ export class WorkflowIfElement {
 export class WorkflowCondition {
     static create({
         variableId,
-        operation,
+        operator,
         value,
     }) {
         return new WorkflowCondition({
-            id: randomUUID(),
             variableId,
-            operation,
+            operator,
             value,
         });
     }
 
     constructor({
-        id,
         variableId,
-        operation,
+        operator,
         value,
     }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
         if (!variableId) {
             throw new Error('Variable ID is required.');
         }
 
-        if (!operation) {
-            throw new Error('Operation is required.');
+        if (!operator) {
+            throw new Error('Operator is required.');
         }
 
         if (value === undefined) {
             throw new Error('Value cannot be undefined.');
         }
 
-        this.id = id;
         this.variableId = variableId;
-        this.operation = operation;
+        this.operator = operator;
         this.value = value;
     }
 
@@ -652,8 +649,8 @@ export class WorkflowCondition {
         return this.variableId;
     }
 
-    getOperation() {
-        return this.operation;
+    getOperator() {
+        return this.operator;
     }
 
     getValue() {
@@ -662,9 +659,8 @@ export class WorkflowCondition {
 
     clone() {
         return new WorkflowCondition({
-            id: this.id,
             variableId: this.variableId,
-            operation: this.operation,
+            operator: this.operator,
             expression: this.expression,
         });
     }
@@ -748,7 +744,7 @@ export class WorkflowAssignElement {
     }) {
         this.name = name;
         this.description = description;
-        this.assignments = assignments;
+        this.assignments = assignments.map(assignments => new WorkflowAssignment(assignments));
     }
 
     clone() {
@@ -762,44 +758,25 @@ export class WorkflowAssignElement {
 }
 
 export class WorkflowAssignment {
-    static create({
-        variableId,
-        operation,
-        value,
-    }) {
-        return new WorkflowAssignment({
-            id: randomUUID(),
-            variableId,
-            operation,
-            value,
-        });
-    }
-
     constructor({
-        id,
         variableId,
-        operation,
+        operator,
         value,
     }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
         if (!variableId) {
             throw new Error('Variable ID is required.');
         }
 
-        if (!operation) {
-            throw new Error('Operation is required.');
+        if (!operator) {
+            throw new Error('Operator is required.');
         }
 
         if (value === undefined) {
             throw new Error('Value cannot be undefined.');
         }
 
-        this.id = id;
         this.variableId = variableId;
-        this.operation = operation;
+        this.operator = operator;
         this.value = value;
     }
 
@@ -811,8 +788,8 @@ export class WorkflowAssignment {
         return this.variableId;
     }
 
-    getOperation() {
-        return this.operation;
+    getOperator() {
+        return this.operator;
     }
 
     getValue() {
@@ -821,9 +798,8 @@ export class WorkflowAssignment {
 
     clone() {
         return new WorkflowAssignment({
-            id: this.id,
             variableId: this.variableId,
-            operation: this.operation,
+            operator: this.operator,
             value: this.value,
         });
     }
