@@ -72,7 +72,6 @@ export async function deleteUserByEmail (email) {
 export function toUser (userData) {
     return new User({
         ...userData,
-        id: userData.id,
         color: new UserColor(userData.color),
         password: new UserPassword(userData.password),
     });
