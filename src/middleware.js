@@ -2,32 +2,47 @@ import {
     NextResponse, 
 } from 'next/server';
 
-async function validateSession ({ sessionToken }) {    
-    const response = await fetch(new URL('http://localhost:3000/api/session/validate'), {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            sessionToken,
-        }),
-    });
+import { sessionTokenCookieName } from "~/cookies";
 
-    if (!response.ok) {
-        console.error(await response.text());
+async function validateSession ({
+    sessionToken,
+    baseUrl,
+}) {
+    try {
+        const validateUrl = new URL('/api/session/validate', baseUrl);
+        
+        const response = await fetch(validateUrl, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                sessionToken,
+            }),
+        });
 
+        if (!response.ok) {
+            console.error('Service is unavailable');
+            
+            return {
+                success: false,
+            };
+        }
+
+        const { success, valid } = await response.json();
+        
         return {
-            success: false,
+            success,
+            valid,
         };
     }
-
-    const { success } = await response.json();
-
-    return {
-        success,
-    };
+    catch (error) {
+        return {
+            success: false,
+        }
+    }
 }
 
 function isGuestRoute (request) {
@@ -36,58 +51,57 @@ function isGuestRoute (request) {
     return guestRoutes.includes(request.nextUrl.pathname);
 }
 
-function redirectToSignIn (request) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
-}
-
-function redirectToSignInDeletingSessionCookie (request) {
-    const response = NextResponse.redirect(new URL('/sign-in', request.url));
-
-    response.cookies.delete('session_token');
-
-    return response;
-}
-
-function redirectToHome (request) {
-    return NextResponse.redirect(new URL('/', request.url));
-}
-
 export default async function middleware (request) {
-    if (process.env.NODE_ENV === 'development') {
-        return NextResponse.next();
-    }
-    
     if (request.nextUrl.pathname === '/favicon.ico') {
         return NextResponse.next();
     }
 
-    const sessionTokenCookie = request.cookies.get('session_token');
+    const sessionTokenCookie = request.cookies.get(sessionTokenCookieName);
 
-    if (sessionTokenCookie) {
-        if (!sessionTokenCookie.value) {
-            return redirectToSignInDeletingSessionCookie(request);
-        }
-
-        const { success } = await validateSession({
-            sessionToken: sessionTokenCookie.value,
-        });
-
-        if (!success) {
-            return redirectToSignInDeletingSessionCookie(request);
-        }
-
+    const homeUrl = new URL('/', request.url);
+    const signInUrl = new URL('/sign-in', request.url);
+    const internalServerErrorUrl = new URL('/500', request.url);
+    
+    if (!sessionTokenCookie) {
         if (isGuestRoute(request)) {
-            return redirectToHome(request);
+            return NextResponse.next();
+        } else {
+            return NextResponse.redirect(signInUrl);
         }
-
-        return NextResponse.next();
+    }
+    
+    const sessionToken = sessionTokenCookie.value;
+    
+    if (!sessionToken) {
+        const response = NextResponse.redirect(signInUrl);
+        
+        response.cookies.delete(sessionTokenCookieName);
+        
+        return response;
     }
 
+    const { success, valid } = await validateSession({
+        sessionToken: sessionToken,
+        baseUrl: request.url,
+    });
+    
+    if (!success) {
+        return NextResponse.redirect(internalServerErrorUrl);
+    }
+    
+    if (!valid) {
+        const response = NextResponse.redirect(signInUrl);
+
+        response.cookies.delete(sessionTokenCookieName);
+
+        return response;
+    }
+    
     if (isGuestRoute(request)) {
-        return NextResponse.next();
-    } else {
-        return redirectToSignIn(request);
+        return NextResponse.redirect(homeUrl);
     }
+    
+    return NextResponse.next();
 }
 
 export const config = {
