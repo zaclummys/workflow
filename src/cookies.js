@@ -2,12 +2,22 @@ import {
     cookies, 
 } from 'next/headers';
 
+import { redirect } from 'next/navigation'
+
 export const sessionTokenCookieName = 'session_token';
 
 export function getSessionToken () {
     const sessionTokenCookie = cookies().get(sessionTokenCookieName);
+    
+    if (!sessionTokenCookie) {
+        redirect('/sign-in');
+    }
+    
+    if (!sessionTokenCookie.value) {
+        redirect('/sign-in');
+    }
 
-    return sessionTokenCookie?.value;
+    return sessionTokenCookie.value;
 }
 
 export function setSessionToken (sessionToken) {
@@ -17,8 +27,4 @@ export function setSessionToken (sessionToken) {
         secure: true,
         sameSite: 'strict',
     });
-}
-
-export function deleteSessionToken () {
-    cookies().delete(sessionTokenCookieName);
 }

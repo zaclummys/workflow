@@ -46,9 +46,21 @@ async function validateSession ({
 }
 
 function isGuestRoute (request) {
-    const guestRoutes = ['/sign-in', '/sign-up'];
+    const guestRoutes = [
+        '/sign-in',
+        '/sign-up',
+    ];
 
     return guestRoutes.includes(request.nextUrl.pathname);
+}
+
+function isIgnoreRoute (request) {
+    const ignoreRoutes = [
+        '/favicon.ico',
+        '/internal-server-error',
+    ];
+
+    return ignoreRoutes.includes(request.nextUrl.pathname);
 }
 
 export default async function middleware (request) {
@@ -56,11 +68,15 @@ export default async function middleware (request) {
         return NextResponse.next();
     }
 
+    if (request.nextUrl.pathname === '/internal-server-error') {
+        return NextResponse.next();
+    }
+    
     const sessionTokenCookie = request.cookies.get(sessionTokenCookieName);
 
     const homeUrl = new URL('/', request.url);
     const signInUrl = new URL('/sign-in', request.url);
-    const internalServerErrorUrl = new URL('/500', request.url);
+    const internalServerErrorUrl = new URL('/internal-server-error', request.url);
     
     if (!sessionTokenCookie) {
         if (isGuestRoute(request)) {

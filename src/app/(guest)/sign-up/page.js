@@ -13,6 +13,8 @@ import {
     PrimaryButton, 
 } from "~/components/button";
 
+import Error from '~/components/error';
+
 import {
     SignBox,
     SignBoxHeader,

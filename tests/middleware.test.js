@@ -43,6 +43,11 @@ function expectToBeRedirectedTo (response, path) {
     expect(response.headers.get('Location')).toBe(locationUrl.toString());
 }
 
+function expectToBeNotRedirected (response) {
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Location')).toBe(null);
+}
+
 describe('Middleware', () => {
     it('Should redirect to /sign-in when try to access / without session token cookie', async () => {
         const request = createRequest(new URL('/', 'http://localhost:3000'));
@@ -125,7 +130,7 @@ describe('Middleware', () => {
         '/',
         '/sign-in',
         '/sign-up',
-    ])('Should redirect to /500 when try to access %s and validation service is unreachable', async (path) => {
+    ])('Should redirect to /internal-server-error when try to access %s and validation service is unreachable', async (path) => {
         const request = createRequestWithSessionTokenCookie(new URL(path, 'http://localhost:3000'), {
             sessionToken: 'it-does-not-matter'
         });
@@ -134,7 +139,7 @@ describe('Middleware', () => {
 
         const response = await middleware(request);
 
-        expectToBeRedirectedTo(response, '/500');
+        expectToBeRedirectedTo(response, '/internal-server-error');
         expectCookieToBePreserved(response);
     });
 
@@ -142,7 +147,7 @@ describe('Middleware', () => {
         '/',
         '/sign-in',
         '/sign-up',
-    ])('Should redirect to /500 when try to access %s and validation service is unavailable', async (path) => {
+    ])('Should redirect to /internal-server-error when try to access %s and validation service is unavailable', async (path) => {
         const request = createRequestWithSessionTokenCookie(new URL(path, 'http://localhost:3000'), {
             sessionToken: 'it-does-not-matter'
         });
@@ -154,7 +159,15 @@ describe('Middleware', () => {
 
         const response = await middleware(request);
 
-        expectToBeRedirectedTo(response, '/500');
+        expectToBeRedirectedTo(response, '/internal-server-error');
         expectCookieToBePreserved(response);
+    });
+    
+    it('Should not redirect elsewhere when trying to access /internal-server-error', async () => {
+        const request = createRequest(new URL('/internal-server-error', 'http://localhost:3000'));
+
+        const response = await middleware(request);
+
+        expectToBeNotRedirected(response);
     });
 });

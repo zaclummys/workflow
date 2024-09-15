@@ -1,26 +1,6 @@
 {
-    "plugins": [
-        "@stylistic/js"
-    ],
     "extends": [
-        "next",
-        "next/core-web-vitals",
-        "eslint:recommended",
-        "plugin:react/recommended"
-    ],
-    "rules": {
-        "indent": ["error", 4, {
-            "SwitchCase": 1
-        }],
-        "react/no-unescaped-entities": "off",
-        "comma-dangle": ["error", "always-multiline"],
-        "keyword-spacing": "error",
-        "object-property-newline": ["error", {
-            "allowAllPropertiesOnSameLine": false
-        }],
-        "object-curly-spacing": ["error", "always"],
-        "object-curly-newline": "off",
-        "react/react-in-jsx-scope": "off",
-        "react/prop-types": "off"
-    }
+        'plugin:react/recommended',
+        'plugin:react-hooks/recommended'
+    ]
 }

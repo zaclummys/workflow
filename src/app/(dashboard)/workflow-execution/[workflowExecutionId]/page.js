@@ -108,19 +108,6 @@ export default async function WorkflowExecution ({ params: { workflowExecutionId
                     <SectionTitle>
                         Execution Details
                     </SectionTitle>
-
-                    {[
-                        workflowExecution.inputValues,
-                        workflowExecution.outputValues,
-                    ].map(values => (
-                        <div>
-                            {values.map(value => (
-                                <div>
-                                    {value.toString()}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
                 </Section>
             </Container>
         </>

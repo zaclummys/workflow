@@ -35,16 +35,21 @@ export default function SignInForm () {
         setPending(true);
         setError(null);
 
-        const { success, message } = await signInAction({
-            email: event.target.email.value,
-            password: event.target.password.value,
-        });
+        try {
+            const {success, message} = await signInAction({
+                email: event.target.email.value,
+                password: event.target.password.value,
+            });
 
-        if (success) {
-            navigateToHome();
-        } else {
-            setPending(false);
-            setError(message);
+            if (success) {
+                navigateToHome();
+            } else {
+                setPending(false);
+                setError(message);
+            }
+        } finally {
+            setPending(true);
+            setError(null);
         }
     }
 
@@ -57,6 +62,7 @@ export default function SignInForm () {
                 </Label>
 
                 <Input
+                    data-testid="sign-in-email-field"
                     id={emailId}
                     type="email"
                     name="email"
@@ -70,6 +76,7 @@ export default function SignInForm () {
                 </Label>
 
                 <Input
+                    data-testid="sign-in-password-field"
                     id={passwordId}
                     type="password"
                     name="password"
@@ -79,7 +86,9 @@ export default function SignInForm () {
                     required />
             </Field>
 
-            <PrimaryButton disabled={pending}>
+            <PrimaryButton
+                data-testid="sign-in-submit-button"
+                disabled={pending}>
                 Sign In
             </PrimaryButton>
 

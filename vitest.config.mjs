@@ -8,5 +8,9 @@ export default defineConfig({
             '~': path.resolve(__dirname, './src')
         },
         setupFiles: './tests/setup.mjs',
+        exclude: [
+            './node_modules',
+            './tests/e2e/**/*',
+        ]
     }
 });
