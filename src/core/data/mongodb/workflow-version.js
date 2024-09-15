@@ -1,4 +1,3 @@
-import { database } from '~/core/data/mongodb/client';
 import {
     WorkflowStartElement,
     WorkflowVariable,
@@ -7,6 +6,8 @@ import {
     WorkflowVersion,
     WorkflowAssignment,
 } from '~/core/domain/workflow-version';
+
+import database from './database';
 
 export async function insertWorkflowVersion (workflowVersion) {
     await database

@@ -1,6 +1,6 @@
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 import getWorkspace from '~/core/application/get-workspace';
 
 export default async function getWorkspaceAction (workspaceId) {

@@ -1,10 +1,8 @@
 import {
-    database, 
-} from './client';
-
-import {
     Workflow, 
 } from '~/core/domain/workflow';
+
+import database from './database';
 
 export async function insertWorkflow (workflow) {
     await database

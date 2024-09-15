@@ -1,9 +1,8 @@
 import {
-    database, 
-} from './client.js';
-import {
     User, UserColor, UserPassword, 
 } from '../../domain/user.js';
+
+import database from './database';
 
 export async function insertUser (user) {
     await database

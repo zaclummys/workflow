@@ -11,19 +11,13 @@ export default async function validateSession ({ sessionToken }) {
 
     if (!session) {
         return {
-            success: false,
-        };
-    }
-
-    const user = await findUserById(session.getUserId());
-
-    if (!user) {
-        return {
-            success: false,
+            success: true,
+            valid: false,
         };
     }
 
     return {
         success: true,
+        valid: true,
     };
 }

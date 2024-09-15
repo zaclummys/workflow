@@ -7,6 +7,6 @@ export default defineConfig({
         alias: {
             '~': path.resolve(__dirname, './src')
         },
-        setupFiles: './vitest.setup.mjs',
+        setupFiles: './tests/setup.mjs',
     }
 });

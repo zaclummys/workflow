@@ -1,4 +1,4 @@
-import { getSessionToken } from './cookies';
+import { getSessionToken } from '../cookies';
 
 import getWorkflowVersions from '~/core/application/get-workflow-versions';
 

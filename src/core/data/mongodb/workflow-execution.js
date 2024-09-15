@@ -1,6 +1,6 @@
-import { database } from "./client";
-
 import { WorkflowExecution } from "~/core/domain/workflow-execution";
+
+import database from './database';
 
 export async function findWorkflowExecutionById (id) {
     const workflowExecutionData = await database

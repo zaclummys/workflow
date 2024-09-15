@@ -1,6 +1,6 @@
 'use server';
 
-import { getSessionToken } from "./cookies";
+import { getSessionToken } from "../cookies";
 
 import executeWorkflowVersion from "~/core/application/execute-workflow-version";
 

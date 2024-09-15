@@ -2,7 +2,7 @@
 
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 
 import deleteWorkflow from '~/core/application/delete-workflow';
 

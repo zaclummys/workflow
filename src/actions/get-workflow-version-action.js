@@ -1,6 +1,6 @@
 import {
     getSessionToken, 
-} from "./cookies";
+} from "../cookies";
 
 import getWorkflowVersion from "~/core/application/get-workflow-version";
 

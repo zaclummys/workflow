@@ -6,7 +6,7 @@ import {
 import signOut from '~/core/application/sign-out';
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 
 export default async function signOutAction () {
     const sessionToken = getSessionToken();

@@ -1,9 +1,8 @@
 import {
-    database, 
-} from './client.js';
-import {
     Workspace, WorkspaceMember, 
 } from '../../domain/workspace.js';
+
+import database from './database';
 
 export async function insertWorkspace (workspace) {
     await database

@@ -2,7 +2,7 @@
 
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 
 import deleteWorkspace from '~/core/application/delete-workspace';
 

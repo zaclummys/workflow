@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import {useCallback, useState} from 'react';
 
 import WorkflowVersionCanvas from '~/components/workflow-version-editor/workflow-version-canvas';
 import VariablesWorkflowSidebar from '~/components/workflow-version-editor/sidebars/variables-workflow-sidebar';
@@ -8,15 +8,17 @@ import VariablesWorkflowSidebar from '~/components/workflow-version-editor/sideb
 export default function WorkflowVersionEditor ({
     workflowVersion
 }) {
+    const handleCanvasElementClick = () => {};
+    
     return (
         <>
             <WorkflowVersionCanvas
                 onCanvasElementClick={handleCanvasElementClick}
                 workflowVersion={workflowVersion} />
 
-            {false && (
+            {true && (
                 <VariablesWorkflowSidebar
-                    />
+                    workflowVersion={workflowVersion} />
             )}
         </>
     )

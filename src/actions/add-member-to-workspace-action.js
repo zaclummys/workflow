@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { getSessionToken } from './cookies';
+import { getSessionToken } from '../cookies';
 
 import addMemberToWorkspace from '~/core/application/add-member-to-workspace';
 

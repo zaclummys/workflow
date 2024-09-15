@@ -3,7 +3,7 @@
 import createWorkflow from '~/core/application/create-workflow';
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 
 export default async function createWorkflowAction ({
     name,

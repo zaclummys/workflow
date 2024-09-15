@@ -23,33 +23,8 @@ export default function VariablesWorkflowSidebar({
     workflowVersion,
     onCloseButtonClick,
 }) {
-    const [addVariable, setAddVariable] = useState(false);
-    const [viewVariable, setViewVariable] = useState(null);
-    const [editVariable, setEditVariable] = useState(null);
-    const [deleteVariable, setDeleteVariable] = useState(null);
-
     const findVariableById = (variableId) => {
         return workflowVersion.variables.find(variable => variable.id === variableId);
-    };
-
-    const clearViewVariable = () => {
-        setViewVariable(null);
-    };
-
-    const clearEditVariable = () => {
-        setEditVariable(null);
-    };
-
-    const clearDeleteVariable = () => {
-        setDeleteVariable(null);
-    };
-
-    const onAddVariableButtonClick = () => {
-        setAddVariable(true);
-    };
-
-    const onCancelAddVariableButtonClick = () => {
-        setAddVariable(false);
     };
 
     const onViewVariableButtonClick = (event) => {

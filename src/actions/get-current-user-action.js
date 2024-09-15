@@ -3,7 +3,7 @@
 import getCurrentUser from '~/core/application/get-current-user';
 import {
     getSessionToken, 
-} from '~/actions/cookies';
+} from '~/cookies';
 
 export default async function getCurrentUserAction () {
     const sessionToken = getSessionToken();
