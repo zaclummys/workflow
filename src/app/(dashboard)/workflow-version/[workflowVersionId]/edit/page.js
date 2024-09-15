@@ -5,7 +5,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionStatus from "~/components/workflow-version-status";
-import WorkflowVersionCanvas from "~/components/workflow-version-canvas";
+import WorkflowVersionEditor from "~/components/workflow-version-editor/workflow-version-editor";
 
 import {
     ActivateWorkflowVersionButton,
@@ -53,7 +53,7 @@ export default async function EditWorkflowVersion ({ params: { workflowVersionId
                 )}
             </header>
 
-            <WorkflowVersionCanvas
+            <WorkflowVersionEditor
                 workflowVersion={workflowVersion} />
         </div>
     );

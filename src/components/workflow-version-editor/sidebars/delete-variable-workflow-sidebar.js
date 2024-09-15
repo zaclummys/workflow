@@ -3,9 +3,9 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../sidebar';
+} from '../../sidebar';
 
-import { DestructiveButton, OutlineButton } from '../button';
+import { DestructiveButton, OutlineButton } from '../../button';
 
 export default function DeleteVariableWorkflowSidebar ({
     variable,

@@ -8,11 +8,11 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../sidebar';
+} from '../../sidebar';
 
-import { OutlineButton } from '../button';
+import { OutlineButton } from '../../button';
 
-import ButtonGroup from '../button-group';
+import ButtonGroup from '../../button-group';
 
 import AddVariableWorkflowSidebar from './add-variable-workflow-sidebar';
 import ViewVariableWorkflowSidebar from './view-variable-workflow-sidebar';

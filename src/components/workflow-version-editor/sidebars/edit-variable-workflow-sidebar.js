@@ -8,7 +8,7 @@ import {
 import {
     PrimaryButton,
     OutlineButton,
-} from '../button';
+} from '../../button';
 
 
 import {
@@ -16,9 +16,9 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../sidebar';
+} from '../../sidebar';
 
-import VariableForm from '../variable-form';
+import VariableForm from '../../variable-form';
 
 export default function EditVariableWorkflowSidebar({
     variable,

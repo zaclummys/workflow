@@ -3,11 +3,11 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from "../sidebar";
+} from "../../sidebar";
 
-import { OutlineButton } from "../button";
+import { OutlineButton } from "../../button";
 
-import VariableForm from "../variable-form";
+import VariableForm from "../../variable-form";
 
 export default function ViewVariableWorkflowSidebar ({
     variable,
