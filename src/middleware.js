@@ -24,8 +24,6 @@ async function validateSession ({
         });
 
         if (!response.ok) {
-            console.error('Service is unavailable');
-            
             return {
                 success: false,
             };
@@ -37,8 +35,7 @@ async function validateSession ({
             success,
             valid,
         };
-    }
-    catch (error) {
+    } catch (error) {
         return {
             success: false,
         }
@@ -64,11 +61,7 @@ function isIgnoreRoute (request) {
 }
 
 export default async function middleware (request) {
-    if (request.nextUrl.pathname === '/favicon.ico') {
-        return NextResponse.next();
-    }
-
-    if (request.nextUrl.pathname === '/internal-server-error') {
+    if (isIgnoreRoute(request)) {
         return NextResponse.next();
     }
     
