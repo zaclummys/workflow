@@ -1,10 +1,6 @@
-import {randomBytes} from "crypto";
-
 import client from './client';
 
-const database = client.db('workflow');
-
-
+const database = client.db();
 
 const users = database.collection('users');
 const sessions = database.collection('sessions');
