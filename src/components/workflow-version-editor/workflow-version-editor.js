@@ -1,7 +1,6 @@
 'use client';
 
 import WorkflowVersionCanvas from '~/components/workflow-version-editor/workflow-version-canvas';
-import VariablesWorkflowSidebar from '~/components/workflow-version-editor/sidebars/variables-workflow-sidebar';
 
 export default function WorkflowVersionEditor ({
     workflowVersion
