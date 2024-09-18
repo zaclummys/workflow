@@ -7,7 +7,6 @@ export default defineConfig({
         alias: {
             '~': path.resolve(__dirname, './src')
         },
-        setupFiles: './tests/setup.mjs',
         exclude: [
             './node_modules',
             './tests/e2e/**/*',
