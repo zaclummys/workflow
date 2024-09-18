@@ -1,112 +1,111 @@
 'use client';
 
-import { useState } from 'react';
-
 import Canvas from '~/components/canvas';
-import VariablesWorkflowSidebar from '~/components/workflow-version-editor/sidebars/variables-workflow-sidebar';
 import AddWorkflowElementButtonMenu from '~/components/add-workflow-element-button-menu';
+
+function buildWorkflowElementHierarchyFromWorkflowVersion (workflowVersion) {
+    const findWorkflowElementByType = (workflowElementType) => {
+        if (!workflowElementType) return null;
+        
+        return workflowVersion.elements.find(workflowElement => workflowElement.type === workflowElementType);
+    };
+
+    const findWorkflowElementById = (workflowElementId) => {
+        if (!workflowElementId) return null;
+        
+        return workflowVersion.elements.find(workflowElement => workflowElement.id === workflowElementId);
+    };
+    
+    if (!workflowVersion) return null;
+    
+    const startWorkflowElement = findWorkflowElementByType('start');
+    
+    if (!startWorkflowElement) return null;
+    
+    const buildWorkflowElementHierarchy = workflowElementId => {
+        if (!workflowElementId) return null;
+        
+        const workflowElement = findWorkflowElementById(workflowElementId);
+        
+        if (!workflowElement) return null;
+        
+        switch (workflowElement.type) {
+            case 'start':
+                return {
+                    ...workflowElement,
+                    nextElementHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementId),
+                };
+            
+            case 'assign':
+                return {
+                    ...workflowElement,
+                    nextElementHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementId),
+                };
+                
+            case 'if':
+                return {
+                    ...workflowElement,
+                    nextElementIfTrueHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementIdIfTrue),
+                    nextElementIfFalsHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementIdIfFalse),
+                };
+                
+            default:
+                return workflowElement;
+        }
+    };
+    
+    return buildWorkflowElementHierarchy(startWorkflowElement.id);
+}
 
 export default function WorkflowVersionCanvas({
     workflowVersion,
     onCanvasElementClick,
 }) {
-    const findElementByType = (elementType) => {
-        return workflowVersion.elements.find(element => element.type === elementType);
-    };
-
-    const findElementById = (elementId) => {
-        return workflowVersion.elements.find(element => element.id === elementId);
-    };
-
-    const startElement = findElementByType('start');
-
+    const workflowElementHierarchy = buildWorkflowElementHierarchyFromWorkflowVersion(workflowVersion);
+    
+    if (!workflowElementHierarchy) return null;
+    
     return (
         <Canvas>
-            <WorkflowElementWithHiearchy
-                onElementClick={onCanvasElementClick}
-                findElementById={findElementById}
-                element={startElement}
-                workflowVersionId={workflowVersion.id}
-                onElementlick={onCanvasElementClick} />
+            <WorkflowElementHierarchy
+                workflowElementHierarchy={workflowElementHierarchy}
+                onCanvasElementClick={onCanvasElementClick} />
         </Canvas>
     );
 }
 
-function WorkflowElementWithHierarchy({
-    element,
-    findElementById,
-    onElementClick,
-    workflowVersionId,
+function WorkflowElementHierarchy ({
+    workflowElementHierarchy,
+    onCanvasElementClick,
 }) {
-    if (!element) return null;
-
-    const nextElement = findElementById(element.nextElementId);
-
     return (
-        <>        
+        <>
             <WorkflowElement
-                onClick={onElementClick}
-                element={element} />
+                workflowElement={workflowElementHierarchy}
+                onClick={onCanvasElementClick} />
+            
+            <AddWorkflowElementButtonMenu />
 
-            {element.type === 'if' ? (
-                <div className="grid grid-cols-2 w-full">                    
-                    <div className="flex flex-col gap-4 items-center">
-                        <AddWorkflowElementButtonMenu
-                            previousElementBranch="false"
-                            previousElementId={element.id}
-                            workflowVersionId={workflowVersionId} />
-
-                        <WorkflowElementWithHierarchy
-                            onElementClick={onElementClick}
-                            element={findElementById(element.nextElementIdIfFalse)}
-                            findElementById={findElementById}
-                            workflowVersionId={workflowVersionId} />
-                    </div>
-
-                    <div className="flex flex-col gap-4 items-center">
-                        <AddWorkflowElementButtonMenu
-                            previousElementBranch="true"
-                            previousElementId={element.id}
-                            workflowVersionId={workflowVersionId} />
-
-                        <WorkflowElementWithHierarchy
-                            onElementClick={onElementClick}
-                            element={findElementById(element.nextElementIdIfTrue)}
-                            findElementById={findElementById}
-                            workflowVersionId={workflowVersionId} />
-                    </div>
-                </div>
-            ) : (
-                <>                            
-                    <AddWorkflowElementButtonMenu
-                        previousElementId={element.id}
-                        workflowVersionId={workflowVersionId} />
-
-                    <WorkflowElementWithHierarchy
-                        onElementClick={onElementClick}
-                        element={nextElement}
-                        findElementById={findElementById}
-                        workflowVersionId={workflowVersionId} />
-                </>
+            {workflowElementHierarchy.nextElementHierarchy && (
+                <WorkflowElementHierarchy
+                    workflowElementHierarchy={workflowElementHierarchy.nextElementHierarchy}
+                    onCanvasElementClick={onCanvasElementClick} />
             )}
         </>
     );
 }
 
 function WorkflowElement ({
-    element,
+    workflowElement,
     onClick,
 }) {
     return (
-        <>
-            <div
-                data-element-id={element.id}
-                data-element-type={element.type}
-                className="inline-flex bg-surface-high text-on-surface hover:ring hover:ring-primary hover:ring-2 rounded-md p-4 cursor-pointer transition-all"
-                onClick={onClick}>
-                <span>{element.name}</span>
-            </div>
-        </>
+        <div
+            data-workflow-element-id={workflowElement.id}
+            className="inline-flex bg-surface-high text-on-surface hover:ring hover:ring-primary rounded-md p-4 cursor-pointer transition-all"
+            onClick={onClick}>
+            <span>{workflowElement.name}</span>
+        </div>
     );
 }
 

@@ -21,7 +21,7 @@ export default function AddWorkflowElementButtonMenu({
         setIsOpen(false);
     };
 
-    const handleIfMenuItemClick = async (event) => {
+    const handleIfMenuItemClick = async () => {
         setIsPending(true);
 
         await addElementToWorkflowVersion({
@@ -40,7 +40,7 @@ export default function AddWorkflowElementButtonMenu({
         setIsOpen(false);
     };
 
-    const handleAssignMenuItemClick = async (event) => {
+    const handleAssignMenuItemClick = async () => {
         setIsPending(true);
 
         await addElementToWorkflowVersion({
@@ -54,10 +54,6 @@ export default function AddWorkflowElementButtonMenu({
         });
 
         setIsPending(false);
-        setIsOpen(false);
-    };
-
-    const handleMenuBackgroundClick = () => {
         setIsOpen(false);
     };
 
@@ -103,7 +99,7 @@ export default function AddWorkflowElementButtonMenu({
                 </>
             ) : (
                 <CirclePlus
-                    className="w-6 h-6 cursor-pointer hover:text-primary transition-colors"
+                    className="w-6 h-6 cursor-pointer hover:text-primary transition-colors text-outline"
                     onClick={handleAddButtonClick} />
             )}
         </div>

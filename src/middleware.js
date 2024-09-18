@@ -13,14 +13,13 @@ async function validateSession ({
         
         const response = await fetch(validateUrl, {
             method: 'POST',
+            mode: 'same-origin',
             credentials: 'same-origin',
+            cache: 'force-cache',
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                sessionToken,
-            }),
+            body: JSON.stringify({ sessionToken }),
         });
 
         if (!response.ok) {

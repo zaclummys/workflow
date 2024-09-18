@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import {
     Sidebar,
     SidebarHeader,
@@ -13,11 +11,6 @@ import {
 import { OutlineButton } from '../../button';
 
 import ButtonGroup from '../../button-group';
-
-import AddVariableWorkflowSidebar from './add-variable-workflow-sidebar';
-import ViewVariableWorkflowSidebar from './view-variable-workflow-sidebar';
-import EditVariableWorkflowSidebar from './edit-variable-workflow-sidebar';
-import DeleteVariableWorkflowSidebar from './delete-variable-workflow-sidebar';
 
 export default function VariablesWorkflowSidebar({
     workflowVersion,
@@ -59,8 +52,7 @@ export default function VariablesWorkflowSidebar({
                         Variables
                     </SidebarTitle>
 
-                    <OutlineButton
-                        onClick={onAddVariableButtonClick}>
+                    <OutlineButton>
                         Add
                     </OutlineButton>
                 </SidebarHeader>
@@ -107,30 +99,30 @@ export default function VariablesWorkflowSidebar({
                 </SidebarFooter>
             </Sidebar>
 
-            {addVariable && (
-                <AddVariableWorkflowSidebar
-                    onCancelButtonClick={onCancelAddVariableButtonClick} />
-            )}
-
-            {viewVariable && (
-                <ViewVariableWorkflowSidebar
-                    variable={viewVariable}
-                    onBackButtonClick={clearViewVariable} />
-            )}
-
-            {editVariable && (
-                <EditVariableWorkflowSidebar
-                    variable={editVariable}
-                    onCancelButtonClick={clearEditVariable}
-                    onSuccess={clearEditVariable} />
-            )}
-
-            {deleteVariable && (
-                <DeleteVariableWorkflowSidebar
-                    variable={deleteVariable}
-                    onCancelButtonClick={clearDeleteVariable}
-                    onSuccess={clearDeleteVariable} />
-            )}
+            {/*{addVariable && (*/}
+            {/*    <AddVariableWorkflowSidebar*/}
+            {/*        onCancelButtonClick={onCancelAddVariableButtonClick} />*/}
+            {/*)}*/}
+            
+            {/*{viewVariable && (*/}
+            {/*    <ViewVariableWorkflowSidebar*/}
+            {/*        variable={viewVariable}*/}
+            {/*        onBackButtonClick={clearViewVariable} />*/}
+            {/*)}*/}
+            
+            {/*{editVariable && (*/}
+            {/*    <EditVariableWorkflowSidebar*/}
+            {/*        variable={editVariable}*/}
+            {/*        onCancelButtonClick={clearEditVariable}*/}
+            {/*        onSuccess={clearEditVariable} />*/}
+            {/*)}*/}
+            
+            {/*{deleteVariable && (*/}
+            {/*    <DeleteVariableWorkflowSidebar*/}
+            {/*        variable={deleteVariable}*/}
+            {/*        onCancelButtonClick={clearDeleteVariable}*/}
+            {/*        onSuccess={clearDeleteVariable} />*/}
+            {/*)}*/}
         </>
     );
 }
