@@ -68,6 +68,7 @@ export default function WorkflowVersionCanvas({
     return (
         <Canvas>
             <WorkflowElementHierarchy
+                workflowVersionId={workflowVersion.id}
                 workflowElementHierarchy={workflowElementHierarchy}
                 onCanvasElementClick={onCanvasElementClick} />
         </Canvas>
@@ -75,24 +76,76 @@ export default function WorkflowVersionCanvas({
 }
 
 function WorkflowElementHierarchy ({
+    workflowVersionId,
     workflowElementHierarchy,
     onCanvasElementClick,
 }) {
-    return (
-        <>
-            <WorkflowElement
-                workflowElement={workflowElementHierarchy}
-                onClick={onCanvasElementClick} />
-            
-            <AddWorkflowElementButtonMenu />
+    switch (workflowElementHierarchy.type) {
+        case 'start':
+        case 'assign':
+            return (
+                <div className="grid grid-cols-1 justify-items-center min-w-40">
+                    <WorkflowElement
+                        workflowElement={workflowElementHierarchy}
+                        onClick={onCanvasElementClick}/>
 
-            {workflowElementHierarchy.nextElementHierarchy && (
-                <WorkflowElementHierarchy
-                    workflowElementHierarchy={workflowElementHierarchy.nextElementHierarchy}
-                    onCanvasElementClick={onCanvasElementClick} />
-            )}
-        </>
-    );
+                    <AddWorkflowElementButtonMenu
+                        previousElementId={workflowElementHierarchy.id}
+                        workflowVersionId={workflowVersionId}/>
+
+                    {workflowElementHierarchy.nextElementHierarchy && (
+                        <WorkflowElementHierarchy
+                            workflowVersionId={workflowVersionId}
+                            workflowElementHierarchy={workflowElementHierarchy.nextElementHierarchy}
+                            onCanvasElementClick={onCanvasElementClick}/>
+                    )}
+                </div>
+            );
+
+        case 'if':
+            return (
+                <>
+                    <div className="grid grid-cols-3 items-start gap-4 min-w-40">
+                        <div>
+                            <AddWorkflowElementButtonMenu
+                                previousElementBranch="false"
+                                previousElementId={workflowElementHierarchy.id}
+                                workflowVersionId={workflowVersionId}/>
+
+                            {workflowElementHierarchy.nextElementIfFalseHierarchy && (
+                                <WorkflowElementHierarchy
+                                    workflowVersionId={workflowVersionId}
+                                    workflowElementHierarchy={workflowElementHierarchy.nextElementIfFalseHierarchy}
+                                    onCanvasElementClick={onCanvasElementClick}
+                                />
+                            )}
+                        </div>
+
+                        <WorkflowElement
+                            workflowElement={workflowElementHierarchy}
+                            onClick={onCanvasElementClick}/>
+
+                        <div>
+                            <AddWorkflowElementButtonMenu
+                                previousElementBranch="true"
+                                previousElementId={workflowElementHierarchy.id}
+                                workflowVersionId={workflowVersionId}/>
+
+                            {workflowElementHierarchy.nextElementIfTrueHierarchy && (
+                                <WorkflowElementHierarchy
+                                    workflowVersionId={workflowVersionId}
+                                    workflowElementHierarchy={workflowElementHierarchy.nextElementIfTrueHierarchy}
+                                    onCanvasElementClick={onCanvasElementClick}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </>
+            );
+
+        default:
+            return null;
+    }
 }
 
 function WorkflowElement ({
@@ -102,9 +155,11 @@ function WorkflowElement ({
     return (
         <div
             data-workflow-element-id={workflowElement.id}
-            className="inline-flex bg-surface-high text-on-surface hover:ring hover:ring-primary rounded-md p-4 cursor-pointer transition-all"
+            className="bg-surface-high text-on-surface hover:ring hover:ring-primary rounded-md p-4 cursor-pointer transition-all"
             onClick={onClick}>
-            <span>{workflowElement.name}</span>
+            <span className="text-sm select-none">
+                {workflowElement.name}
+            </span>
         </div>
     );
 }

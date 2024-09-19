@@ -1,11 +1,11 @@
-import { CirclePlus, Split, Equal, X } from 'lucide-react';
+import { CirclePlus, Split, Equal, CircleX } from 'lucide-react';
 
 import { useState } from 'react';
 import { Menu, MenuItem } from '~/components/menu';
 
 import addElementToWorkflowVersion from '~/actions/add-element-to-workflow-version-action';
 
-export default function AddWorkflowElementButtonMenu({
+export default function AddWorkflowElementButtonMenu ({
     previousElementId,
     previousElementBranch,
     workflowVersionId,
@@ -13,7 +13,7 @@ export default function AddWorkflowElementButtonMenu({
     const [isOpen, setIsOpen] = useState(false);
     const [isPending, setIsPending] = useState(false);
 
-    const handleAddButtonClick = () => {
+    const handleOpenButtonClick = () => {
         setIsOpen(true);
     };
 
@@ -21,86 +21,62 @@ export default function AddWorkflowElementButtonMenu({
         setIsOpen(false);
     };
 
-    const handleIfMenuItemClick = async () => {
+    const handleAddElementMenuItemClick = async (event) => {
         setIsPending(true);
 
-        await addElementToWorkflowVersion({
-            elementData: {
-                type: "if",
-                name: "New If Element",
-                strategy: "all",
-                conditions: [],
-            },
-            previousElementId,
-            previousElementBranch,
-            workflowVersionId,
-        });
+        const { elementType } =event.target.dataset;
+        
+        try {
+            const { success, message } = await addElementToWorkflowVersion({
+                elementType,
+                previousElementId,
+                previousElementBranch,
+                workflowVersionId,
+            });
 
-        setIsPending(false);
-        setIsOpen(false);
-    };
-
-    const handleAssignMenuItemClick = async () => {
-        setIsPending(true);
-
-        await addElementToWorkflowVersion({
-            elementData: {
-                type: "assign",
-                name: "New Assign Element",
-            },
-            previousElementId,
-            previousElementBranch,
-            workflowVersionId,
-        });
-
-        setIsPending(false);
-        setIsOpen(false);
+            if (success) {
+                setIsOpen(false);
+            } else {
+                console.error(message)
+            }
+        } finally {
+            setIsPending(false);
+        }
     };
 
     return (
-        <div className="flex flex-col items-center gap-2">
-            {previousElementBranch === 'true' && (
-                <span className="text-sm">True</span>
-            )}
-
-            {previousElementBranch === 'false' && (
-                <span className="text-sm">False</span>
-            )}
-
+        <div className="p-4 flex flex-col items-center gap-4">
             {isOpen ? (
                 <>
+                    <CircleX
+                        className="w-6 h-6 cursor-pointer hover:text-primary transition-colors text-outline"
+                        onClick={handleCloseButtonClick} />
+                    
                     <Menu
-                        className="z-50"
                         onClick={event => event.stopPropagation()}>
                         <MenuItem
+                            data-element-type="if"
                             disabled={isPending}
-                            onClick={handleIfMenuItemClick}>
+                            onClick={handleAddElementMenuItemClick}>
                             <Split className="w-4 h-4" />
 
                             <span>If</span>
                         </MenuItem>
 
                         <MenuItem
+                            data-element-type="assign"
                             disabled={isPending}
-                            onClick={handleAssignMenuItemClick}>
+                            onClick={handleAddElementMenuItemClick}>
                             <Equal className="w-4 h-4" />
 
                             <span>Assign</span>
-                        </MenuItem>
-
-                        <MenuItem
-                            disabled={isPending}
-                            onClick={handleCloseButtonClick}>
-                            <X className="w-4 h-4" />
-
-                            <span>Close</span>
                         </MenuItem>
                     </Menu>
                 </>
             ) : (
                 <CirclePlus
                     className="w-6 h-6 cursor-pointer hover:text-primary transition-colors text-outline"
-                    onClick={handleAddButtonClick} />
+                    onClick={handleOpenButtonClick} />
             )}
         </div>
     )

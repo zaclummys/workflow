@@ -1,20 +1,21 @@
 'use server';
 
 import { revalidatePath } from "next/cache";
-import { getSessionToken } from "../cookies";
+
+import { getSessionToken } from "~/cookies";
 
 import addElementToWorkflowVersion from "~/core/application/add-element-to-workflow-version";
 
 export default async function addElementToWorkflowVersionAction ({
-    elementData,
+    elementType,
     previousElementId,
     previousElementBranch,
     workflowVersionId,
 }) {
     const sessionToken = getSessionToken();
 
-    const output = addElementToWorkflowVersion({
-        elementData,
+    const output = await addElementToWorkflowVersion({
+        elementType,
         previousElementId,
         previousElementBranch,
         workflowVersionId,

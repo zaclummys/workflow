@@ -5,8 +5,8 @@ import WorkflowVersionCanvas from '~/components/workflow-version-editor/workflow
 export default function WorkflowVersionEditor ({
     workflowVersion
 }) {
-    const handleCanvasElementClick = () => {
-        
+    const handleCanvasElementClick = (event) => {
+        console.log(event)
     };
     
     return (

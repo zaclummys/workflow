@@ -493,18 +493,12 @@ export class WorkflowStartElement {
 }
 
 export class WorkflowIfElement {
-    static create({
-        name,
-        description,
-        strategy,
-        conditions,
-    }) {
+    static create() {
         return new WorkflowIfElement({
             id: randomUUID(),
-            name,
-            description,
-            strategy,
-            conditions,
+            name: 'New If Element',
+            strategy: 'all',
+            conditions: [],
         });
     }
 
@@ -667,14 +661,10 @@ export class WorkflowCondition {
 }
 
 export class WorkflowAssignElement {
-    static create({
-        name,
-        description,
-    }) {
+    static create() {
         return new WorkflowAssignElement({
             id: randomUUID(),
-            name,
-            description,
+            name: 'New Assign Element',
             assignments: [],
         });
     }

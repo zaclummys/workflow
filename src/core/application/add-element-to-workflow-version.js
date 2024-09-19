@@ -9,7 +9,7 @@ import {
 } from '~/core/domain/workflow-version';
 
 export default async function addElementToWorkflowVersion ({
-    elementData,
+    elementType,
     previousElementId,
     previousElementBranch,
     workflowVersionId,
@@ -23,7 +23,14 @@ export default async function addElementToWorkflowVersion ({
         };
     }
 
-    const element = createElement(elementData);
+    const element = createElementFromType(elementType);
+    
+    if (!element) {
+        return {
+            success: false,
+            message: 'Unknown element type',
+        };
+    }
     
     workflowVersion.addElement({
         element,
@@ -38,17 +45,17 @@ export default async function addElementToWorkflowVersion ({
     };
 }
 
-function createElement ({ type, ...attributes }) {
-    switch (type) {
+function createElementFromType (elementType) {
+    switch (elementType) {
         case 'if': {    
-            return WorkflowIfElement.create(attributes);
+            return WorkflowIfElement.create();
         }
 
         case 'assign': {
-           return WorkflowAssignElement.create(attributes);
+           return WorkflowAssignElement.create();
         }
 
         default:
-            throw new Error(`Unknown element type: ${type}`);
+            return null;
     }
 }
