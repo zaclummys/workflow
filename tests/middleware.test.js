@@ -32,7 +32,7 @@ function expectCookieToBeDeleted (response) {
     expect(response.headers.get('Set-Cookie')).toBe('session_token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT');
 }
 
-function expectCookieToBePreserved (response) {
+function expectCookieNotToBeModified (response) {
     expect(response.headers.get('Set-Cookie')).toBe(null);
 }
 
@@ -48,6 +48,13 @@ function expectToBeNotRedirected (response) {
     expect(response.headers.get('Location')).toBe(null);
 }
 
+function expectToRewroteTo (response, path) {
+    const rewriteUrl = new URL(path, 'http://localhost:3000');
+
+    expect(response.headers.get('x-middleware-rewrite')).toBe(rewriteUrl.toString());
+}
+
+
 describe('Middleware', () => {
     it('Should redirect to /sign-in when try to access / without session token cookie', async () => {
         const request = createRequest(new URL('/', 'http://localhost:3000'));
@@ -55,6 +62,7 @@ describe('Middleware', () => {
         const response = await middleware(request);
 
         expectToBeRedirectedTo(response, '/sign-in');
+        expectCookieNotToBeModified(response);
     });
     
     it('Should redirect to /sign-in when try to access / with empty session token cookie', async () => {
@@ -65,15 +73,6 @@ describe('Middleware', () => {
         const response = await middleware(request);
 
         expectToBeRedirectedTo(response, '/sign-in');
-    });
-
-    it('Should delete cookie when try to access / with empty session token cookie', async () => {
-        const request = createRequestWithSessionTokenCookie(new URL('/', 'http://localhost:3000'), {
-            sessionToken: ''
-        });
-
-        const response = await middleware(request);
-
         expectCookieToBeDeleted(response);
     });
     
@@ -90,20 +89,6 @@ describe('Middleware', () => {
         const response = await middleware(request);
 
         expectToBeRedirectedTo(response, '/sign-in');
-    });
-
-    it('Should delete cookie when try to access / with invalid session token cookie', async () => {
-        const request = createRequestWithSessionTokenCookie(new URL('/', 'http://localhost:3000'), {
-            sessionToken: 'invalid'
-        });
-
-        mockFetchWithResponse({
-            success: true,
-            valid: false,
-        });
-
-        const response = await middleware(request);
-
         expectCookieToBeDeleted(response);
     });
 
@@ -123,14 +108,14 @@ describe('Middleware', () => {
         const response = await middleware(request);
 
         expectToBeRedirectedTo(response, '/');
-        expectCookieToBePreserved(response);
+        expectCookieNotToBeModified(response);
     });
 
     it.each([
         '/',
         '/sign-in',
         '/sign-up',
-    ])('Should redirect to /internal-server-error when try to access %s and validation service is unreachable', async (path) => {
+    ])('Should rewrite to /internal-server-error when try to access %s and validation service is unreachable', async (path) => {
         const request = createRequestWithSessionTokenCookie(new URL(path, 'http://localhost:3000'), {
             sessionToken: 'it-does-not-matter'
         });
@@ -139,15 +124,15 @@ describe('Middleware', () => {
 
         const response = await middleware(request);
 
-        expectToBeRedirectedTo(response, '/internal-server-error');
-        expectCookieToBePreserved(response);
+        expectToRewroteTo(response, '/internal-server-error');
+        expectCookieNotToBeModified(response);
     });
 
     it.each([
         '/',
         '/sign-in',
         '/sign-up',
-    ])('Should redirect to /internal-server-error when try to access %s and validation service is unavailable', async (path) => {
+    ])('Should rewrite to /internal-server-error when try to access %s and validation service is unavailable', async (path) => {
         const request = createRequestWithSessionTokenCookie(new URL(path, 'http://localhost:3000'), {
             sessionToken: 'it-does-not-matter'
         });
@@ -159,8 +144,8 @@ describe('Middleware', () => {
 
         const response = await middleware(request);
 
-        expectToBeRedirectedTo(response, '/internal-server-error');
-        expectCookieToBePreserved(response);
+        expectToRewroteTo(response, '/internal-server-error');
+        expectCookieNotToBeModified(response);
     });
     
     it('Should not redirect elsewhere when trying to access /internal-server-error', async () => {
@@ -169,5 +154,6 @@ describe('Middleware', () => {
         const response = await middleware(request);
 
         expectToBeNotRedirected(response);
+        expectCookieNotToBeModified(response);
     });
 });

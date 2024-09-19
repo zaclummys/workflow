@@ -94,7 +94,7 @@ export default async function middleware (request) {
     });
     
     if (!success) {
-        return NextResponse.redirect(internalServerErrorUrl);
+        return NextResponse.rewrite(internalServerErrorUrl);
     }
     
     if (!valid) {
