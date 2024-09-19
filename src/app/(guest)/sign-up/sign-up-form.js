@@ -1,7 +1,7 @@
 'use client';
 
 import {
-    useId, 
+    useId,
     useState,
 } from 'react';
 
@@ -11,65 +11,80 @@ import {
     Form,
     Field,
     Label,
-    Input, 
+    Input,
 } from '~/components/form';
 
 import {
-    PrimaryButton, 
-} from "~/components/button";
+    PrimaryButton,
+} from '~/components/button';
 
-import signInAction from '~/actions/sign-in-action';
+import signUpAction from '~/actions/sign-up-action';
 
-export default function SignInForm () {    
+export default function SignUpForm() {
+    const nameId = useId();
     const emailId = useId();
     const passwordId = useId();
-    
+
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
     
-    const { navigateToHome } = useNavigation();
+    const { replaceBySignIn } = useNavigation();
 
-    const handleSubmit = async (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
 
         setPending(true);
         setError(null);
 
         try {
-            const { success, message} = await signInAction({
+            const {success, message} = await signUpAction({
+                name: event.target.name.value,
                 email: event.target.email.value,
                 password: event.target.password.value,
             });
 
             if (success) {
-                navigateToHome();
+                replaceBySignIn();
             } else {
                 setPending(false);
                 setError(message);
             }
         } catch {
             setPending(false);
-            setError('An error occurred while signing in. Please try again later.');
+            setError('An error occurred while signing up. Please try again later.');
         }
-    }
-    
-    console.log(pending)
+    };
 
-    return (        
-        <Form
-            onSubmit={handleSubmit}>
+    return (
+        <Form onSubmit={onSubmit}>
+            <Field>
+                <Label htmlFor={nameId}>
+                    Name
+                </Label>
+
+                <Input
+                    required
+                    id={nameId}
+                    disabled={pending}
+                    type="text"
+                    name="name"
+                    data-testid="sign-up-name-field"
+                />
+            </Field>
+
             <Field>
                 <Label htmlFor={emailId}>
                     Email
                 </Label>
 
                 <Input
-                    data-testid="sign-in-email-field"
+                    required
                     id={emailId}
+                    disabled={pending}
                     type="email"
                     name="email"
-                    disabled={pending}
-                    required />
+                    data-testid="sign-up-email-field"
+                />
             </Field>
 
             <Field>
@@ -78,20 +93,20 @@ export default function SignInForm () {
                 </Label>
 
                 <Input
-                    data-testid="sign-in-password-field"
+                    required
                     id={passwordId}
+                    disabled={pending}
                     type="password"
                     name="password"
                     minLength="8"
                     maxLength="255"
-                    disabled={pending}
-                    required />
+                    data-testid="sign-up-password-field"
+                />
             </Field>
 
             <PrimaryButton
-                data-testid="sign-in-submit-button"
                 disabled={pending}>
-                Sign In
+                Sign Up
             </PrimaryButton>
 
             {error && (
