@@ -51,6 +51,7 @@ export default function Canvas ({ children }) {
 
     return (
         <Pane
+            isPointerDown={isPointerDown}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}>
@@ -90,7 +91,13 @@ function Pattern({
 }) {
     return (
         <svg className="absolute w-full h-full text-outline-variant">
-            <pattern id="pattern" x={translateX} y={translateY} width="32" height="32" patternUnits="userSpaceOnUse">
+            <pattern
+                id="pattern"
+                width="32"
+                height="32"
+                patternUnits="userSpaceOnUse"
+                x={translateX}
+                y={translateY}>
                 <circle cx="1" cy="1" r="1" fill="currentColor" />
             </pattern>
 
@@ -100,6 +107,7 @@ function Pattern({
 }
 
 function Pane({
+    isPointerDown,
     onPointerDown,
     onPointerMove,
     onPointerUp,
@@ -107,7 +115,7 @@ function Pane({
 }) {
     return (
         <div
-            className="relative w-full h-full overflow-hidden"
+            className={`relative w-full h-full overflow-hidden ${isPointerDown ? "cursor-grabbing" : "cursor-grab"}`}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
             onPointerMove={onPointerMove}>
