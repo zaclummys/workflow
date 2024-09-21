@@ -105,8 +105,10 @@ function WorkflowElementHierarchy ({
         case 'if':
             return (
                 <>
-                    <div className="grid grid-cols-3 items-start gap-4 min-w-40">
-                        <div>
+                    <div className="grid grid-cols-3-min-content items-start gap-4">
+                        <div
+                            className="flex flex-col items-center"
+                            data-element-branch="false">
                             <AddWorkflowElementButtonMenu
                                 previousElementBranch="false"
                                 previousElementId={workflowElementHierarchy.id}
@@ -125,7 +127,9 @@ function WorkflowElementHierarchy ({
                             workflowElement={workflowElementHierarchy}
                             onClick={onCanvasElementClick}/>
 
-                        <div>
+                        <div
+                            className="flex flex-col items-center"
+                            data-element-branch="true">
                             <AddWorkflowElementButtonMenu
                                 previousElementBranch="true"
                                 previousElementId={workflowElementHierarchy.id}
@@ -154,10 +158,10 @@ function WorkflowElement ({
 }) {
     return (
         <div
-            data-workflow-element-id={workflowElement.id}
+            data-element-id={workflowElement.id}
             className="bg-surface-high text-on-surface hover:ring hover:ring-primary rounded-md p-4 cursor-pointer transition-all"
             onClick={onClick}>
-            <span className="text-sm select-none">
+            <span className="text-sm text-nowrap select-none">
                 {workflowElement.name}
             </span>
         </div>
