@@ -46,7 +46,7 @@ function buildWorkflowElementHierarchyFromWorkflowVersion (workflowVersion) {
                 return {
                     ...workflowElement,
                     nextElementIfTrueHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementIdIfTrue),
-                    nextElementIfFalsHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementIdIfFalse),
+                    nextElementIfFalseHierarchy: buildWorkflowElementHierarchy(workflowElement.nextElementIdIfFalse),
                 };
                 
             default:
