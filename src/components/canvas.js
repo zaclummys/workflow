@@ -3,13 +3,16 @@
 import { useState } from 'react';
 
 export default function Canvas ({ children }) {
+    const width = 10240;
+    const height = 10240;
+    
     const [isPointerDown, setIsPointerDown] = useState(false);
 
     const [translateX, setTranslateX] = useState(0);
     const [translateY, setTranslateY] = useState(0);
 
-    const maxTranslateX = 1024;
-    const minTranslateX = -1024;
+    const maxTranslateX = width;
+    const minTranslateX = -width;
 
     const onPointerDown = () => {
         setIsPointerDown(true);
@@ -63,7 +66,7 @@ export default function Canvas ({ children }) {
             <Viewport
                 translateX={translateX}
                 translateY={translateY}>
-                    {children}
+                {children}
             </Viewport>
         </Pane>
     );

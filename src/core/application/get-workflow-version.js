@@ -80,7 +80,11 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                         default:
                             return null;
                     }
-                }),
+                })
+                .map(element => ({
+                    ...element,
+                    position: generateRandomPosition(),
+                })),
 
             variables: workflowVersion.getVariables()
                 .map(variable => ({
@@ -111,5 +115,12 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
 
             numberOfExecutions,
         },
+    };
+}
+
+function generateRandomPosition () {
+    return {
+        x: Math.random() * 1000,
+        y: Math.random() * 1000,
     };
 }

@@ -5,12 +5,13 @@ import { ArrowLeftIcon } from "lucide-react";
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionStatus from "~/components/workflow-version-status";
-import WorkflowVersionEditor from "~/components/workflow-version-editor/workflow-version-editor";
 
 import {
     ActivateWorkflowVersionButton,
     DeactivateWorkflowVersionButton,
 } from "~/components/toggle-workflow-version-button";
+
+import WorkflowVersionEditor from '~/components/workflow-version-editor/workflow-version-editor';
 
 export default async function EditWorkflowVersion ({ params: { workflowVersionId } }) {
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);

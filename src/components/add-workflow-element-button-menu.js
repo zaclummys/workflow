@@ -24,7 +24,7 @@ export default function AddWorkflowElementButtonMenu ({
     const handleAddElementMenuItemClick = async (event) => {
         setIsPending(true);
 
-        const { elementType } =event.target.dataset;
+        const { elementType } =event.currentTarget.dataset;
         
         try {
             const { success, message } = await addElementToWorkflowVersion({
@@ -37,7 +37,7 @@ export default function AddWorkflowElementButtonMenu ({
             if (success) {
                 setIsOpen(false);
             } else {
-                console.error(message)
+                alert(message)
             }
         } finally {
             setIsPending(false);
@@ -53,6 +53,7 @@ export default function AddWorkflowElementButtonMenu ({
                         onClick={handleCloseButtonClick} />
                     
                     <Menu
+                        className="w-full"
                         onClick={event => event.stopPropagation()}>
                         <MenuItem
                             data-element-type="if"

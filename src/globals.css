@@ -1,3 +1,5 @@
+@import '@xyflow/react/dist/style.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,21 +9,35 @@ html {
 }
 
 :root {
-    --surface-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.surface.DEFAULT'));
-    --surface-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.surface.DEFAULT'));
+    --primary: theme(colors.primary);
+    --danger: theme('colors.danger');
 
-    --surface-high-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.surface.high'));
-    --surface-high-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.surface.high'));
+    --surface: theme('colors.surface.DEFAULT');
+    --on-surface: theme('colors.on.surface.DEFAULT');
+    --on-surface-variant: theme('colors.on.surface.variant');
 
-    --primary-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.primary'));
-    --primary-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.primary'));
+    --surface-high: theme('colors.surface.high');
 
-    --danger-hover-layer: color-mix(in srgb, currentColor 12%, theme('colors.danger'));
-    --danger-press-layer: color-mix(in srgb, currentColor 16%, theme('colors.danger'));
+    --background: theme('colors.background');
+
+    --outline: theme('colors.outline.DEFAULT');
+    --outline-variant: theme('colors.outline.variant');
+
+    --primary-hover: color-mix(in srgb, currentColor 12%, var(--primary));
+    --primary-press: color-mix(in srgb, currentColor 16%, var(--primary));
+
+    --surface-hover: color-mix(in srgb, currentColor 12%, var(--surface));
+    --surface-press: color-mix(in srgb, currentColor 16%, var(--surface));
+
+    --surface-high-hover: color-mix(in srgb, currentColor 12%, var(--surface-high));
+    --surface-high-press: color-mix(in srgb, currentColor 16%, var(--surface-high));
+
+    --danger-hover: color-mix(in srgb, currentColor 12%, var(--danger));
+    --danger-press: color-mix(in srgb, currentColor 16%, var(--danger));
 }
 
 html {
-    @apply bg-background text-on-background;
+    @apply bg-background text-on-background ring-2 ring-primary;
 }
 
 @layer components {
@@ -39,4 +55,70 @@ html {
 button:focus,
 input:focus {
     @apply outline-none;
+}
+
+.react-flow {
+    --xy-node-color: var(--on-surface);
+
+    --xy-controls-button-color: var(--on-surface);
+    --xy-controls-button-border-color: none;
+    --xy-controls-button-background-color: var(--surface);
+
+    --xy-controls-button-color-hover: var(--on-surface);
+    --xy-controls-button-background-color-hover: var(--surface-hover);
+
+    --xy-minimap-background-color: var(--background);
+    --xy-minimap-node-background-color: var(--surface);
+    --xy-minimap-mask-background-color: var(--surface-high);
+
+    --xy-node-background-color: var(--surface);
+    --xy-node-border: none;
+    --xy-node-boxshadow-selected: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+
+    --xy-background-pattern-color: var(--outline-variant);
+}
+
+.react-flow__controls {
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.react-flow__controls-button {
+    width: 28px;
+    height: 28px;
+}
+
+
+.react-flow__node-start,
+.react-flow__node-if,
+.react-flow__node-assign {
+    padding: 10px;
+}
+
+.react-flow__node-new,
+.react-flow__node-start,
+.react-flow__node-if,
+.react-flow__node-assign {
+    border-radius: var(--xy-node-border-radius, var(--xy-node-border-radius-default));
+    width: 150px;
+    font-size: 12px;
+    color: var(--xy-node-color, var(--xy-node-color-default));
+    text-align: center;
+    border: var(--xy-node-border, var(--xy-node-border-default));
+    background-color: var(--xy-node-background-color, var(--xy-node-background-color-default));
+    @apply transition-colors transition-shadow;
+}
+
+.react-flow__node-new:hover,
+.react-flow__node-start:hover,
+.react-flow__node-if:hover,
+.react-flow__node-assign:hover {
+
+}
+
+.react-flow__node-new.selected,
+.react-flow__node-start.selected,
+.react-flow__node-if.selected,
+.react-flow__node-assign.selected {
+    @apply ring-1 ring-primary;
 }

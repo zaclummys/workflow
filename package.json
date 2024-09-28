@@ -13,6 +13,8 @@
     "e2e": "playwright"
   },
   "dependencies": {
+    "@dagrejs/dagre": "^1.1.4",
+    "@xyflow/react": "^12.3.0",
     "argon2": "^0.40.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

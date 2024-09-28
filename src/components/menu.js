@@ -14,7 +14,7 @@ export function Menu ({ className, ...props }) {
 export function MenuItem ({ className, ...props }) {
     return (
         <button
-            className={twMerge('flex flex-row items-center gap-3 py-3 px-5 text-left text-sm hover:bg-[var(--surface-high-hover-layer)] active:bg-[var(--surface-high-press-layer)] transition-colors', className)}
+            className={twMerge('flex flex-row items-center gap-3 py-3 px-5 text-left hover:bg-[var(--surface-high-hover)] active:bg-[var(--surface-high-press)] transition-colors', className)}
             {...props}
         />
     );

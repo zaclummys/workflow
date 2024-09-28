@@ -10,13 +10,13 @@ export function Button ({ className, ...props }) {
 }
 
 export function PrimaryButton (props) {
-    return <Button className="bg-primary text-on-primary hover:bg-[var(--primary-hover-layer)] active:bg-[var(--primary-press-layer)]" { ...props } />;
+    return <Button className="bg-primary text-on-primary hover:bg-[var(--primary-hover)] active:bg-[var(--primary-press)]" { ...props } />;
 }
 
 export function DestructiveButton (props) {
-    return <Button className="bg-danger text-on-danger hover:bg-[var(--danger-hover-layer)] active:bg-[var(--danger-press-layer)]" {...props} />;
+    return <Button className="bg-danger text-on-danger hover:bg-[var(--danger-hover)] active:bg-[var(--danger-press)]" {...props} />;
 }
 
 export function OutlineButton (props) {
-    return <Button className="border border-outline text-on-surface hover:bg-[var(--surface-hover-layer)] active:bg-[var(--surface-press-layer)]" {...props} />;
+    return <Button className="border border-outline text-on-surface hover:bg-[var(--surface-hover)] active:bg-[var(--surface-press)]" {...props} />;
 }

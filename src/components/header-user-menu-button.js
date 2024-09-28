@@ -64,7 +64,7 @@ function HeaderUserButton ({
 
     return (
         <button
-            className="flex flex-row items-center gap-2 px-3 py-3 rounded hover:bg-[var(--surface-hover-layer)] active:bg-[var(--surface-press-layer)] transition-colors"
+            className="flex flex-row items-center gap-2 px-3 py-3 rounded hover:bg-[var(--surface-hover)] active:bg-[var(--surface-press)] transition-colors"
             onClick={onClick}>
             <UserColor
                 className="w-8 h-8"
