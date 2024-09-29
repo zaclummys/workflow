@@ -1,15 +1,49 @@
 import {
+    useId,
+    useState,
+} from 'react';
+
+import {
     Sidebar,
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from "../../sidebar";
+} from "../../../sidebar";
 
-import { OutlineButton } from "../../button";
+import { OutlineButton } from "../../../button";
 
-import VariableForm from "../../variable-form";
+import VariableForm from "../../../variable-form";
 
-export default function ViewVariableWorkflowSidebar ({
+export function ViewVariableSidebarButton ({ variable }) {
+    const [open, setOpen] = useState(false);
+
+    const handleViewButtonClick = () => {
+        setOpen(false);
+    }
+
+    const handleBackButtonClick = () => {
+        setOpen(false);
+    }
+
+    return (
+        <>
+            <OutlineButton
+                onClick={handleViewButtonClick}
+            >
+                View
+            </OutlineButton>
+
+            {open && (
+                <ViewVariableSidebar
+                    variable={variable}
+                    onBackButtonClick={handleBackButtonClick}
+                />
+            )}
+        </>
+    );
+}
+
+export function ViewVariableSidebar ({
     variable,
     onBackButtonClick,
 }) {

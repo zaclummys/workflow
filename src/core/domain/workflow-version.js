@@ -139,6 +139,25 @@ export class WorkflowVersion {
         return this.createdById;
     }
 
+    change ({ variables, elements }) {
+        this.variables = variables.map(variableData => new WorkflowVariable(variableData));
+        this.elements = elements.map(elementData => {
+            switch (elementData.type) {
+                case 'start':
+                    return new WorkflowStartElement(elementData);
+
+                case 'assign':
+                    return new WorkflowAssignElement(elementData);
+
+                case 'if':
+                    return new WorkflowIfElement(elementData);
+
+                default:
+                    throw new Error(`Unexpected element type: ${elementData.type}`);
+            }
+        });
+    }
+
     activate() {
         this.status = 'active';
     }
@@ -336,8 +355,8 @@ export class WorkflowVariable {
         type,
         description,
         defaultValue,
-        markedAsInputOption,
-        markedAsOutputOption,
+        markedAsInput,
+        markedAsOutput,
     }) {
         return new WorkflowVariable({
             id: randomUUID(),
@@ -345,8 +364,8 @@ export class WorkflowVariable {
             type,
             description,
             defaultValue,
-            markedAsInputOption,
-            markedAsOutputOption,
+            markedAsInput,
+            markedAsOutput,
         });
     }
 
@@ -356,8 +375,8 @@ export class WorkflowVariable {
         type,
         description,
         defaultValue,
-        markedAsInputOption,
-        markedAsOutputOption,
+        markedAsInput,
+        markedAsOutput,
     }) {
         const validTypes = ['number', 'string', 'boolean'];
 
@@ -377,20 +396,20 @@ export class WorkflowVariable {
             throw new Error(`Type must be one of ${validTypes.join(', ')}, got ${type}.`);
         }
 
-        if (!description) {
-            throw new Error('Description is required.');
+        if (defaultValue === undefined) {
+            throw new Error('Default value cannot be undefined');
         }
 
-        if (typeof defaultValue !== type) {
+        if (defaultValue !== null && typeof defaultValue !== type) {
             throw new Error('Default value must be of the same type as the variable. Expected ' + type + ' but got ' + typeof defaultValue + '.');
         }
 
-        if (typeof markedAsInputOption !== 'boolean') {
-            throw new Error('Marked as input option is invalid.');
+        if (typeof markedAsInput !== 'boolean') {
+            throw new Error('Marked as input option must be a boolean.');
         }
 
-        if (typeof markedAsOutputOption !== 'boolean') {
-            throw new Error('Marked as output option is invalid.');
+        if (typeof markedAsOutput !== 'boolean') {
+            throw new Error('Marked as output option must be a boolean.');
         }
 
         this.id = id;
@@ -398,8 +417,8 @@ export class WorkflowVariable {
         this.type = type;
         this.description = description;
         this.defaultValue = defaultValue;
-        this.markedAsInputOption = markedAsInputOption;
-        this.markedAsOutputOption = markedAsOutputOption;
+        this.markedAsInput = markedAsInput;
+        this.markedAsOutput = markedAsOutput;
     }
 
     getId() {
@@ -422,12 +441,12 @@ export class WorkflowVariable {
         return this.defaultValue;
     }
 
-    getMarkedAsInputOption() {
-        return this.markedAsInputOption;
+    getMarkedAsInput() {
+        return this.markedAsInput;
     }
 
-    getMarkedAsOutputOption() {
-        return this.markedAsOutputOption;
+    getMarkedAsOutput() {
+        return this.markedAsOutput;
     }
 
     clone() {
@@ -436,8 +455,8 @@ export class WorkflowVariable {
             type: this.type,
             description: this.description,
             defaultValue: this.defaultValue,
-            markedAsInputOption: this.markedAsInputOption,
-            markedAsOutputOption: this.markedAsOutputOption,
+            markedAsInput: this.markedAsInput,
+            markedAsOutput: this.markedAsOutput,
         });
     }
 }

@@ -17,29 +17,106 @@ import {
 } from './form';
 
 export default function VariableForm ({
-    id,
-
-    name,
-    description,
-    type,
-    defaultValue,
-    markedAsInput,
-    markedAsOutput,
-    hasDefaultValue,
-
+    formId,
     disabled,
-
+    initialValues = {},
     onFormSubmit,
-    onNameChange,
-    onDescriptionChange,
-    onTypeChange,
-    onDefaultValueChange,
-    onMarkedAsInputChange,
-    onMarkedAsOutputChange,
-    onAddDefaultValueButtonClick,
-    onRemoveDefaultValueButtonClick,
 }) {
-    const formId = useId();
+    const getDefaultValueFromType = (type) => {
+        switch (type) {
+            case 'string':
+                return '';
+
+            case 'number':
+                return '0';
+
+            case 'boolean':
+                return 'true';
+
+            default:
+                return null;
+        }
+    }
+
+    const defaultValues = {
+        name: '',
+        description: '',
+        type: 'string',
+        defaultValue: null,
+        markedAsInput: false,
+        markedAsOutput: false,
+    };
+
+    const [values, setValues] = useState({
+        ...defaultValues,
+        ...initialValues,
+    });
+
+    const handleFormSubmit = event => {
+        event.preventDefault();
+
+        onFormSubmit(event, values);
+    }
+
+    const handleNameChange = event => {
+        setValues(values => ({
+            ...values,
+            name: event.target.value,
+        }));
+    };
+
+    const handleDescriptionChange = event => {
+        setValues(values => ({
+            ...values,
+            description: event.target.value,
+        }));
+    }
+
+    const handleTypeChange = event => {
+        const type = event.target.value;
+
+        setValues(values => ({
+            ...values,
+            type,
+            defaultValue: values.defaultValue == null ? null : getDefaultValueFromType(type),
+        }));
+    }
+
+    const handleRemoveDefaultValueButtonClick = () => {
+        setValues(values => ({
+            ...values,
+            defaultValue: null,
+        }));
+    };
+
+    const handleAddDefaultValueButtonClick = () => {
+        setValues(values => ({
+            ...values,
+            defaultValue: getDefaultValueFromType(values.type),
+        }));
+    };
+
+    const handleDefaultValueChange = event => {
+        setValues(values => ({
+            ...values,
+            defaultValue: event.target.value,
+        }));
+    }
+
+    const handleMarkedAsInputChange = event => {
+        setValues(values => ({
+            ...values,
+            markedAsInput: event.target.checked,
+        }));
+    };
+
+    const handleMarkedAsOutputChange = event => {
+        setValues(values => ({
+            ...values,
+            markedAsOutput: event.target.checked,
+        }));
+    };
+
     const nameId = useId();
     const typeId = useId();
     const descriptionId = useId();
@@ -49,8 +126,8 @@ export default function VariableForm ({
 
     return (
         <Form
-            id={id}
-            onSubmit={onFormSubmit}>
+            id={formId}
+            onSubmit={handleFormSubmit}>
             <Field>
                 <Label
                     aria-disabled={disabled}
@@ -61,8 +138,8 @@ export default function VariableForm ({
                 <Input
                     type="text"
                     id={nameId}
-                    value={name}
-                    onChange={onNameChange}
+                    value={values.name}
+                    onChange={handleNameChange}
                     disabled={disabled}
                     required />
             </Field>
@@ -76,8 +153,8 @@ export default function VariableForm ({
 
                 <TextArea
                     id={descriptionId}
-                    value={description}
-                    onChange={onDescriptionChange}
+                    value={values.description}
+                    onChange={handleDescriptionChange}
                     disabled={disabled} />
             </Field>
 
@@ -91,8 +168,8 @@ export default function VariableForm ({
                 <Select
                     id={typeId}
                     title="Select the type of the variable"
-                    value={type}
-                    onChange={onTypeChange}
+                    value={values.type}
+                    onChange={handleTypeChange}
                     disabled={disabled}>
                     <Option value="string">String</Option>
                     <Option value="number">Number</Option>
@@ -103,25 +180,27 @@ export default function VariableForm ({
             <Field>
                 <div className="flex flex-row justify-between">
                     <Label
-                        aria-disabled={!hasDefaultValue}
+                        aria-disabled={values.defaultValue == null}
                         htmlFor={defaultValueId}>
                         Default Value
                     </Label>
 
                     {!disabled && (
-                        hasDefaultValue ? (
+                        values.defaultValue == null ? (
                             <button
                                 type="button"
                                 className="font-medium text-sm text-primary"
-                                onClick={onRemoveDefaultValueButtonClick}>
-                                Remove
+                                onClick={handleAddDefaultValueButtonClick}
+                            >
+                                Add
                             </button>
                         ) : (
                             <button
                                 type="button"
                                 className="font-medium text-sm text-primary"
-                                onClick={onAddDefaultValueButtonClick}>
-                                Add
+                                onClick={handleRemoveDefaultValueButtonClick}
+                            >
+                                Remove
                             </button>
                         )
                     )}
@@ -129,10 +208,9 @@ export default function VariableForm ({
 
                 <DefaultValueInput
                     id={defaultValueId}
-                    disabled={!hasDefaultValue}
-                    value={defaultValue}
-                    onChange={onDefaultValueChange}
-                    type={type} />
+                    value={values.defaultValue}
+                    onChange={handleDefaultValueChange}
+                    type={values.type} />
             </Field>
 
             <div className="flex flex-col gap-2">
@@ -140,8 +218,8 @@ export default function VariableForm ({
                     <Checkbox
                         disabled={disabled}
                         id={markedAsInputId}
-                        checked={markedAsInput}
-                        onChange={onMarkedAsInputChange} />
+                        checked={values.markedAsInput}
+                        onChange={handleMarkedAsInputChange} />
 
                     <InlineLabel
                         aria-disabled={disabled}
@@ -154,8 +232,8 @@ export default function VariableForm ({
                     <Checkbox
                         disabled={disabled}
                         id={markedAsOutputId}
-                        checked={markedAsOutput}
-                        onChange={onMarkedAsOutputChange} />
+                        checked={values.markedAsOutput}
+                        onChange={handleMarkedAsOutputChange} />
 
                     <InlineLabel
                         aria-disabled={disabled}
@@ -169,7 +247,7 @@ export default function VariableForm ({
 }
 
 
-function DefaultStringInput ({
+function DefaultValueString ({
     id,
     value,
     disabled,
@@ -180,14 +258,14 @@ function DefaultStringInput ({
             required
             id={id}
             value={value === null ? '' : value}
-            disabled={disabled}
-            onChange={event => onChange(event.target.value)}
+            disabled={value === null}
+            onChange={onChange}
             
             type="text" />
     );
 }
 
-function DefaultNumberInput({
+function DefaultValueNumber({
     id,
     value,
     disabled,
@@ -198,16 +276,15 @@ function DefaultNumberInput({
             required
             id={id}
             value={value === null ? '' : value}
-            disabled={disabled}
-            onChange={event => onChange(parseInt(event.target.value))}
+            disabled={value === null}
+            onChange={onChange}
             type="number"
             step="1" />
     );
 }
 
-function DefaultBooleanInput({
+function DefaultValueBoolean({
     value,
-    disabled,
     onChange,
 }) {
     const trueId = useId();
@@ -219,9 +296,10 @@ function DefaultBooleanInput({
                 <Radio
                     required
                     id={trueId}
-                    disabled={disabled}
-                    checked={value === true}
-                    onChange={() => onChange(true)}
+                    disabled={value === null}
+                    value="true"
+                    checked={value === "true"}
+                    onChange={onChange}
                     name="defaultValue" />
 
                 <InlineLabel
@@ -235,9 +313,10 @@ function DefaultBooleanInput({
                 <Radio
                     required
                     id={falseId}
-                    disabled={disabled}
-                    checked={value === false}
-                    onChange={() => onChange(false)}
+                    disabled={value === null}
+                    value="false"
+                    checked={value === "false"}
+                    onChange={onChange}
                     name="defaultValue" />
 
                 <InlineLabel
@@ -260,27 +339,24 @@ function DefaultValueInput({
     switch (type) {
         case 'string':
             return (
-                <DefaultStringInput
+                <DefaultValueString
                     id={id}
                     value={value}
-                    disabled={disabled}
                     onChange={onChange} />
             );
 
         case 'number':
             return (
-                <DefaultNumberInput
+                <DefaultValueNumber
                     id={id}
                     value={value}
-                    disabled={disabled}
                     onChange={onChange} />
             );
 
         case 'boolean':
             return (
-                <DefaultBooleanInput
+                <DefaultValueBoolean
                     value={value}
-                    disabled={disabled}
                     onChange={onChange} />
             );
 

@@ -10,10 +10,40 @@ import {
 import activateWorkflowVersionAction from "~/actions/activate-workflow-version-action";
 import deactivateWorkflowVersionAction from "~/actions/deactivate-workflow-version-action";
 
-export function ActivateWorkflowVersionButton ({ workflowVersionId }) {
+export default function ToggleWorkflowVersionButton ({
+    disabled,
+    workflowVersion,
+}) {
+    switch (workflowVersion.status) {
+        case 'active':
+            return (
+                <DeactivateWorkflowVersionButton
+                    disabled={disabled}
+                    workflowVersionId={workflowVersion.id}
+                />
+            );
+
+        case 'draft':
+        case 'inactive':
+            return (
+                <ActivateWorkflowVersionButton
+                    disabled={disabled}
+                    workflowVersionId={workflowVersion.id}
+                />
+            );
+
+        default:
+            return null;
+    }
+}
+
+function ActivateWorkflowVersionButton ({
+    disabled,
+    workflowVersionId,
+}) {
     const [isActivating, setIsActivating] = useState(false);
 
-    const onClick = async () => {
+    const handleActivateButtonClick = async () => {
         setIsActivating(true);
 
         try {
@@ -25,17 +55,21 @@ export function ActivateWorkflowVersionButton ({ workflowVersionId }) {
 
     return (
         <PrimaryButton
-            disabled={isActivating}
-            onClick={onClick}>
+            disabled={isActivating || disabled}
+            onClick={handleActivateButtonClick}
+        >
             Activate
         </PrimaryButton>
     );
 }
 
-export function DeactivateWorkflowVersionButton ({ workflowVersionId }) {
+function DeactivateWorkflowVersionButton ({
+    disabled,
+    workflowVersionId,
+}) {
     const [isDeactivating, setIsDeactivating] = useState(false);
 
-    const onClick = async () => {
+    const handleDeactivateButtonClick = async () => {
         setIsDeactivating(true);
 
         try {
@@ -47,8 +81,9 @@ export function DeactivateWorkflowVersionButton ({ workflowVersionId }) {
 
     return (
         <OutlineButton
-            disabled={isDeactivating}
-            onClick={onClick}>
+            disabled={isDeactivating || disabled}
+            onClick={handleDeactivateButtonClick}
+        >
             Deactivate
         </OutlineButton>
     );
