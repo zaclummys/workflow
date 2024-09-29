@@ -15,7 +15,10 @@ sessions.createIndex({ id: 1 }, { unique: true });
 sessions.createIndex({ token: 1 }, { unique: true });
 
 workspaces.createIndex({ id: 1 }, { unique: true });
+
 workflowVersions.createIndex({ id: 1 }, { unique: true });
+workflowVersions.createIndex({ workflowVersionId: 1, number: 2 }, { unique: true });
+
 workflowExecutions.createIndex({ id: 1 }, { unique: true });
 
 export default database;

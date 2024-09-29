@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { getSessionToken } from "~/cookies";
 import saveWorkflowVersion from "~/core/application/save-workflow-version";
 
@@ -10,16 +11,19 @@ export default async function saveWorkflowVersionAction ({
 }) {
     const sessionToken = getSessionToken();
 
-    const saveWorkflowVersionOutput = await saveWorkflowVersion({
+    const { success, savedWorkflowVersionId } = await saveWorkflowVersion({
         sessionToken,
         workflowVersionId,
         workflowVersionChanges,
     });
 
-    if (saveWorkflowVersionOutput.success) {
-        revalidatePath(`/workflow-version/${workflowVersionId}`);
-        revalidatePath(`/workflow-version/${workflowVersionId}/edit`);
+    if (success) {
+        if (savedWorkflowVersionId === workflowVersionId) {
+            revalidatePath(`/workflow-version/${savedWorkflowVersionId}/edit`);
+        } else {
+            redirect(`/workflow-version/${savedWorkflowVersionId}/edit`);
+        }
     }
 
-    return saveWorkflowVersionOutput;
+    return { success };
 }

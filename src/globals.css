@@ -23,17 +23,17 @@ html {
     --outline: theme('colors.outline.DEFAULT');
     --outline-variant: theme('colors.outline.variant');
 
-    --primary-hover: color-mix(in srgb, currentColor 12%, var(--primary));
-    --primary-press: color-mix(in srgb, currentColor 16%, var(--primary));
+    --primary-hover: color-mix(in srgb, currentColor 16%, var(--primary));
+    --primary-press: color-mix(in srgb, currentColor 20%, var(--primary));
 
-    --surface-hover: color-mix(in srgb, currentColor 12%, var(--surface));
-    --surface-press: color-mix(in srgb, currentColor 16%, var(--surface));
+    --surface-hover: color-mix(in srgb, currentColor 16%, var(--surface));
+    --surface-press: color-mix(in srgb, currentColor 20%, var(--surface));
 
-    --surface-high-hover: color-mix(in srgb, currentColor 12%, var(--surface-high));
-    --surface-high-press: color-mix(in srgb, currentColor 16%, var(--surface-high));
+    --surface-high-hover: color-mix(in srgb, currentColor 16%, var(--surface-high));
+    --surface-high-press: color-mix(in srgb, currentColor 20%, var(--surface-high));
 
-    --danger-hover: color-mix(in srgb, currentColor 12%, var(--danger));
-    --danger-press: color-mix(in srgb, currentColor 16%, var(--danger));
+    --danger-hover: color-mix(in srgb, currentColor 16%, var(--danger));
+    --danger-press: color-mix(in srgb, currentColor 20%, var(--danger));
 }
 
 html {

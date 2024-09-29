@@ -139,6 +139,10 @@ export class WorkflowVersion {
         return this.createdById;
     }
 
+    isDraft () {
+        return this.status === 'draft';
+    }
+
     change ({ variables, elements }) {
         this.variables = variables.map(variableData => new WorkflowVariable(variableData));
         this.elements = elements.map(elementData => {
@@ -156,6 +160,21 @@ export class WorkflowVersion {
                     throw new Error(`Unexpected element type: ${elementData.type}`);
             }
         });
+    }
+
+    changeAsNewVersion ({
+        nextWorkflowVersionNumber,
+        workflowVersionChanges,
+    }) {
+        const newWorkflow = WorkflowVersion.create({
+            number: nextWorkflowVersionNumber,
+            workflowId: this.workflowId,
+            createdById: this.createdById,
+        });
+
+        newWorkflow.change(workflowVersionChanges);
+
+        return newWorkflow;
     }
 
     activate() {
@@ -333,19 +352,6 @@ export class WorkflowVersion {
 
     execute (inputValues) {
         return [];
-    }
-
-    fork({
-        number,
-        createdById,
-    }) {
-        return WorkflowVersion.create({
-            number,
-            createdById,
-            workflowId: this.workflowId,
-            variables: this.variables.map(variable => variable.clone()),
-            elements: this.elements.map(element => element.clone()),
-        });
     }
 }
 

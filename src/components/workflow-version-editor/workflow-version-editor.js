@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-
 import GoBack from '~/components/go-back';
 import ButtonGroup from '~/components/button-group';
 import WorkflowVersionStatus from "~/components/workflow-version-status";
@@ -35,7 +34,6 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
     }
 
     const handleRemoveVariable = (removedVariable) => {
-        console.log(removedVariable)
         setLocalWorkflowVersion(localWorkflowVersion => ({
             ...localWorkflowVersion,
             variables: localWorkflowVersion.variables.filter(variable => (
@@ -44,6 +42,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         }));
     }
 
+    // Refresh local workflow version if workflow version received from props is updated
     useEffect(() => {
         setLocalWorkflowVersion(workflowVersion);
     }, [workflowVersion]);

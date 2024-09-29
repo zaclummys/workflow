@@ -1,8 +1,15 @@
+import { findSessionByToken } from "~/core/data/mongodb/session";
+
 import { 
     findWorkflowVersionById,
+    insertWorkflowVersion,
     updateWorkflowVersion,
 } from "~/core/data/mongodb/workflow-version";
-import { findSessionByToken } from "../data/mongodb/session";
+
+import { 
+    findWorkflowById, 
+    updateWorkflow,
+} from "../data/mongodb/workflow";
 
 export default async function saveWorkflowVersion ({
     sessionToken,
@@ -25,11 +32,37 @@ export default async function saveWorkflowVersion ({
         }
     }
 
-    workflowVersion.change(workflowVersionChanges);
+    const workflow = await findWorkflowById(workflowVersion.getWorkflowId());
 
-    await updateWorkflowVersion(workflowVersion);
+    if (!workflow) {
+        return {
+            success: false,
+        }
+    }
+    
+    if (workflowVersion.isDraft()) {
+        workflowVersion.change(workflowVersionChanges);
 
-    return {
-        success: true
-    };
+        await updateWorkflowVersion(workflowVersion);
+
+        return {
+            success: true,
+            savedWorkflowVersionId: workflowVersion.getId(),
+        };
+    } else {
+        const nextWorkflowVersionNumber = workflow.takeNextVersionNumber();
+
+        const newWorkflowVersion = workflowVersion.changeAsNewVersion({
+            nextWorkflowVersionNumber,
+            workflowVersionChanges,
+        });
+    
+        await insertWorkflowVersion(newWorkflowVersion);
+        await updateWorkflow(workflow);
+
+        return {
+            success: true,
+            savedWorkflowVersionId: newWorkflowVersion.getId(),
+        };
+    }
 }

@@ -6,7 +6,12 @@ export function Button ({ className, ...props }) {
         className,
     );
 
-    return <button className={buttonClassName} {...props} />;
+    return (
+        <button
+            className={buttonClassName}
+            {...props} 
+        />
+    );
 }
 
 export function PrimaryButton (props) {

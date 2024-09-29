@@ -20,7 +20,10 @@ describe('MongoDB Database', () => {
             { token: 1 },
         ]],
         ['workspaces', [{ id: 1 }]],
-        ['workflow-versions', [{ id: 1 }]],
+        ['workflow-versions', [
+            { id: 1 },
+            { workflowVersionId: 1, number: 2 },
+        ]],
         ['workflow-executions', [{ id: 1 }]],
     ])('Collection %s should have unique indexes', async (collectionName, uniqueIndexKeys) => {
         const indexes = await database.collection(collectionName).listIndexes().toArray();

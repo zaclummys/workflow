@@ -6,13 +6,12 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../../sidebar';
+} from '~/components/sidebar';
 
-import { OutlineButton } from '../../button';
+import { OutlineButton } from '~/components/button';
 
-import ButtonGroup from '../../button-group';
+import ButtonGroup from '~/components/button-group';
 
-import { ViewVariableSidebarButton } from './variable-sidebar/view-variable-sidebar';
 import { AddVariableSidebarButton } from './variable-sidebar/add-variable-sidebar';
 import { EditVariableSidebarButton } from './variable-sidebar/edit-variable-sidebar';
 import { RemoveVariableSidebarButton } from './variable-sidebar/remove-variable-sidebar';
@@ -37,34 +36,11 @@ export default function VariablesSidebar ({
                 </SidebarHeader>
 
                 <SidebarContent>
-                    <div className="flex flex-col gap-2">
-                        {localWorkflowVersion.variables.map((variable) => (
-                            <div
-                                key={variable.id}
-                                className="flex flex-row justify-between items-center"
-                            >
-                                <span>{variable.name}</span>
-
-                                {localWorkflowVersion.status === 'draft' ? (
-                                    <ButtonGroup>
-                                        <EditVariableSidebarButton
-                                            variable={variable}
-                                            onEditVariable={onEditVariable}
-                                        />
-
-                                        <RemoveVariableSidebarButton
-                                            variable={variable}
-                                            onRemoveVariable={onRemoveVariable}
-                                        />
-                                    </ButtonGroup>
-                                ) : (
-                                    <ViewVariableSidebarButton
-                                        variable={variable}
-                                    />
-                                )}
-                            </div>
-                        ))}
-                    </div>
+                    <VariableList
+                        variables={localWorkflowVersion.variables}
+                        onEditVariable={onEditVariable}
+                        onRemoveVariable={onRemoveVariable}
+                    />
                 </SidebarContent>
 
                 <SidebarFooter>
@@ -78,4 +54,33 @@ export default function VariablesSidebar ({
     );
 }
 
+function VariableList ({
+    variables,
+    onEditVariable,
+    onRemoveVariable,
+}) {
+    return (
+        <div className="flex flex-col gap-2">
+            {variables.map((variable) => (
+                <div
+                    key={variable.id}
+                    className="flex flex-row justify-between items-center"
+                >
+                    <span>{variable.name}</span>
 
+                    <ButtonGroup>
+                        <EditVariableSidebarButton
+                            variable={variable}
+                            onEditVariable={onEditVariable}
+                        />
+
+                        <RemoveVariableSidebarButton
+                            variable={variable}
+                            onRemoveVariable={onRemoveVariable}
+                        />
+                    </ButtonGroup>
+                </div>
+            ))}
+        </div>
+    );
+}

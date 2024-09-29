@@ -76,7 +76,7 @@ export function AddVariableSidebar ({
 
                 <PrimaryButton
                     form={formId}>
-                    Save
+                    Confirm
                 </PrimaryButton>
             </SidebarFooter>
         </Sidebar>

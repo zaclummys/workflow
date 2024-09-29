@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function Form({ className, ...props }) {
@@ -20,12 +21,24 @@ export function Radio (props) {
     return <input type="radio" className="px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-all outline-none accent-primary disabled:opacity-[0.38]" {...props} />
 }
 
-export function Label (props) {
-    return <label className="font-medium text-sm text-on-surface-variant aria-disabled:opacity-[0.38]" {...props} />;
+export function Label ({ disabled, ...props }) {
+    const additionalClassNames = clsx({
+        'opacity-[0.38]': disabled,
+    });
+
+    const finalClassNames = twMerge('font-medium text-sm text-on-surface-variant', additionalClassNames);
+
+    return <label className={finalClassNames} {...props} />;
 }
 
-export function InlineLabel (props) {
-    return <label className="font-normal text-base aria-disabled:opacity-[0.38]" {...props} />;
+export function InlineLabel ({ disabled, ...props }) {
+    const additionalClassNames = clsx({
+        'opacity-[0.38]': disabled,
+    });
+
+    const finalClassNames = twMerge('font-normal text-base', additionalClassNames);
+
+    return <label className={finalClassNames} {...props} />;
 }
 
 export function Select(props) {

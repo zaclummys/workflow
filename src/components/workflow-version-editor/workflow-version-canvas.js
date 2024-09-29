@@ -110,7 +110,7 @@ function WorkflowVersionReactFlow ({
     const handleConnect = (params) => setEdges((eds) => addEdge(params, eds));
 
     const handleConnectEnd = (event, connectionState) => {
-        if (connectionState.isValid) return;
+        if (disabled || connectionState.isValid) return;
 
         addNewNode({
             position: screenToFlowPosition({
@@ -157,7 +157,10 @@ function WorkflowVersionReactFlow ({
     }
 
     return (
-        <div className="w-full h-full relative">
+        <div
+            data-workflow-status={localWorkflowVersion.status}
+            className="w-full h-full relative"
+        >
             <ReactFlow
                 nodes={nodes}
                 edges={edges}

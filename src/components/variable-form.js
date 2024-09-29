@@ -28,10 +28,10 @@ export default function VariableForm ({
                 return '';
 
             case 'number':
-                return '0';
+                return 0;
 
             case 'boolean':
-                return 'true';
+                return true;
 
             default:
                 return null;
@@ -124,13 +124,15 @@ export default function VariableForm ({
     const markedAsInputId = useId();
     const markedAsOutputId = useId();
 
+    const defaultValueIsDisabled = disabled || values.defaultValue === null;
+
     return (
         <Form
             id={formId}
             onSubmit={handleFormSubmit}>
             <Field>
                 <Label
-                    aria-disabled={disabled}
+                    disabled={disabled}
                     htmlFor={nameId}>
                     Name
                 </Label>
@@ -146,7 +148,7 @@ export default function VariableForm ({
 
             <Field>
                 <Label
-                    aria-disabled={disabled}
+                    disabled={disabled}
                     htmlFor={descriptionId}>
                     Description
                 </Label>
@@ -160,7 +162,7 @@ export default function VariableForm ({
 
             <Field>
                 <Label
-                    aria-disabled={disabled}
+                    disabled={disabled}
                     htmlFor={typeId}>
                     Type
                 </Label>
@@ -180,8 +182,9 @@ export default function VariableForm ({
             <Field>
                 <div className="flex flex-row justify-between">
                     <Label
-                        aria-disabled={values.defaultValue == null}
-                        htmlFor={defaultValueId}>
+                        htmlFor={defaultValueId}
+                        disabled={defaultValueIsDisabled}
+                    >
                         Default Value
                     </Label>
 
@@ -208,9 +211,11 @@ export default function VariableForm ({
 
                 <DefaultValueInput
                     id={defaultValueId}
+                    type={values.type}
                     value={values.defaultValue}
+                    disabled={defaultValueIsDisabled}
                     onChange={handleDefaultValueChange}
-                    type={values.type} />
+                />
             </Field>
 
             <div className="flex flex-col gap-2">
@@ -222,7 +227,7 @@ export default function VariableForm ({
                         onChange={handleMarkedAsInputChange} />
 
                     <InlineLabel
-                        aria-disabled={disabled}
+                        disabled={disabled}
                         htmlFor={markedAsInputId} >
                         Allow this variable to be available as input.
                     </InlineLabel>
@@ -236,7 +241,7 @@ export default function VariableForm ({
                         onChange={handleMarkedAsOutputChange} />
 
                     <InlineLabel
-                        aria-disabled={disabled}
+                        disabled={disabled}
                         htmlFor={markedAsOutputId}>
                         Allow this variable to be available as output.
                     </InlineLabel>
@@ -253,13 +258,17 @@ function DefaultValueString ({
     disabled,
     onChange,
 }) {
+    const handleChange = event => {
+        onChange(event, event.target.value);
+    };
+
     return (
         <Input
             required
             id={id}
             value={value === null ? '' : value}
-            disabled={value === null}
-            onChange={onChange}
+            disabled={disabled}
+            onChange={handleChange}
             
             type="text" />
     );
@@ -271,13 +280,17 @@ function DefaultValueNumber({
     disabled,
     onChange,
 }) {
+    const handleChange = event => {
+        onChange(event, +event.targe.value);
+    }
+
     return (
         <Input
             required
             id={id}
             value={value === null ? '' : value}
-            disabled={value === null}
-            onChange={onChange}
+            disabled={disabled}
+            onChange={handleChange}
             type="number"
             step="1" />
     );
@@ -286,9 +299,18 @@ function DefaultValueNumber({
 function DefaultValueBoolean({
     value,
     onChange,
+    disabled,
 }) {
     const trueId = useId();
     const falseId = useId();
+
+    const handleTrueChange = event => {
+        onChange(event, true);
+    }
+
+    const handleFalseChange = event => {
+        onChange(event, false);
+    }
 
     return (
         <>
@@ -296,15 +318,15 @@ function DefaultValueBoolean({
                 <Radio
                     required
                     id={trueId}
-                    disabled={value === null}
-                    value="true"
-                    checked={value === "true"}
-                    onChange={onChange}
-                    name="defaultValue" />
+                    disabled={disabled}
+                    checked={value === true}
+                    onChange={handleTrueChange}
+                />
 
                 <InlineLabel
-                    aria-disabled={disabled}
-                    htmlFor={trueId}>
+                    disabled={disabled}
+                    htmlFor={trueId}
+                >
                     True
                 </InlineLabel>
             </div>
@@ -313,15 +335,15 @@ function DefaultValueBoolean({
                 <Radio
                     required
                     id={falseId}
-                    disabled={value === null}
-                    value="false"
-                    checked={value === "false"}
-                    onChange={onChange}
-                    name="defaultValue" />
+                    disabled={disabled}
+                    checked={value === false}
+                    onChange={handleFalseChange}
+                />
 
                 <InlineLabel
-                    aria-disabled={disabled}
-                    htmlFor={falseId}>
+                    disabled={disabled}
+                    htmlFor={falseId}
+                >
                     False
                 </InlineLabel>
             </div>
@@ -342,7 +364,9 @@ function DefaultValueInput({
                 <DefaultValueString
                     id={id}
                     value={value}
-                    onChange={onChange} />
+                    disabled={disabled}
+                    onChange={onChange}
+                />
             );
 
         case 'number':
@@ -350,14 +374,18 @@ function DefaultValueInput({
                 <DefaultValueNumber
                     id={id}
                     value={value}
-                    onChange={onChange} />
+                    disabled={disabled}
+                    onChange={onChange}
+                />
             );
 
         case 'boolean':
             return (
                 <DefaultValueBoolean
                     value={value}
-                    onChange={onChange} />
+                    disabled={disabled}
+                    onChange={onChange}
+                />
             );
 
         default:

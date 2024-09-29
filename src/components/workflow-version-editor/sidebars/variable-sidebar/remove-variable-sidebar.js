@@ -63,7 +63,7 @@ export function RemoveVariableSidebar ({
 
             <SidebarContent>
                 <span>
-                    Are you sure you want to delete <span className="font-medium">{variable.name}</span>?
+                    Are you sure you want to delete <span className="font-semibold">{variable.name}</span>?
                 </span>
             </SidebarContent>
 
