@@ -6,20 +6,20 @@ import saveWorkflowVersionAction from '~/actions/save-workflow-version-action';
 import { OutlineButton } from './button';
 
 export default function SaveWorkflowVersionButton ({
-    localWorkflowVersion,
-    hasLocalWorkflowVersionChanged,
+    disabled,
+    workflowVersion,
 }) {
     const [pending, setPending] = useState(false);
 
-    const handleSaveButtonClick = async (event) => {
+    const handleSaveButtonClick = async () => {
         setPending(true);
 
         try {
             await saveWorkflowVersionAction({
-                workflowVersionId: localWorkflowVersion.id,
+                workflowVersionId: workflowVersion.id,
                 workflowVersionChanges: {
-                    elements: localWorkflowVersion.elements,
-                    variables: localWorkflowVersion.variables,
+                    elements: workflowVersion.elements,
+                    variables: workflowVersion.variables,
                 }
             });
         } finally {
@@ -29,7 +29,7 @@ export default function SaveWorkflowVersionButton ({
 
     return (
         <OutlineButton
-            disabled={!hasLocalWorkflowVersionChanged || pending}
+            disabled={disabled || pending}
             onClick={handleSaveButtonClick}
         >
             Save
