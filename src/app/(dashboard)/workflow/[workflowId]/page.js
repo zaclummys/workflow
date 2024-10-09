@@ -38,6 +38,8 @@ import {
 import getWorkflowAction from '~/actions/get-workflow-action';
 import getWorkflowVersionIdsAction from '~/actions/get-workflow-versions-action';
 
+import GoBack from '~/components/go-back';
+
 export const title = 'Workflow';
 
 export default async function Workflow({ params: { workflowId } }) {
@@ -56,7 +58,11 @@ export default async function Workflow({ params: { workflowId } }) {
             <Container>
                 <Section>
                     <SectionHeader>
-                        <SectionTitle>{workflow.name}</SectionTitle>
+                        <SectionTitle>
+                            <GoBack url={`/workspace/${workflow.workspace.id}`} />
+
+                            {workflow.name}
+                        </SectionTitle>
 
                         <SectionActions>
                             <CreateWorkflowVersionModalButton

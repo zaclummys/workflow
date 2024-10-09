@@ -33,9 +33,15 @@ import {
     PlaceholderText,
     PlaceholderTitle,
 } from '~/components/placeholder';
+
 import ExecuteWorkflowVersionModalButton from '~/components/modal-buttons/execute-workflow-version-modal-button';
-import ForkWorkflowVersionModalButton from '~/components/modal-buttons/fork-workflow-version-modal-button';
-import { WorkflowExecutionGrid, WorkflowExecutionGridItem } from '~/components/workflow-execution-grid';
+
+import {
+    WorkflowExecutionGrid,
+    WorkflowExecutionGridItem,
+} from '~/components/workflow-execution-grid';
+
+import GoBack from '~/components/go-back';
 
 export const title = 'Workflow Version';
 
@@ -59,14 +65,15 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
             <Container>
                 <Section>
                     <SectionHeader>
-                        <SectionTitle>{workflowVersion.workflow.name} - Version {workflowVersion.number}</SectionTitle>
+                        <SectionTitle>
+                            <GoBack url={`/workflow/${workflowVersion.workflow.id}`} />
+
+                            {workflowVersion.workflow.name} - Version {workflowVersion.number}
+                        </SectionTitle>
 
                         <SectionActions>
                             <EditWorkflowVersionButton
                                 workflowVersionId={workflowVersion.id} />
-
-                            <ForkWorkflowVersionModalButton
-                                workflowVersion={workflowVersion} />
 
                             <ExecuteWorkflowVersionModalButton
                                 workflowVersion={workflowVersion} />

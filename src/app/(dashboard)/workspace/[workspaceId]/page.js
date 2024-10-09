@@ -39,6 +39,7 @@ import EditWorkspaceModalButton from '~/components/modal-buttons/edit-workspace-
 
 import getWorkspaceAction from '~/actions/get-workspace-action';
 import getWorkflowsAction from '~/actions/get-workflows-action';
+import GoBack from '~/components/go-back';
 
 export const title = 'Workspace';
 
@@ -62,7 +63,11 @@ export default async function Workspace({ params: { workspaceId } }) {
             <Container>
                 <Section>
                     <SectionHeader>
-                        <SectionTitle>{workspace.name}</SectionTitle>
+                        <SectionTitle>
+                            <GoBack url="/" />
+                            
+                            {workspace.name}
+                        </SectionTitle>
 
                         <SectionActions>
                             <CreateWorkflowModalButton

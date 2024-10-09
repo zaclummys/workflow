@@ -16,7 +16,7 @@ export function SectionHeader ({ children }) {
 
 export function SectionTitle ({ children }) {
     return (
-        <span className="font-normal text-xl">
+        <span className="inline-flex flex-row items-center gap-6 font-normal text-xl">
             {children}
         </span>
     );
