@@ -55,6 +55,12 @@ export async function deleteWorkflowExecutionByVersionId (workflowVersionId) {
         .deleteMany({ workflowVersionId });
 }
 
+export async function deleteWorkflowExecutionByVersionIds (workflowVersionIds) {
+    await database
+        .collection('workflow-executions')
+        .deleteMany({ workflowVersionId: { $in: workflowVersionIds } });
+}
+
 export function fromWorkflowExecution (workflowExecution) {
     return {
         id: workflowExecution.getId(),
