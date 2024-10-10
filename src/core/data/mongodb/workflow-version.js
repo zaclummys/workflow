@@ -30,7 +30,7 @@ export async function findWorkflowVersionById (id) {
 export async function findWorkflowVersionIdsByWorkflowId (workflowId) {
     const workflowVersionIdsData = await database
         .collection('workflow-versions')
-        .find({ workflowId }, { sort: { number: -1 } })
+        .find({ workflowId }, { sort: { number: -1 }, projection: { id: 1 } })
         .toArray();
 
     return workflowVersionIdsData.map(workflowVersionIdData => workflowVersionIdData.id);
@@ -82,6 +82,8 @@ export function fromWorkflowElement (workflowElement) {
         case 'start':
             return {
                 id: workflowElement.getId(),
+                positionX: workflowElement.getPositionX(),
+                positionY: workflowElement.getPositionY(),
                 type: workflowElement.getType(),
                 nextElementId: workflowElement.getNextElementId(),
             };
@@ -89,6 +91,8 @@ export function fromWorkflowElement (workflowElement) {
         case 'assign':
             return {
                 id: workflowElement.getId(),
+                positionX: workflowElement.getPositionX(),
+                positionY: workflowElement.getPositionY(),
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
                 description: workflowElement.getDescription(),
@@ -100,6 +104,8 @@ export function fromWorkflowElement (workflowElement) {
         case 'if':
             return {
                 id: workflowElement.getId(),
+                positionX: workflowElement.getPositionX(),
+                positionY: workflowElement.getPositionY(),
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
                 strategy: workflowElement.getStrategy(),
