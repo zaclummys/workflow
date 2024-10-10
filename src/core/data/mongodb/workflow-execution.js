@@ -26,7 +26,7 @@ export async function findWorkflowExecutionIdsByWorkflowVersionId (workflowVersi
 export async function findWorkflowExecutionIdsByWorkflowVersionIds (workflowVersionIds) {
     const workflowExecutionIdsData = await database
         .collection('workflow-executions')
-        .find({ workflowVersionId: { $in: { workflowVersionIds }} }, { projection: { id: 1 } })
+        .find({ workflowVersionId: { $in: workflowVersionIds } }, { projection: { id: 1 } })
         .toArray();
 
     return workflowExecutionIdsData.map(workflowExecutionIdData => workflowExecutionIdData.id);

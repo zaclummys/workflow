@@ -15,15 +15,12 @@ import {
     DestructiveButton, 
 } from '~/components/button';
 
-import Tooltip from '~/components/tooltip';
-
 import deleteWorkspaceAction from '~/actions/delete-workspace-action';
 
 import useNavigation from '~/hooks/use-navigation';
 
 export default function DeleteWorkspaceModalButton({
     workspace,
-    hasWorkflows,
 }) {
     const { navigateToHome } = useNavigation();
 
@@ -55,19 +52,10 @@ export default function DeleteWorkspaceModalButton({
 
     return (
         <>
-            {hasWorkflows ? (
-                <Tooltip text="Cannot delete workspace with workflows">
-                    <OutlineButton disabled>
-                        Delete
-                    </OutlineButton>
-                </Tooltip>
-                
-            ) : (
-                <OutlineButton
-                    onClick={onDeleteButtonClick}>
-                    Delete
-                </OutlineButton>
-            )}
+            <OutlineButton
+                onClick={onDeleteButtonClick}>
+                Delete
+            </OutlineButton>
             
             {isOpen && (
                 <Modal>

@@ -53,7 +53,7 @@ export async function deleteWorkflowById (id) {
         .deleteOne({ id });
 }
 
-export async function deleteWorkflowById (ids) {
+export async function deleteWorkflowsByIds (ids) {
     await database
         .collection('workflows')
         .deleteMany({ id: { $in: ids } });

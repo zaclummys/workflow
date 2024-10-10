@@ -14,8 +14,6 @@ import {
     ModalFooter,
 } from '~/components/modal';
 
-import Tooltip from '~/components/tooltip';
-
 import deleteWorkflowVersionAction from '~/actions/delete-workflow-version-action';
 
 import useNavigation from '~/hooks/use-navigation';
@@ -48,19 +46,10 @@ export default function WorkflowVersionModalButton({ workflowVersion }) {
 
     return (
         <>
-            {workflowVersion.status !== 'active' ? (
-                <OutlineButton
-                    onClick={onDeleteButtonClick}>
-                    Delete
-                </OutlineButton>
-            ) : (
-                <Tooltip
-                    text="Cannot delete an active workflow version">
-                    <OutlineButton disabled>
-                        Delete
-                    </OutlineButton>
-                </Tooltip>
-            )}
+            <OutlineButton
+                onClick={onDeleteButtonClick}>
+                Delete
+            </OutlineButton>
 
             {isOpen && (
                 <Modal>

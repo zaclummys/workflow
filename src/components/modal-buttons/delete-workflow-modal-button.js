@@ -24,7 +24,6 @@ import useNavigation from '~/hooks/use-navigation';
 
 export default function DeleteWorkflowModalButton({
     workflow,
-    hasWorkflowVersions,
 }) {
     const { navigateToWorkspace } = useNavigation();
 
@@ -54,19 +53,10 @@ export default function DeleteWorkflowModalButton({
 
     return (
         <>
-            {hasWorkflowVersions ? (
-                <Tooltip
-                    text="Cannot delete a workflow with versions">
-                    <OutlineButton disabled>
-                        Delete
-                    </OutlineButton>
-                </Tooltip>
-            ) : (
-                <OutlineButton
-                    onClick={onDeleteButtonClick}>
-                    Delete
-                </OutlineButton>
-            )}
+            <OutlineButton
+                onClick={onDeleteButtonClick}>
+                Delete
+            </OutlineButton>
 
             {isOpen && (
                 <Modal>

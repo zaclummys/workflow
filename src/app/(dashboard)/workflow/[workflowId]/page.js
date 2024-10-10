@@ -72,8 +72,7 @@ export default async function Workflow({ params: { workflowId } }) {
                                 workflow={workflow} />
 
                             <DeleteWorkflowModalButton
-                                workflow={workflow}
-                                hasWorkflowVersions={workflowVersionIds.length > 0} />
+                                workflow={workflow} />
                         </SectionActions>
                     </SectionHeader>
 

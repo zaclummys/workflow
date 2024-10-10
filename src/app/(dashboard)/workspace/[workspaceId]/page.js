@@ -80,8 +80,7 @@ export default async function Workspace({ params: { workspaceId } }) {
                                 workspace={workspace} />
 
                             <DeleteWorkspaceModalButton
-                                workspace={workspace}
-                                hasWorkflows={workflowIds.length > 0} />
+                                workspace={workspace} />
                         </SectionActions>
                     </SectionHeader>
 
