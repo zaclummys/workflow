@@ -37,10 +37,6 @@ export class Workflow {
             throw new Error('Name is required');
         }
 
-        if (!description) {
-            throw new Error('Description is required');
-        }
-
         if (!nextVersionNumber) {
             throw new Error('Next Version Number is required');
         }

@@ -104,7 +104,7 @@ function CreateWorkflowModal ({
                         id={descriptionId}
                         disabled={pending}
                         name="description"
-                        required />
+                    />
                 </Field>
             </Form>
 
