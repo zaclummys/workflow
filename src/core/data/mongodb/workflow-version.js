@@ -36,6 +36,39 @@ export async function findWorkflowVersionIdsByWorkflowId (workflowId) {
     return workflowVersionIdsData.map(workflowVersionIdData => workflowVersionIdData.id);
 }
 
+export async function findWorkflowVersionIdsByWorkflowIds (workflowIds) {
+    const workflowVersionIdsData = await database
+        .collection('workflow-versions')
+        .find({ workflowId: { $in: workflowIds } }, { projection: { id: 1 } })
+        .toArray();
+
+    return workflowVersionIdsData.map(workflowVersionIdData => workflowVersionIdData.id);
+}
+
+export async function deleteWorkflowVersionById (id) {
+    await database
+        .collection('workflow-versions')
+        .deleteOne({ id });
+}
+
+export async function deleteWorkflowVersionsByIds (ids) {
+    await database
+        .collection('workflow-versions')
+        .deleteMany({ id: { $in: ids } });
+}
+
+export async function deleteWorkflowVersionsByWorkflowId (workflowId) {
+    await database
+        .collection('workflow-versions')
+        .deleteMany({ workflowId });
+}
+
+export async function deleteWorkflowVersionsByWorkflowIds (workflowIds) {
+    await database
+        .collection('workflow-versions')
+        .deleteMany({ workflowId: { $in: { workflowIds } } });
+}
+
 export async function countWorkflowVersionsByWorkflowId (workflowId) {
     return database
         .collection('workflow-versions')
@@ -51,17 +84,7 @@ export async function updateWorkflowVersion (workflowVersion) {
         );
 }
 
-export async function deleteWorkflowVersionById (id) {
-    await database
-        .collection('workflow-versions')
-        .deleteOne({ id });
-}
 
-export async function deleteWorkflowVersionsByWorkflowId (workflowId) {
-    await database
-        .collection('workflow-versions')
-        .deleteMany({ workflowId });
-}
 
 export function fromWorkflowVersion (workflowVersion) {
     return {

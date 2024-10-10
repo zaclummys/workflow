@@ -1,6 +1,15 @@
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { deleteWorkflowById } from '~/core/data/mongodb/workflow';
-import { countWorkflowVersionsByWorkflowId } from '~/core/data/mongodb/workflow-version';
+
+import {
+    findWorkflowVersionIdsByWorkflowId,
+    deleteWorkflowVersionsByIds,
+} from '~/core/data/mongodb/workflow-version';
+
+import {
+    findWorkflowExecutionIdsByWorkflowVersionIds,
+    deleteWorkflowExecutionsByIds,
+} from '~/core/data/mongodb/workflow-execution';
 
 export default async function deleteWorkflow ({
     workflowId,
@@ -20,14 +29,11 @@ export default async function deleteWorkflow ({
         };
     }
 
-    const amountOfWorkflowVersions = await countWorkflowVersionsByWorkflowId(workflowId);
+    const workflowVersionIds = await findWorkflowVersionIdsByWorkflowId(workflowId);
+    const workflowExecutionIds = await findWorkflowExecutionIdsByWorkflowVersionIds(workflowVersionIds);
 
-    if (amountOfWorkflowVersions > 0) {
-        return {
-            success: false,
-        }
-    }
-
+    await deleteWorkflowExecutionsByIds(workflowExecutionIds);
+    await deleteWorkflowVersionsByIds(workflowVersionIds);
     await deleteWorkflowById(workflowId);
 
     return {

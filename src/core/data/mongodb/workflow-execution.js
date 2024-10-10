@@ -14,20 +14,30 @@ export async function findWorkflowExecutionById (id) {
     return toWorkflowExecution(workflowExecutionData);
 }
 
-export async function findWorkflowExecutionIdsByVersionId (workflowVersionId) {
+export async function findWorkflowExecutionIdsByWorkflowVersionId (workflowVersionId) {
     const workflowExecutionIdsData = await database
         .collection('workflow-executions')
-        .find({ workflowVersionId }, { sort: { startedAt: -1 } })
+        .find({ workflowVersionId }, { projection: { id: 1 } })
         .toArray();
 
     return workflowExecutionIdsData.map(workflowExecutionIdData => workflowExecutionIdData.id);
 }
 
-export async function countWorkflowExecutionsByVersionId (workflowVersionId) {
+export async function findWorkflowExecutionIdsByWorkflowVersionIds (workflowVersionIds) {
+    const workflowExecutionIdsData = await database
+        .collection('workflow-executions')
+        .find({ workflowVersionId: { $in: { workflowVersionIds }} }, { projection: { id: 1 } })
+        .toArray();
+
+    return workflowExecutionIdsData.map(workflowExecutionIdData => workflowExecutionIdData.id);
+}
+
+export async function countWorkflowExecutionsByWorkflowVersionId (workflowVersionId) {
     return database
         .collection('workflow-executions')
         .countDocuments({ workflowVersionId });
 }
+
 export async function insertWorkflowExecution (workflowExecution) {
     await database
         .collection('workflow-executions')
@@ -49,13 +59,19 @@ export async function deleteWorkflowExecutionById (id) {
         .deleteOne({ id });
 }
 
-export async function deleteWorkflowExecutionByVersionId (workflowVersionId) {
+export async function deleteWorkflowExecutionsByIds (ids) {
+    await database
+        .collection('workflow-executions')
+        .deleteMany({ id: { $in: ids } });
+}
+
+export async function deleteWorkflowExecutionsByWorkflowVersionId (workflowVersionId) {
     await database
         .collection('workflow-executions')
         .deleteMany({ workflowVersionId });
 }
 
-export async function deleteWorkflowExecutionByVersionIds (workflowVersionIds) {
+export async function deleteWorkflowExecutionsByWorkflowVersionIds (workflowVersionIds) {
     await database
         .collection('workflow-executions')
         .deleteMany({ workflowVersionId: { $in: workflowVersionIds } });

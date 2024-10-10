@@ -5,7 +5,20 @@ import {
     deleteWorkspaceById, 
 } from '~/core/data/mongodb/workspace';
 
-import { countWorkflowsByWorkspaceId } from '~/core/data/mongodb/workflow';
+import {
+    findWorkflowIdsByWorkspaceId,
+    deleteWorkflowsByIds,
+} from '~/core/data/mongodb/workflow';
+
+import {
+    findWorkflowVersionIdsByWorkflowIds,
+    deleteWorkflowVersionsByIds,
+} from '~/core/data/mongodb/workflow-version';
+
+import {
+    findWorkflowExecutionIdsByWorkflowVersionIds,
+    deleteWorkflowExecutionsByIds,
+} from '~/core/data/mongodb/workflow-execution';
 
 export default async function deleteWorkspace ({
     workspaceId,
@@ -41,15 +54,13 @@ export default async function deleteWorkspace ({
         };
     }
 
-    const workflows = await countWorkflowsByWorkspaceId(workspaceId);
+    const workflowIds = await findWorkflowIdsByWorkspaceId(workspaceId);
+    const workflowVersionIds = await findWorkflowVersionIdsByWorkflowIds(workflowIds);
+    const workflowExecutionIds = await findWorkflowExecutionIdsByWorkflowVersionIds(workflowVersionIds);
 
-    if (workflows.length > 0) {
-        return {
-            success: false,
-            message: 'Cannot delete workspace with workflows.',
-        };
-    }
-
+    await deleteWorkflowExecutionsByIds(workflowExecutionIds);
+    await deleteWorkflowVersionsByIds(workflowVersionIds);
+    await deleteWorkflowsByIds(workflowIds);
     await deleteWorkspaceById(workspaceId);
 
     return {

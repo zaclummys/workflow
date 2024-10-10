@@ -19,9 +19,7 @@ export async function insertWorkflow (workflow) {
 export async function findWorkflowById (id) {
     const workflowData = await database
         .collection('workflows')
-        .findOne({
-            id, 
-        });
+        .findOne({ id });
 
     if (workflowData == null) {
         return null;
@@ -33,13 +31,7 @@ export async function findWorkflowById (id) {
 export async function findWorkflowIdsByWorkspaceId (workspaceId) {
     const workflowIdsData = await database
         .collection('workflows')
-        .find({
-            workspaceId, 
-        }, {
-            sort: {
-                createdAt: -1, 
-            },
-        })
+        .find({ workspaceId }, { projection: { id: 1 } })
         .toArray();
 
     return workflowIdsData.map(workflowIdData => workflowIdData.id);
@@ -58,10 +50,28 @@ export async function updateWorkflow (workflow) {
 export async function deleteWorkflowById (id) {
     await database
         .collection('workflows')
-        .deleteOne({
-            id, 
-        });
+        .deleteOne({ id });
 }
+
+export async function deleteWorkflowById (ids) {
+    await database
+        .collection('workflows')
+        .deleteMany({ id: { $in: ids } });
+}
+
+export async function deleteWorkflowsByWorkspaceId (workspaceId) {
+    await database
+        .collection('workflows')
+        .deleteMany({ workspaceId });
+}
+
+
+export async function deleteWorkflowsByWorkspaceIds (workspaceIds) {
+    await database
+        .collection('workflows')
+        .deleteMany({ workspaceId: { $in: workspaceIds } });
+}
+
 
 export async function countWorkflowsByWorkspaceId (workspaceId) {
     return database

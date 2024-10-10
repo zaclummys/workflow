@@ -46,9 +46,7 @@ export async function updateWorkspace (workspace) {
 export async function deleteWorkspaceById (id) {
     await database
         .collection('workspaces')
-        .deleteOne({
-            id, 
-        });
+        .deleteOne({ id });
 }
 
 export function fromWorkspace (workspace) {
