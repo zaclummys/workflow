@@ -467,29 +467,60 @@ export class WorkflowVariable {
     }
 }
 
-export class WorkflowElement {}
-
-export class WorkflowStartElement {
-    static create () {
-        return new WorkflowStartElement({
-            id: randomUUID()
-        });
-    }
-
-    constructor({
+export class WorkflowElement {
+    constructor ({
         id,
-        nextElementId,
+        positionX,
+        positionY,
     }) {
         if (!id) {
             throw new Error('ID is required.');
         }
 
+        if (positionX == null) {
+            throw new Error('Position X cannot be null');
+        }
+
+        if (positionY == null) {
+            throw new Error('Position Y cannot be null');
+        }
+
         this.id = id;
-        this.nextElementId = nextElementId;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
 
     getId() {
         return this.id;
+    }
+
+    getPositionX () {
+        return this.positionX;
+    }
+
+    getPositionY () {
+        return this.positionY;
+    }
+}
+
+export class WorkflowStartElement extends WorkflowElement {
+    static create () {
+        return new WorkflowStartElement({
+            id: randomUUID(),
+            positionX: 0.0,
+            positionY: 0.0,
+        });
+    }
+    
+    constructor ({
+        id,
+        positionX,
+        positionY,
+        nextElementId,
+    }) {
+        super({ id, positionX, positionY });
+
+        this.nextElementId = nextElementId;
     }
 
     getType() {
@@ -517,16 +548,7 @@ export class WorkflowStartElement {
     }
 }
 
-export class WorkflowIfElement {
-    static create() {
-        return new WorkflowIfElement({
-            id: randomUUID(),
-            name: 'New If Element',
-            strategy: 'all',
-            conditions: [],
-        });
-    }
-
+export class WorkflowIfElement extends WorkflowElement {
     constructor({
         id,
         name,
@@ -535,28 +557,19 @@ export class WorkflowIfElement {
         conditions,
         nextElementIdIfTrue,
         nextElementIdIfFalse,
+        positionX,
+        positionY,
     }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
+        super({ id, name, positionX, positionY });
 
         if (!name) {
-            throw new Error('Name is required.');
+            throw new Error('Name is required');
         }
 
-        if (!strategy) {
-            throw new Error('Strategy is required.');
-        }
-
-        if (!conditions) {
-            throw new Error('Conditions are required.');
-        }
-
-        this.id = id;
         this.name = name;
         this.description = description;
-        this.strategy = strategy;
-        this.conditions = conditions;
+        this.strategy = strategy || 'all';
+        this.conditions = conditions || [];
         this.nextElementIdIfTrue = nextElementIdIfTrue;
         this.nextElementIdIfFalse = nextElementIdIfFalse;
     }
@@ -685,38 +698,25 @@ export class WorkflowCondition {
     }
 }
 
-export class WorkflowAssignElement {
-    static create() {
-        return new WorkflowAssignElement({
-            id: randomUUID(),
-            name: 'New Assign Element',
-            assignments: [],
-        });
-    }
-
+export class WorkflowAssignElement extends WorkflowElement {
     constructor({
         id,
+        positionX,
+        positionY,
         name,
         description,
         assignments,
         nextElementId,
     }) {
-        if (!id) {
-            throw new Error('Id is required.');
-        }
+        super({ id, positionX, positionY });
 
         if (!name) {
             throw new Error('Name is required.');
         }
 
-        if (!assignments) {
-            throw new Error('Assignments are required.');
-        }
-
-        this.id = id;
         this.name = name;
         this.description = description;
-        this.assignments = assignments;
+        this.assignments = assignments || [];
         this.nextElementId = nextElementId;
     }
 
