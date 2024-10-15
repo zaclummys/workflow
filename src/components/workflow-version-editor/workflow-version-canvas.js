@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import {
     ReactFlow,
@@ -11,7 +11,6 @@ import {
     MiniMap,
     useNodesState,
     useEdgesState,
-    addEdge,
     useReactFlow,
     ReactFlowProvider,
 } from '@xyflow/react';
@@ -29,22 +28,66 @@ export default function WorkflowVersionCanvas (props) {
     );
 }
 
-function WorkflowVersionReactFlow ({
-    localWorkflowVersion,
-    onAddVariable,
-    onEditVariable,
-    onRemoveVariable,
+const nodeTypes = {
+    new: NewNode,
+    start: StartNode,
+    if: IfNode,
+    assign: AssignNode,
+}
+
+function getEdgeLabelSourceHandleId (handleId) {
+    switch (handleId) {
+        case 'true':
+            return 'Yes';
+
+        case 'false':
+            return 'No';
+
+        default:
+            return null;
+    }
+}
+
+function createNode ({ type, label, position, }) {
+    return {
+        id: crypto.randomUUID(),
+        type,
+        data: {
+            label,
+        },
+        position,
+        origin: [0.5, 0.0],
+    }
+}
+
+function createEdge ({
+    sourceNodeId,
+    sourceHandleId,
+    targetNodeId,
 }) {
-    const initialNodes = localWorkflowVersion.elements.map(element => ({
+    return {
+        id: `${sourceNodeId}:${sourceHandleId}->${targetNodeId}`,
+        source: sourceNodeId,
+        sourceHandle: sourceHandleId,
+        target: targetNodeId,
+        label: getEdgeLabelSourceHandleId(sourceHandleId),
+    }
+}
+
+function fromWorkflowElements (workflowElements) {
+    const reactFlowNodes = workflowElements.map(element => ({
         id: element.id,
         type: element.type,
-        position: element.position,
+        position: {
+            x: element.positionX,
+            y: element.positionY,
+        },
         data: {
             label: element.name,
         }
     }));
 
-    const initialEdges =  localWorkflowVersion.elements.flatMap(element => {
+    const reactFlowEdges = workflowElements.flatMap(element => {
         const edges = [];
 
         switch (element.type) {
@@ -54,6 +97,7 @@ function WorkflowVersionReactFlow ({
                     edges.push({
                         id: `${element.id}->${element.nextElementId}`,
                         source: element.id,
+                        sourceHandle: 'next',
                         target: element.nextElementId,
                     });
                 }
@@ -65,7 +109,7 @@ function WorkflowVersionReactFlow ({
                         source: element.id,
                         sourceHandle: 'false',
                         target: element.nextElementIdIfFalse,
-                        label: getEdgeLabelFromHandleId('false'),
+                        label: getEdgeLabelSourceHandleId('false'),
                     });
                 }
 
@@ -75,7 +119,7 @@ function WorkflowVersionReactFlow ({
                         source: element.id,
                         sourceHandle: 'true',
                         target: element.nextElementIdIfTrue,
-                        label: getEdgeLabelFromHandleId('true'),
+                        label: getEdgeLabelSourceHandleId('true'),
                     });
                 }
         }
@@ -83,67 +127,68 @@ function WorkflowVersionReactFlow ({
         return edges;
     });
 
-    const addNewNode = ({ position, fromNodeId, fromHandleId }) => {
-        const newNodeId = crypto.randomUUID();
+    return [reactFlowNodes, reactFlowEdges];
+}
 
-        setNodes(nodes => nodes.concat({
-            id: newNodeId,
-            position,
-            type: 'new',
-            origin: [0.5, 0.0],
-        }));
+function WorkflowVersionReactFlow ({
+    localWorkflowVersion,
+    onAddVariable,
+    onEditVariable,
+    onRemoveVariable,
+    onAddElement,
+    onEditElement,
+    onRemoveElement,
+}) {
+    const instance = useReactFlow();
 
-        setEdges(edges => edges.concat({
-            id: `${fromNodeId}->${newNodeId}`,
-            source: fromNodeId,
-            sourceHandle: fromHandleId,
-            target: newNodeId,
-            label: getEdgeLabelFromHandleId(fromHandleId),
-        }));
-    }
-
-    const { screenToFlowPosition } = useReactFlow();
+    const [initialNodes, initialEdges] = fromWorkflowElements(localWorkflowVersion.elements); 
 
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-    const handleConnect = (params) => setEdges((eds) => addEdge(params, eds));
+    const { screenToFlowPosition } = useReactFlow();
 
     const handleConnectEnd = (event, connectionState) => {
-        if (disabled || connectionState.isValid) return;
+        const sourceNodeId = connectionState.fromNode.id;
+        const sourceHandleId = connectionState.fromHandle.id;
 
-        addNewNode({
-            position: screenToFlowPosition({
+        if (connectionState.isValid) {
+            const edge = createEdge({
+                sourceNodeId,
+                sourceHandleId,
+                targetNodeId: connectionState.toNode.id,
+            });
+
+            instance.addEdges(edge);
+        } else {
+            const position = screenToFlowPosition({
                 x: event.clientX,
                 y: event.clientY,
-            }),
-            fromNodeId: connectionState.fromNode.id,
-            fromHandleId: connectionState.fromHandle.id,
-        });
-    };
+            });
 
-    function getEdgeLabelFromHandleId (handleId) {
-        switch (handleId) {
-            case 'true':
-                return 'Yes';
+            const targetNodeId = crypto.randomUUID();
 
-            case 'false':
-                return 'No';
+            const node = {
+                id: targetNodeId,
+                position,
+                type: 'new',
+                origin: [0.5, 0.0],
+                data: {
+                    position,
+                    sourceNodeId,
+                    sourceHandleId,
+                }
+            };
 
-            default:
-                return null;
+            const edge = createEdge({
+                sourceNodeId,
+                sourceHandleId,
+                targetNodeId,
+            });
+
+            instance.addNodes(node);
+            instance.addEdges(edge);
         }
-    }
-
-    const nodeTypes = {
-        new: NewNode,
-        start: StartNode,
-        if: IfNode,
-        assign: AssignNode,
-    }
-
-    const handleInit = instance => {
-        instance.fitView();
     }
 
     const [openSidebarForNode, setOpenSidebarForNode] = useState(null);
@@ -156,21 +201,87 @@ function WorkflowVersionReactFlow ({
         setOpenSidebarForNode(null);
     }
 
+    const handleNodesChange = changes => {
+        onNodesChange(changes);
+
+        for (const change of changes) {
+            switch (change.type) {
+                case 'position':
+                    onEditElement(change.id, {
+                        positionX: change.position.x,
+                        positionY: change.position.y
+                    });
+                break;
+                
+                case 'remove':
+                    onRemoveElement(change.id);
+                break;
+
+                case 'add':
+                    if (change.item.type === 'new') continue;
+
+                    onAddElement({
+                        id: change.item.id,
+                        type: change.item.type,
+                        name: change.item.data.label,
+                        positionX: change.item.position.x,
+                        positionY: change.item.position.y,
+                    });
+                break;
+            }
+        }
+    }
+
+    const handleEdgesChanges = changes => {
+        onEdgesChange(changes);
+
+        for (const change of changes) {
+            switch (change.type) {
+                case 'add':
+                    switch (change.item.sourceHandle) {
+                        case 'next':
+                            onEditElement(change.item.source, {
+                                nextElementId: change.item.target,
+                            });
+                        break;
+
+                        case 'true':
+                            onEditElement(change.item.source, {
+                                nextElementIdIfTrue: change.item.target,
+                            });
+                        break;
+
+                        case 'false':
+                            onEditElement(change.item.source, {
+                                nextElementIdIfFalse: change.item.target,
+                            });
+                        break;
+                    }
+                break;
+
+                case 'remove':
+                    console.log(change)
+                break;
+            }
+        }
+    }
+
+    const handleBeforeDelete = ({ nodes, edges }) => {
+        return nodes.every(node => node.type !== 'start');
+    }
+
     return (
-        <div
-            data-workflow-status={localWorkflowVersion.status}
-            className="w-full h-full relative"
-        >
+        <div className="w-full h-full relative">
             <ReactFlow
+                fitView
                 nodes={nodes}
                 edges={edges}
                 nodeTypes={nodeTypes}
-                onInit={handleInit}
                 onNodeDoubleClick={handleNodeDoubleClick}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={handleConnect}
+                onNodesChange={handleNodesChange}
+                onEdgesChange={handleEdgesChanges}
                 onConnectEnd={handleConnectEnd}
+                onBeforeDelete={handleBeforeDelete}
             >
                 <Background
                     size={1}
@@ -179,7 +290,7 @@ function WorkflowVersionReactFlow ({
                 <MiniMap />
             </ReactFlow>
 
-            {openSidebarForNode && (
+            {/* {openSidebarForNode && (
                 <NodeSidebar
                     node={openSidebarForNode}
                     localWorkflowVersion={localWorkflowVersion}
@@ -188,7 +299,7 @@ function WorkflowVersionReactFlow ({
                     onRemoveVariable={onRemoveVariable}
                     onCloseButtonClick={handleCloseSidebarButtonClick}
                 />
-            )}
+            )} */}
         </div>
     );
 }
@@ -215,11 +326,12 @@ function NodeSidebar ({
     }
 }
 
-function StartNode () {
+function StartNode ({ positionAbsoluteX, positionAbsoluteY }) {
     return (
         <>
             <Handle
                 type="source"
+                id="next"
                 position={Position.Bottom}
             />
 
@@ -257,40 +369,57 @@ function AssignNode ({ data }) {
     return (
         <>
             <Handle
+                type="source"
+                id="next"
+                position={Position.Bottom}
+            />
+
+            <Handle
                 type="target"
                 position={Position.Top}
             />
 
-            <Handle
-                type="source"
-                position={Position.Bottom}
-            />
 
             {data?.label}
         </>
     );
 }
 
-
-
-function NewNode ({ id, ...params }) {
+function NewNode ({ id, data: { sourceNodeId, sourceHandleId, position } }) {
     const instance = useReactFlow();
 
-    const handleIfClick = () => {
-        instance.updateNode(id, {
-            type: 'if',
-            data: {
-                label: 'New If',
-            },
+    const addNode = ({ type, label }) => {
+        const node = createNode({
+            type,
+            label,
+            position,
         });
-    };
+
+        const edge = createEdge({
+            sourceNodeId,
+            sourceHandleId,
+            targetNodeId: node.id,
+        });
+
+        instance.addNodes(node);
+        instance.addEdges(edge);
+
+        instance.deleteElements({
+            nodes: [{ id }]
+        });
+    }
+
+    const handleIfClick = () => {
+        addNode({
+            type: 'if',
+            label: 'New If',
+        });
+    }
 
     const handleAssignClick = () => {
-        instance.updateNode(id, {
+        addNode({
             type: 'assign',
-            data: {
-                label: 'New Assign',
-            },
+            label: 'New Assign',
         });
     }
 
@@ -308,22 +437,19 @@ function NewNode ({ id, ...params }) {
             />
 
             <Menu>
-                <MenuItem
-                    onClick={handleIfClick}>
+                <MenuItem onClick={handleIfClick}>
                     <Split className="w-4 h-4" />
 
                     If
                 </MenuItem>
 
-                <MenuItem
-                    onClick={handleAssignClick}>
+                <MenuItem onClick={handleAssignClick}>
                     <Equal className="w-4 h-4" />
 
                     Assign
                 </MenuItem>
 
-                <MenuItem
-                    onClick={handleCancelClick}>
+                <MenuItem onClick={handleCancelClick}>
                     <X className="w-4 h-4" />
 
                     Cancel
