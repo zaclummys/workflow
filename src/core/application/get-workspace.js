@@ -12,8 +12,6 @@ export default async function getWorkspace ({
 }) {
     const workspace = await findWorkspaceById(workspaceId);
 
-    console.log()
-
     if (!workspace) {
         return {
             success: false,
