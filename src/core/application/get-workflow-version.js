@@ -14,7 +14,7 @@ import {
     findWorkspaceById,
 } from "~/core/data/mongodb/workspace";
 
-import { countWorkflowExecutionsByVersionId } from "../data/mongodb/workflow-execution";
+import { countWorkflowExecutionsByWorkflowVersionId } from "~/core/data/mongodb/workflow-execution";
 
 export default async function getWorkflowVersion ({ workflowVersionId }) {
     const workflowVersion = await findWorkflowVersionById(workflowVersionId);
@@ -37,7 +37,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
 
     const workspace = await findWorkspaceById(workflow.getWorkspaceId());
 
-    const numberOfExecutions = await countWorkflowExecutionsByVersionId(workflowVersion.getId());
+    if (!workspace) {
+        return {
+            success: false,
+        };
+    }
+
+    const numberOfExecutions = await countWorkflowExecutionsByWorkflowVersionId(workflowVersion.getId());
 
     return {
         success: true,
@@ -53,6 +59,8 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 id: element.getId(),
                                 type: element.getType(),
                                 name: element.getName(),
+                                positionX: element.getPositionX(),
+                                positionY: element.getPositionY(),
                                 nextElementId: element.getNextElementId(),
                             };
 
@@ -61,6 +69,8 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 id: element.getId(),
                                 type: element.getType(),
                                 name: element.getName(),
+                                positionX: element.getPositionX(),
+                                positionY: element.getPositionY(),
                                 description: element.getDescription(),
                                 nextElementId: element.getNextElementId(),
                             };
@@ -70,6 +80,8 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 id: element.getId(),
                                 type: element.getType(),
                                 name: element.getName(),
+                                positionX: element.getPositionX(),
+                                positionY: element.getPositionY(),
                                 description: element.getDescription(),
                                 nextElementIdIfTrue: element.getNextElementIdIfTrue(),
                                 nextElementIdIfFalse: element.getNextElementIdIfFalse(),
@@ -80,11 +92,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                         default:
                             return null;
                     }
-                })
-                .map(element => ({
-                    ...element,
-                    position: generateRandomPosition(),
-                })),
+                }),
 
             variables: workflowVersion.getVariables()
                 .map(variable => ({
