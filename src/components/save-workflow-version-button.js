@@ -8,6 +8,7 @@ import { OutlineButton } from './button';
 export default function SaveWorkflowVersionButton ({
     disabled,
     workflowVersion,
+    onSave,
 }) {
     const [pending, setPending] = useState(false);
 
@@ -15,13 +16,15 @@ export default function SaveWorkflowVersionButton ({
         setPending(true);
 
         try {
-            await saveWorkflowVersionAction({
+            const { success } = await saveWorkflowVersionAction({
                 workflowVersionId: workflowVersion.id,
                 workflowVersionChanges: {
                     elements: workflowVersion.elements,
                     variables: workflowVersion.variables,
                 }
             });
+
+            onSave?.(success);
         } finally {
             setPending(false);
         }
@@ -32,7 +35,7 @@ export default function SaveWorkflowVersionButton ({
             disabled={disabled || pending}
             onClick={handleSaveButtonClick}
         >
-            Save
+            {pending ? 'Saving' : 'Save'}
         </OutlineButton>
     );
 }
