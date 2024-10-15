@@ -65,33 +65,6 @@ export class WorkflowVersion {
             throw new Error('Created by ID is required.');
         }
 
-        const elementIds = elements.map(element => element.getId());
-
-        for (const element of elements) {
-            if (element instanceof WorkflowIfElement) {
-                const nextElementIdIfTrue = element.getNextElementIdIfTrue();
-                const nextElementIdIfFalse = element.getNextElementIdIfFalse();
-
-                const nextElementIdIfTrueExists = elementIds.includes(nextElementIdIfTrue);
-                const nextElementIdIfFalseExists = elementIds.includes(nextElementIdIfFalse);
-
-                if (nextElementIdIfTrue && !nextElementIdIfTrueExists) {
-                    throw new Error(`Next Element ID If True does not exist: ${nextElementIdIfTrue}`)
-                }
-
-                if (nextElementIdIfFalse && !nextElementIdIfFalseExists) {
-                    throw new Error(`Next Element ID If False does not exist: ${nextElementIdIfFalse}`)
-                }
-            } else {
-                const nextElementId = element.getNextElementId();
-                const nextElementIdIfExists = elementIds.includes(nextElementId);
-
-                if (nextElementId && !nextElementIdIfExists) {
-                    throw new Error(`Next Element ID does not exist: ${nextElementId}`)
-                }
-            }
-        }
-
         this.id = id;
         this.number = number;
         this.status = status;
