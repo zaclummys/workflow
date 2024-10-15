@@ -93,6 +93,9 @@ export default async function middleware (request) {
         return response;
     }
 
+    console.log('[Middleware] Request:', JSON.stringify(request));
+    console.log('[Middleware] Enviroment Variables:', JSON.stringify(process.env));
+    
     const { success, valid } = await validateSession({
         sessionToken: sessionToken,
         baseUrl: request.url,
