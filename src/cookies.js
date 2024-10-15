@@ -10,7 +10,7 @@ export function getSessionToken () {
     const sessionTokenCookie = cookies().get(sessionTokenCookieName);
     
     if (!sessionTokenCookie || !sessionTokenCookie.value) {
-        redirect('/sign-in');
+        return null;
     }
 
     return sessionTokenCookie.value;
