@@ -20,6 +20,5 @@ export function setSessionToken (sessionToken) {
     cookies().set(sessionTokenCookieName, sessionToken, {
         path: '/',
         httpOnly: true,
-        secure: true,
     });
 }
