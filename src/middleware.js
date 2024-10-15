@@ -13,9 +13,6 @@ async function validateSession ({
         
         const response = await fetch(validateUrl, {
             method: 'POST',
-            mode: 'same-origin',
-            credentials: 'same-origin',
-            cache: 'force-cache',
             headers: {
                 'Content-Type': 'application/json',
             },
