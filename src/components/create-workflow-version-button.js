@@ -34,11 +34,13 @@ export default function CreateWorkflowVersionModalButton ({ workflowId }) {
     const onCreateButtonClick = async () => {
         setPending(true);
 
-        const { success, workflowVersionId } = await createWorkflowVersionAction(workflowId);
+        try {
+            const { success, workflowVersionId } = await createWorkflowVersionAction(workflowId);
 
-        if (success) {
-            navigateToWorkflowVersion(workflowVersionId);
-        } else {
+            if (success) {
+                navigateToWorkflowVersion(workflowVersionId);
+            }
+        } finally {
             setPending(false);
         }
     };
