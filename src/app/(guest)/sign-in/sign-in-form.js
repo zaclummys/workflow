@@ -52,8 +52,6 @@ export default function SignInForm () {
             setError('An error occurred while signing in. Please try again later.');
         }
     }
-    
-    console.log(pending)
 
     return (        
         <Form
