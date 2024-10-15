@@ -12,9 +12,11 @@ import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-bu
 import WorkflowVersionCanvas from "./workflow-version-canvas";
 
 export default function WorkflowVersionEditor ({ workflowVersion }) {
+    const [localWorkflowVersionHasChanged, setLocalWorkflowVersionHasChanged] = useState(false);
     const [localWorkflowVersion, setLocalWorkflowVersion] = useState(workflowVersion);
 
     const handleAddVariable = (addedVariable) => {
+        setLocalWorkflowVersionHasChanged(true);
         setLocalWorkflowVersion(localWorkflowVersion => ({
             ...localWorkflowVersion,
             variables: localWorkflowVersion.variables.concat({
@@ -25,6 +27,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
     }
 
     const handleEditVariable = (editedVariable) => {
+        setLocalWorkflowVersionHasChanged(true);
         setLocalWorkflowVersion(localWorkflowVersion => ({
             ...localWorkflowVersion,
             variables: localWorkflowVersion.variables.map(variable => (
@@ -34,6 +37,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
     }
 
     const handleRemoveVariable = (removedVariable) => {
+        setLocalWorkflowVersionHasChanged(true);
         setLocalWorkflowVersion(localWorkflowVersion => ({
             ...localWorkflowVersion,
             variables: localWorkflowVersion.variables.filter(variable => (
@@ -42,57 +46,109 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         }));
     }
 
-    // Refresh local workflow version if workflow version received from props is updated
-    useEffect(() => {
-        setLocalWorkflowVersion(workflowVersion);
-    }, [workflowVersion]);
+    const handleAddElement = (element) => {
+        setLocalWorkflowVersionHasChanged(true);
+        setLocalWorkflowVersion(localWorkflowVersion => ({
+            ...localWorkflowVersion,
+            elements: localWorkflowVersion.elements.concat(element),
+        }));
+    }
 
-    const hasLocalWorkflowVersionChanged = localWorkflowVersion !== workflowVersion;
+    const handleEditElement = (elementId, elementChanges) => {
+        setLocalWorkflowVersionHasChanged(true);
+        setLocalWorkflowVersion(localWorkflowVersion => ({
+            ...localWorkflowVersion,
+            elements: localWorkflowVersion.elements.map(element => {
+                if (element.id === elementId) {
+                    return {
+                        ...element,
+                        ...elementChanges,
+                    };
+                } else {
+                    return element;
+                }
+            })
+        }));
+    }
+
+    const handleRemoveElement = (elementId, elementChanges) => {
+        setLocalWorkflowVersionHasChanged(true);
+        setLocalWorkflowVersion(localWorkflowVersion => ({
+            ...localWorkflowVersion,
+            elements: localWorkflowVersion.elements.filter(element => element.id !== elementId),
+        }));
+    }
+
+    const handleSave = (success) => {
+        if (success) {
+            setLocalWorkflowVersionHasChanged(false);
+        } else {
+            setLocalWorkflowVersionHasChanged(true);
+        }
+    }
 
     return (
         <div className="flex flex-col h-screen">
-            <header className="flex flex-row items-center bg-surface-high text-on-surface px-6 py-2 h-20">
-                <div className="flex flex-row flex-grow gap-6">
-                    <GoBack url={`/workflow-version/${workflowVersion.id}`} />
-
-                    <div className="flex flex-row gap-4">
-                        <div className="flex flex-row gap-2">
-                            <span>
-                                Version {workflowVersion.number}
-                            </span>
-
-                            <span className="text-on-surface-variant">/</span>
-
-                            <span className="text-on-surface-variant">
-                                {workflowVersion.workflow.name}
-                            </span>
-                        </div>
-
-                        <WorkflowVersionStatus
-                            status={workflowVersion.status} />
-                    </div>
-                </div>
-
-                <ButtonGroup>
-                    <SaveWorkflowVersionButton
-                        localWorkflowVersion={localWorkflowVersion}
-                        hasLocalWorkflowVersionChanged={hasLocalWorkflowVersionChanged}
-                    />
-
-                    <ToggleWorkflowVersionButton
-                        disabled={hasLocalWorkflowVersionChanged}
-                        workflowVersion={workflowVersion}
-                    />
-                </ButtonGroup>
-            </header>
+            <WorkflowVersionHeader
+                localWorkflowVersion={localWorkflowVersion}
+                localWorkflowVersionHasChanged={localWorkflowVersionHasChanged}
+                onSave={handleSave}
+            />
 
             <WorkflowVersionCanvas
                 localWorkflowVersion={localWorkflowVersion}
                 onAddVariable={handleAddVariable}
                 onEditVariable={handleEditVariable}
                 onRemoveVariable={handleRemoveVariable}
+                onAddElement={handleAddElement}
+                onEditElement={handleEditElement}
+                onRemoveElement={handleRemoveElement}
             />
         </div>
     );
 }
 
+function WorkflowVersionHeader ({
+    localWorkflowVersion,
+    localWorkflowVersionHasChanged,
+    onSave,
+}) {
+    return (
+        <header className="flex flex-row items-center bg-surface-high text-on-surface px-6 py-2 h-20">
+            <div className="flex flex-row flex-grow gap-6">
+                <GoBack url={`/workflow-version/${localWorkflowVersion.id}`} />
+
+                <div className="flex flex-row gap-4">
+                    <div className="flex flex-row gap-2">
+                        <span>
+                            Version {localWorkflowVersion.number}
+                        </span>
+
+                        <span className="text-on-surface-variant">/</span>
+
+                        <span className="text-on-surface-variant">
+                            {localWorkflowVersion.workflow.name}
+                        </span>
+                    </div>
+
+                    <WorkflowVersionStatus
+                        status={localWorkflowVersion.status}
+                    />
+                </div>
+            </div>
+
+            <ButtonGroup>
+                <SaveWorkflowVersionButton
+                    disabled={!localWorkflowVersionHasChanged}
+                    workflowVersion={localWorkflowVersion}
+                    onSave={onSave}
+                />
+
+                <ToggleWorkflowVersionButton
+                    disabled={localWorkflowVersionHasChanged}
+                    workflowVersion={localWorkflowVersion}
+                />
+            </ButtonGroup>
+        </header>
+    );
+}
