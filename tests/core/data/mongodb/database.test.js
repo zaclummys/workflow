@@ -22,7 +22,7 @@ describe('MongoDB Database', () => {
         ['workspaces', [{ id: 1 }]],
         ['workflow-versions', [
             { id: 1 },
-            { workflowVersionId: 1, number: 2 },
+            { id: 1, number: 2 },
         ]],
         ['workflow-executions', [{ id: 1 }]],
     ])('Collection %s should have unique indexes', async (collectionName, uniqueIndexKeys) => {
