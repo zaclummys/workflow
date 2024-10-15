@@ -1,5 +1,5 @@
-import { findSessionByToken } from "../data/mongodb/session";
-import { findWorkflowExecutionIdsByVersionId } from "../data/mongodb/workflow-execution";
+import { findSessionByToken } from "~/core/data/mongodb/session";
+import { findWorkflowExecutionIdsByWorkflowVersionId } from "~/core/data/mongodb/workflow-execution";
 
 export default async function getWorkflowExecutions ({
     workflowVersionId,
@@ -13,7 +13,7 @@ export default async function getWorkflowExecutions ({
         };
     }
 
-    const workflowExecutionIds = await findWorkflowExecutionIdsByVersionId(workflowVersionId);
+    const workflowExecutionIds = await findWorkflowExecutionIdsByWorkflowVersionId(workflowVersionId);
 
     return {
         success: true,
