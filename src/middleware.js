@@ -23,18 +23,26 @@ async function validateSession ({
         });
 
         if (!response.ok) {
+            console.error('[Validate Session] Did not receive an OK:', response.status);
+
             return {
                 success: false,
             };
         }
 
         const { success, valid } = await response.json();
+
+        if (!success) {
+            console.error('[Validate Session] Did not receive a success.');
+        }
         
         return {
             success,
             valid,
         };
     } catch (error) {
+        console.error('[Validate Session] An error was thrown:', error);
+
         return {
             success: false,
         }
