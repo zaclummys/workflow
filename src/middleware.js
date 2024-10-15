@@ -5,44 +5,27 @@ import {
 import { sessionTokenCookieName } from "~/cookies";
 
 async function validateSession ({
-    sessionToken,
-    baseUrl,
     cookie,
+    baseUrl,
 }) {
-    console.error('[Validate Session] Cookie:', cookie);
     try {
         const validateUrl = new URL('/api/session/validate', baseUrl);
         
         const response = await fetch(validateUrl, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
                 'Cookie': cookie,
             },
-            body: JSON.stringify({ sessionToken }),
         });
 
         if (!response.ok) {
-            console.error('[Validate Session] Did not receive an OK:', response.status);
-
             return {
                 success: false,
             };
         }
 
-        const { success, valid } = await response.json();
-
-        if (!success) {
-            console.error('[Validate Session] Did not receive a success.');
-        }
-        
-        return {
-            success,
-            valid,
-        };
+        return await response.json();
     } catch (error) {
-        console.error('[Validate Session] An error was thrown:', error);
-
         return {
             success: false,
         }
@@ -72,40 +55,29 @@ export default async function middleware (request) {
         return NextResponse.next();
     }
     
-    const sessionTokenCookie = request.cookies.get(sessionTokenCookieName);
-
     const homeUrl = new URL('/', request.url);
     const signInUrl = new URL('/sign-in', request.url);
     const internalServerErrorUrl = new URL('/internal-server-error', request.url);
+
+    const sessionTokenCookie = request.cookies.get(sessionTokenCookieName);
     
-    if (!sessionTokenCookie) {
+    if (!sessionTokenCookie || !sessionTokenCookie.value) {
+        let response;
+
         if (isGuestRoute(request)) {
-            return NextResponse.next();
+            response = NextResponse.next();
         } else {
-            return NextResponse.redirect(signInUrl);
+            response = NextResponse.redirect(signInUrl);
         }
-    }
-    
-    const sessionToken = sessionTokenCookie.value;
-    
-    if (!sessionToken) {
-        const response = NextResponse.redirect(signInUrl);
-        
-        response.cookies.delete(sessionTokenCookieName);
-        
+
+        if (sessionTokenCookie && !sessionTokenCookie.value) {
+            response.cookies.delete(sessionTokenCookieName);
+        }
+
         return response;
     }
-
-    console.log('[Middleware] Request:', {
-        url: request.url,
-        cookies: request.cookies.getAll(),
-        headers: Object.fromEntries(request.headers.entries()),
-    });
-
-    console.log('[Middleware] Enviroment Variables:', JSON.stringify(process.env));
-
+    
     const { success, valid } = await validateSession({
-        sessionToken: sessionToken,
         baseUrl: request.url,
         cookie: request.headers.get('cookie'),
     });

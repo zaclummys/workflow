@@ -16,6 +16,15 @@ export default async function validateSession ({ sessionToken }) {
         };
     }
 
+    const user = await findUserById(session.getId());
+
+    if (!user) {
+        return {
+            success: true,
+            valid: false,
+        };
+    }
+
     return {
         success: true,
         valid: true,
