@@ -10,7 +10,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "test": "vitest --no-isolate --no-file-parallelism",
-    "e2e": "playwright"
+    "e2e": "playwright",
+    "postinstall": "npm rebuild argon2 --build-from-source"
   },
   "dependencies": {
     "@dagrejs/dagre": "^1.1",
