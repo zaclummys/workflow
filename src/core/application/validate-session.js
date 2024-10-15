@@ -16,7 +16,7 @@ export default async function validateSession ({ sessionToken }) {
         };
     }
 
-    const user = await findUserById(session.getId());
+    const user = await findUserById(session.getUserId());
 
     if (!user) {
         return {
