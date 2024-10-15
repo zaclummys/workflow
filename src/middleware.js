@@ -7,7 +7,9 @@ import { sessionTokenCookieName } from "~/cookies";
 async function validateSession ({
     sessionToken,
     baseUrl,
+    cookie,
 }) {
+    console.error('[Validate Session] Cookie:', cookie);
     try {
         const validateUrl = new URL('/api/session/validate', baseUrl);
         
@@ -15,6 +17,7 @@ async function validateSession ({
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Cookie': cookie,
             },
             body: JSON.stringify({ sessionToken }),
         });
@@ -104,6 +107,7 @@ export default async function middleware (request) {
     const { success, valid } = await validateSession({
         sessionToken: sessionToken,
         baseUrl: request.url,
+        cookie: request.headers.get('cookie'),
     });
     
     if (!success) {
