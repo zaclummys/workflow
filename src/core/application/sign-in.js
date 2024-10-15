@@ -11,8 +11,6 @@ import {
 } from '~/core/domain/session';
 
 export default async function signIn ({ email, password }) {
-    console.info('Sign In');
-    
     const user = await findUserByEmail(email);
 
     if (!user) {
