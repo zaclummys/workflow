@@ -15,13 +15,22 @@ import {
     ReactFlowProvider,
 } from '@xyflow/react';
 
-import { Split, Equal, X } from 'lucide-react';
 
-import { Menu, MenuItem } from '~/components/menu';
 import VariablesWorkflowSidebar from './sidebars/variables-sidebar';
 
 import AssignSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/assign-sidebar';
 import IfSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/if-sidebar';
+
+import NewNode from '~/components/workflow-version-editor/nodes/new-node';
+import StartNode from '~/components/workflow-version-editor/nodes/start-node';
+import IfNode from '~/components/workflow-version-editor/nodes/if-node';
+import AssignNode from '~/components/workflow-version-editor/nodes/assign-node';
+
+import {
+    createNode,
+    createEdge,
+    fromWorkflowElements,
+} from '~/components/workflow-version-editor/react-flow-helpers';
 
 export default function WorkflowVersionCanvas (props) {
     return (
@@ -38,100 +47,6 @@ const nodeTypes = {
     assign: AssignNode,
 }
 
-function getEdgeLabelSourceHandleId (handleId) {
-    switch (handleId) {
-        case 'true':
-            return 'Yes';
-
-        case 'false':
-            return 'No';
-
-        default:
-            return null;
-    }
-}
-
-function createNode ({ type, label, position, }) {
-    return {
-        id: crypto.randomUUID(),
-        type,
-        data: {
-            label,
-        },
-        position,
-        origin: [0.5, 0.0],
-    }
-}
-
-function createEdge ({
-    sourceNodeId,
-    sourceHandleId,
-    targetNodeId,
-}) {
-    return {
-        id: `${sourceNodeId}:${sourceHandleId}->${targetNodeId}`,
-        source: sourceNodeId,
-        sourceHandle: sourceHandleId,
-        target: targetNodeId,
-        label: getEdgeLabelSourceHandleId(sourceHandleId),
-    }
-}
-
-function fromWorkflowElements (workflowElements) {
-    const reactFlowNodes = workflowElements.map(element => ({
-        id: element.id,
-        type: element.type,
-        position: {
-            x: element.positionX,
-            y: element.positionY,
-        },
-        data: {
-            label: element.name,
-        }
-    }));
-
-    const reactFlowEdges = workflowElements.flatMap(element => {
-        const edges = [];
-
-        switch (element.type) {
-            case 'start':
-            case 'assign':
-                if (element.nextElementId) {
-                    edges.push({
-                        id: `${element.id}->${element.nextElementId}`,
-                        source: element.id,
-                        sourceHandle: 'next',
-                        target: element.nextElementId,
-                    });
-                }
-
-            case 'if':
-                if (element.nextElementIdIfFalse) {
-                    edges.push({
-                        id: `${element.id}->${element.nextElementIdIfFalse}`,
-                        source: element.id,
-                        sourceHandle: 'false',
-                        target: element.nextElementIdIfFalse,
-                        label: getEdgeLabelSourceHandleId('false'),
-                    });
-                }
-
-                if (element.nextElementIdIfTrue) {
-                    edges.push({
-                        id: `${element.id}->${element.nextElementIdIfTrue}`,
-                        source: element.id,
-                        sourceHandle: 'true',
-                        target: element.nextElementIdIfTrue,
-                        label: getEdgeLabelSourceHandleId('true'),
-                    });
-                }
-        }
-
-        return edges;
-    });
-
-    return [reactFlowNodes, reactFlowEdges];
-}
 
 function WorkflowVersionReactFlow ({
     localWorkflowVersion,
@@ -169,24 +84,22 @@ function WorkflowVersionReactFlow ({
                 y: event.clientY,
             });
 
-            const targetNodeId = crypto.randomUUID();
-
-            const node = {
-                id: targetNodeId,
-                position,
+            const node = createNode({
+                id: crypto.randomUUID(),
                 type: 'new',
-                origin: [0.5, 0.0],
+                positionX: position.x,
+                positionY: position.y,
                 data: {
                     position,
                     sourceNodeId,
                     sourceHandleId,
                 }
-            };
+            })
 
             const edge = createEdge({
                 sourceNodeId,
                 sourceHandleId,
-                targetNodeId,
+                targetNodeId: node.id,
             });
 
             instance.addNodes(node);
@@ -260,10 +173,6 @@ function WorkflowVersionReactFlow ({
                             });
                         break;
                     }
-                break;
-
-                case 'remove':
-                    console.log(change)
                 break;
             }
         }
@@ -343,138 +252,5 @@ function ElementSidebar ({
                 />
             );
     }
-}
-
-function StartNode () {
-    return (
-        <>
-            <Handle
-                type="source"
-                id="next"
-                position={Position.Bottom}
-            />
-
-            Start
-        </>
-    );
-}
-
-function IfNode ({ data }) {
-    return (
-        <>
-            <Handle
-                type="target"
-                position={Position.Top}
-            />
-
-            <Handle
-                type="source"
-                id="false"
-                position={Position.Left}
-            />
-
-            <Handle
-                type="source"
-                id="true"
-                position={Position.Right}
-            />
-
-            {data?.label}
-        </>
-    );
-}
-
-function AssignNode ({ data }) {
-    return (
-        <>
-            <Handle
-                type="source"
-                id="next"
-                position={Position.Bottom}
-            />
-
-            <Handle
-                type="target"
-                position={Position.Top}
-            />
-
-
-            {data?.label}
-        </>
-    );
-}
-
-function NewNode ({ id, data: { sourceNodeId, sourceHandleId, position } }) {
-    const instance = useReactFlow();
-
-    const addNode = ({ type, label }) => {
-        const node = createNode({
-            type,
-            label,
-            position,
-        });
-
-        const edge = createEdge({
-            sourceNodeId,
-            sourceHandleId,
-            targetNodeId: node.id,
-        });
-
-        instance.addNodes(node);
-        instance.addEdges(edge);
-
-        instance.deleteElements({
-            nodes: [{ id }]
-        });
-    }
-
-    const handleIfClick = () => {
-        addNode({
-            type: 'if',
-            label: 'New If',
-        });
-    }
-
-    const handleAssignClick = () => {
-        addNode({
-            type: 'assign',
-            label: 'New Assign',
-        });
-    }
-
-    const handleCancelClick = () => {
-        instance.deleteElements({
-            nodes: [{ id }],
-        });
-    }
-
-    return (
-        <>
-            <Handle
-                type="target"
-                position={Position.Top}
-            />
-
-            <Menu>
-                <MenuItem onClick={handleIfClick}>
-                    <Split className="w-4 h-4" />
-
-                    If
-                </MenuItem>
-
-                <MenuItem onClick={handleAssignClick}>
-                    <Equal className="w-4 h-4" />
-
-                    Assign
-                </MenuItem>
-
-                <MenuItem onClick={handleCancelClick}>
-                    <X className="w-4 h-4" />
-
-                    Cancel
-                </MenuItem>
-            </Menu>
-        </>
-    );
 }
 
