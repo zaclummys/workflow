@@ -281,7 +281,7 @@ function DefaultValueNumber({
     onChange,
 }) {
     const handleChange = event => {
-        onChange(event, +event.targe.value);
+        onChange(event, +event.target.value);
     }
 
     return (
