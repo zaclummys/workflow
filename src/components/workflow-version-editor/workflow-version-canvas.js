@@ -20,6 +20,9 @@ import { Split, Equal, X } from 'lucide-react';
 import { Menu, MenuItem } from '~/components/menu';
 import VariablesWorkflowSidebar from './sidebars/variables-sidebar';
 
+import AssignSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/assign-sidebar';
+import IfSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/if-sidebar';
+
 export default function WorkflowVersionCanvas (props) {
     return (
         <ReactFlowProvider>
@@ -191,14 +194,14 @@ function WorkflowVersionReactFlow ({
         }
     }
 
-    const [openSidebarForNode, setOpenSidebarForNode] = useState(null);
+    const [openElementSidebarForNode, setOpenElementSidebarForNode] = useState(null);
 
     const handleNodeDoubleClick = (event, node) => {
-        setOpenSidebarForNode(node);
+        setOpenElementSidebarForNode(node);
     }
 
     const handleCloseSidebarButtonClick = () => {
-        setOpenSidebarForNode(null);
+        setOpenElementSidebarForNode(null);
     }
 
     const handleNodesChange = changes => {
@@ -290,21 +293,21 @@ function WorkflowVersionReactFlow ({
                 <MiniMap />
             </ReactFlow>
 
-            {/* {openSidebarForNode && (
-                <NodeSidebar
-                    node={openSidebarForNode}
+            {openElementSidebarForNode && (
+                <ElementSidebar
+                    node={openElementSidebarForNode}
                     localWorkflowVersion={localWorkflowVersion}
                     onAddVariable={onAddVariable}
                     onEditVariable={onEditVariable}
                     onRemoveVariable={onRemoveVariable}
                     onCloseButtonClick={handleCloseSidebarButtonClick}
                 />
-            )} */}
+            )}
         </div>
     );
 }
 
-function NodeSidebar ({
+function ElementSidebar ({
     node,
     localWorkflowVersion,
     onAddVariable,
@@ -323,10 +326,26 @@ function NodeSidebar ({
                     onCloseButtonClick={onCloseButtonClick}
                 />
             );
+
+        case 'assign':
+            return (
+                <AssignSidebar
+                    localWorkflowVersion={localWorkflowVersion}
+                    onCloseButtonClick={onCloseButtonClick}
+                />
+            );
+
+        case 'if':
+            return (
+                <IfSidebar
+                    localWorkflowVersion={localWorkflowVersion}
+                    onCloseButtonClick={onCloseButtonClick}
+                />
+            );
     }
 }
 
-function StartNode ({ positionAbsoluteX, positionAbsoluteY }) {
+function StartNode () {
     return (
         <>
             <Handle
