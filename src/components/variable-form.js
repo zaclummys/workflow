@@ -96,10 +96,10 @@ export default function VariableForm ({
         }));
     };
 
-    const handleDefaultValueChange = event => {
+    const handleDefaultValueChange = (event, defaultValue) => {
         setValues(values => ({
             ...values,
-            defaultValue: event.target.value,
+            defaultValue,
         }));
     }
 
