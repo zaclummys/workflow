@@ -37,7 +37,10 @@ module.exports = {
 
                 on: {
                     primary: gray[50],
-                    background: gray[50],
+                    background: {
+                        DEFAULT: gray[50],
+                        variant: gray[400],
+                    },
                     surface: {
                         DEFAULT: gray[50],
                         variant: gray[300],
