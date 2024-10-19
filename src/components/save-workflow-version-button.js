@@ -8,7 +8,7 @@ import { OutlineButton } from './button';
 export default function SaveWorkflowVersionButton ({
     disabled,
     workflowVersion,
-    onSave,
+    onSaveWorkflowVersion,
 }) {
     const [pending, setPending] = useState(false);
 
@@ -24,7 +24,7 @@ export default function SaveWorkflowVersionButton ({
                 }
             });
 
-            onSave?.(success);
+            onSaveWorkflowVersion?.(success);
         } finally {
             setPending(false);
         }
