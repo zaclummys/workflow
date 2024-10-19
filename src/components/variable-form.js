@@ -22,22 +22,6 @@ export default function VariableForm ({
     initialValues = {},
     onFormSubmit,
 }) {
-    const getDefaultValueFromType = (type) => {
-        switch (type) {
-            case 'string':
-                return '';
-
-            case 'number':
-                return 0;
-
-            case 'boolean':
-                return true;
-
-            default:
-                return null;
-        }
-    }
-
     const defaultValues = {
         name: '',
         description: '',
@@ -78,7 +62,7 @@ export default function VariableForm ({
         setValues(values => ({
             ...values,
             type,
-            defaultValue: values.defaultValue == null ? null : getDefaultValueFromType(type),
+            defaultValue: '',
         }));
     }
 
@@ -92,7 +76,7 @@ export default function VariableForm ({
     const handleAddDefaultValueButtonClick = () => {
         setValues(values => ({
             ...values,
-            defaultValue: getDefaultValueFromType(values.type),
+            defaultValue: '',
         }));
     };
 
@@ -129,7 +113,7 @@ export default function VariableForm ({
     return (
         <Form
             id={formId}
-            onSubmit={handleFormSubmit}>
+            onSubmit={event => onFormSubmit(event, values)}>
             <Field>
                 <Label
                     disabled={disabled}
@@ -251,7 +235,6 @@ export default function VariableForm ({
     );
 }
 
-
 function DefaultValueString ({
     id,
     value,
@@ -281,7 +264,7 @@ function DefaultValueNumber({
     onChange,
 }) {
     const handleChange = event => {
-        onChange(event, +event.target.value);
+        onChange(event, event.target.value);
     }
 
     return (
