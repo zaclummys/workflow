@@ -615,23 +615,16 @@ export class WorkflowIfElement extends WorkflowElement {
 }
 
 export class WorkflowCondition {
-    static create({
-        variableId,
-        operator,
-        value,
-    }) {
-        return new WorkflowCondition({
-            variableId,
-            operator,
-            value,
-        });
-    }
-
     constructor({
+        id,
         variableId,
         operator,
         value,
     }) {
+        if (!id) {
+            throw new Error('ID is required.')
+        }
+
         if (!variableId) {
             throw new Error('Variable ID is required.');
         }
@@ -644,6 +637,7 @@ export class WorkflowCondition {
             throw new Error('Value cannot be undefined.');
         }
 
+        this.id = id;
         this.variableId = variableId;
         this.operator = operator;
         this.value = value;
@@ -750,10 +744,15 @@ export class WorkflowAssignElement extends WorkflowElement {
 
 export class WorkflowAssignment {
     constructor({
+        id,
         variableId,
         operator,
         value,
     }) {
+        if (!id) {
+            throw new Error('ID is required.');
+        }
+
         if (!variableId) {
             throw new Error('Variable ID is required.');
         }
@@ -766,6 +765,7 @@ export class WorkflowAssignment {
             throw new Error('Value cannot be undefined.');
         }
 
+        this.id = id;
         this.variableId = variableId;
         this.operator = operator;
         this.value = value;

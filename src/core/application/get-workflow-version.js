@@ -88,6 +88,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 strategy: element.getStrategy(),
                                 conditions: element.getConditions()
                                     .map(condition => ({
+                                        id: condition.getId(),
                                         variableId: condition.getVariableId(),
                                         operator: condition.getOperator(),
                                         value: condition.getValue(),
@@ -128,12 +129,5 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
 
             numberOfExecutions,
         },
-    };
-}
-
-function generateRandomPosition () {
-    return {
-        x: Math.random() * 1000,
-        y: Math.random() * 1000,
     };
 }

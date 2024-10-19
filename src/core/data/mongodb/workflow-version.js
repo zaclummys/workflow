@@ -5,6 +5,7 @@ import {
     WorkflowIfElement,
     WorkflowVersion,
     WorkflowAssignment,
+    WorkflowCondition,
 } from '~/core/domain/workflow-version';
 
 import database from './database';
@@ -84,8 +85,6 @@ export async function updateWorkflowVersion (workflowVersion) {
         );
 }
 
-
-
 export function fromWorkflowVersion (workflowVersion) {
     return {
         id: workflowVersion.getId(),
@@ -105,37 +104,47 @@ export function fromWorkflowElement (workflowElement) {
         case 'start':
             return {
                 id: workflowElement.getId(),
+
+                type: workflowElement.getType(),
+                
+                nextElementId: workflowElement.getNextElementId(),
+
                 positionX: workflowElement.getPositionX(),
                 positionY: workflowElement.getPositionY(),
-                type: workflowElement.getType(),
-                nextElementId: workflowElement.getNextElementId(),
             };
 
         case 'assign':
             return {
                 id: workflowElement.getId(),
-                positionX: workflowElement.getPositionX(),
-                positionY: workflowElement.getPositionY(),
+
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
                 description: workflowElement.getDescription(),
                 assignments: workflowElement.getAssignments()
                     .map(fromWorkflowAssignment),
+
                 nextElementId: workflowElement.getNextElementId(),
+
+                positionX: workflowElement.getPositionX(),
+                positionY: workflowElement.getPositionY(),
             };
 
         case 'if':
             return {
                 id: workflowElement.getId(),
-                positionX: workflowElement.getPositionX(),
-                positionY: workflowElement.getPositionY(),
+
                 type: workflowElement.getType(),
                 name: workflowElement.getName(),
+                description: workflowElement.getDescription(),
                 strategy: workflowElement.getStrategy(),
                 conditions: workflowElement.getConditions()
                     .map(fromWorkflowCondition),
+
                 nextElementIdIfTrue: workflowElement.getNextElementIdIfTrue(),
                 nextElementIdIfFalse: workflowElement.getNextElementIdIfFalse(),
+
+                positionX: workflowElement.getPositionX(),
+                positionY: workflowElement.getPositionY(),
             };
 
         default:
@@ -144,13 +153,19 @@ export function fromWorkflowElement (workflowElement) {
 }
 
 function fromWorkflowCondition (workflowCondition) {
-    return {};
+    return {
+        id: workflowCondition.getId(),
+        variableId: workflowCondition.getVariableId(),
+        operator: workflowCondition.getOperator(),
+        value: workflowCondition.getValue(),
+    };
 }
 
 function fromWorkflowAssignment (workflowAssignment) {
     return {
         id: workflowAssignment.getId(),
         variableId: workflowAssignment.getVariableId(),
+        operator: workflowAssignment.getOperator(),
         value: workflowAssignment.getValue(),
     };
 }
@@ -193,7 +208,10 @@ export function toWorkflowElement (workflowElementData) {
             });
 
         case 'if':
-            return new WorkflowIfElement(workflowElementData);
+            return new WorkflowIfElement({
+                ...workflowElementData,
+                conditions: workflowElementData.conditions.map(toWorkflowCondition)
+            });
 
         default:
             throw new Error(`Unknown element type: ${workflowElementData.type}`);
@@ -202,4 +220,8 @@ export function toWorkflowElement (workflowElementData) {
 
 export function toWorkflowAssignment (workflowAssignmentData) {
     return new WorkflowAssignment(workflowAssignmentData);
+}
+
+export function toWorkflowCondition (workflowConditionData) {
+    return new WorkflowCondition(workflowConditionData);
 }
