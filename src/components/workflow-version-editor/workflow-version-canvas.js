@@ -16,7 +16,7 @@ import {
 } from '@xyflow/react';
 
 
-import VariablesWorkflowSidebar from './sidebars/variables-sidebar';
+import VariablesSidebar from './sidebars/variables-sidebar';
 
 import AssignSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/assign-sidebar';
 import IfSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/if-sidebar';
@@ -31,6 +31,7 @@ import {
     createEdge,
     fromWorkflowElements,
 } from '~/components/workflow-version-editor/react-flow-helpers';
+import VariablesSidebar from './sidebars/variables-sidebar';
 
 export default function WorkflowVersionCanvas (props) {
     return (
@@ -298,7 +299,7 @@ function ElementSidebar ({
     switch (element.type) {
         case 'start':
             return (
-                <VariablesWorkflowSidebar
+                <VariablesSidebar
                     workflowVersion={workflowVersion}
                     onCloseButtonClick={onCloseButtonClick}
                 />
