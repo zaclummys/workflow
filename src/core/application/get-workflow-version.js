@@ -73,6 +73,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 positionY: element.getPositionY(),
                                 description: element.getDescription(),
                                 nextElementId: element.getNextElementId(),
+                                assignments: element.getAssignments()
+                                    .map(assignment => ({
+                                        id: assignment.getId(),
+                                        variableId: assignment.getVariableId(),
+                                        operator: assignment.getOperator(),
+                                        value: assignment.getValue(),
+                                    }))
                             };
 
                         case 'if':

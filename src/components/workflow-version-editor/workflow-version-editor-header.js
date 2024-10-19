@@ -5,44 +5,45 @@ import SaveWorkflowVersionButton from '~/components/save-workflow-version-button
 import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
 
 export default function WorkflowVersionEditorHeader ({
-    localWorkflowVersion,
-    localWorkflowVersionHasChanged,
-    onSave,
+    workflowVersion,
+    disableSaveButton,
+    disableToggleButton,
+    onSaveWorkflowVersion,
 }) {
     return (
         <header className="flex flex-row items-center bg-surface-high text-on-surface px-6 py-2 h-20">
             <div className="flex flex-row flex-grow gap-6">
-                <GoBack url={`/workflow-version/${localWorkflowVersion.id}`} />
+                <GoBack url={`/workflow-version/${workflowVersion.id}`} />
 
                 <div className="flex flex-row gap-4">
                     <div className="flex flex-row gap-2">
                         <span>
-                            Version {localWorkflowVersion.number}
+                            Version {workflowVersion.number}
                         </span>
 
                         <span className="text-on-surface-variant">/</span>
 
                         <span className="text-on-surface-variant">
-                            {localWorkflowVersion.workflow.name}
+                            {workflowVersion.workflow.name}
                         </span>
                     </div>
 
                     <WorkflowVersionStatus
-                        status={localWorkflowVersion.status}
+                        status={workflowVersion.status}
                     />
                 </div>
             </div>
 
             <ButtonGroup>
                 <SaveWorkflowVersionButton
-                    disabled={!localWorkflowVersionHasChanged}
-                    workflowVersion={localWorkflowVersion}
-                    onSave={onSave}
+                    disabled={disableSaveButton}
+                    workflowVersion={workflowVersion}
+                    onSaveWorkflowVersion={onSaveWorkflowVersion}
                 />
 
                 <ToggleWorkflowVersionButton
-                    disabled={localWorkflowVersionHasChanged}
-                    workflowVersion={localWorkflowVersion}
+                    disabled={disableToggleButton}
+                    workflowVersion={workflowVersion}
                 />
             </ButtonGroup>
         </header>

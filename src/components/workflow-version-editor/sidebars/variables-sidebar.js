@@ -17,10 +17,7 @@ import { EditVariableSidebarButton } from './variable-sidebar/edit-variable-side
 import { RemoveVariableSidebarButton } from './variable-sidebar/remove-variable-sidebar';
 
 export default function VariablesSidebar ({
-    localWorkflowVersion,
-    onAddVariable,
-    onEditVariable,
-    onRemoveVariable,
+    workflowVersion,
     onCloseButtonClick,
 }) {
     return (
@@ -31,15 +28,12 @@ export default function VariablesSidebar ({
                         Variables
                     </SidebarTitle>
 
-                    <AddVariableSidebarButton
-                        onAddVariable={onAddVariable} />
+                    <AddVariableSidebarButton />
                 </SidebarHeader>
 
                 <SidebarContent>
                     <VariableList
-                        variables={localWorkflowVersion.variables}
-                        onEditVariable={onEditVariable}
-                        onRemoveVariable={onRemoveVariable}
+                        variables={workflowVersion.variables}
                     />
                 </SidebarContent>
 
@@ -56,8 +50,6 @@ export default function VariablesSidebar ({
 
 function VariableList ({
     variables,
-    onEditVariable,
-    onRemoveVariable,
 }) {
     return (
         <div className="flex flex-col gap-2">
@@ -71,12 +63,10 @@ function VariableList ({
                     <ButtonGroup>
                         <EditVariableSidebarButton
                             variable={variable}
-                            onEditVariable={onEditVariable}
                         />
 
                         <RemoveVariableSidebarButton
                             variable={variable}
-                            onRemoveVariable={onRemoveVariable}
                         />
                     </ButtonGroup>
                 </div>

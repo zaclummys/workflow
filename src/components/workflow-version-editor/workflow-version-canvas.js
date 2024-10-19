@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
     ReactFlow,
@@ -49,20 +49,53 @@ const nodeTypes = {
 
 
 function WorkflowVersionReactFlow ({
-    localWorkflowVersion,
-    onAddVariable,
-    onEditVariable,
-    onRemoveVariable,
-    onAddElement,
-    onEditElement,
-    onRemoveElement,
+    workflowVersion,
+    dispatchWorkflowVersion,
 }) {
     const instance = useReactFlow();
 
-    const [initialNodes, initialEdges] = fromWorkflowElements(localWorkflowVersion.elements); 
+    const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
 
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+    useEffect(() => {
+        const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
+
+        setNodes(nodes => {
+            const updatedNodes = nodes.map(node => {
+                const initialNode = initialNodes.find(initialNode => initialNode.id === node.id);
+    
+                if (!initialNode) {
+                    return node;
+                }
+    
+                return {
+                    ...node,
+                    ...initialNode,
+                };
+            });
+
+            return updatedNodes;
+        });
+
+        setEdges(edges => {
+            const updatedEdges = edges.map(edge => {
+                const initialEdge = initialEdges.find(initialEdge => initialEdge.id === edge.id);
+    
+                if (!initialEdge) {
+                    return edge;
+                }
+    
+                return {
+                    ...edge,
+                    ...initialEdge,
+                };
+            });
+
+            return updatedEdges;
+        });
+    }, [workflowVersion]);
 
     const { screenToFlowPosition } = useReactFlow();
 
@@ -107,14 +140,14 @@ function WorkflowVersionReactFlow ({
         }
     }
 
-    const [openElementSidebarForNode, setOpenElementSidebarForNode] = useState(null);
+    const [openSidebar, setOpenSidebar] = useState(null);
 
     const handleNodeDoubleClick = (event, node) => {
-        setOpenElementSidebarForNode(node);
+        setOpenSidebar({ elementId: node.id });
     }
 
     const handleCloseSidebarButtonClick = () => {
-        setOpenElementSidebarForNode(null);
+        setOpenSidebar(null);
     }
 
     const handleNodesChange = changes => {
@@ -123,27 +156,55 @@ function WorkflowVersionReactFlow ({
         for (const change of changes) {
             switch (change.type) {
                 case 'position':
-                    onEditElement(change.id, {
-                        positionX: change.position.x,
-                        positionY: change.position.y
+                    dispatchWorkflowVersion({
+                        type: 'element-edited',
+                        element: {
+                            id: change.id,
+                            positionX: change.position.x,
+                            positionY: change.position.y,
+                        }
                     });
                 break;
                 
                 case 'remove':
-                    onRemoveElement(change.id);
-                break;
-
-                case 'add':
-                    if (change.item.type === 'new') continue;
-
-                    onAddElement({
-                        id: change.item.id,
-                        type: change.item.type,
-                        name: change.item.data.label,
-                        positionX: change.item.position.x,
-                        positionY: change.item.position.y,
+                    dispatchWorkflowVersion({
+                        type: 'element-removed',
+                        elementId: change.id,
                     });
                 break;
+
+                case 'add': {
+                    switch (change.item.type) {
+                        case 'if': {
+                            dispatchWorkflowVersion({
+                                type: 'element-added',
+                                element: {
+                                    id: change.item.id,
+                                    type: change.item.type,
+                                    name: change.item.data.label,
+                                    positionX: change.item.position.x,
+                                    positionY: change.item.position.y,
+                                    strategy: 'all',
+                                    conditions: [],
+                                },
+                            });
+                        }
+
+                        case 'assign': {
+                            dispatchWorkflowVersion({
+                                type: 'element-added',
+                                element: {
+                                    id: change.item.id,
+                                    type: change.item.type,
+                                    name: change.item.data.label,
+                                    positionX: change.item.position.x,
+                                    positionY: change.item.position.y,
+                                    assignments: [],
+                                },
+                            });
+                        }
+                    }
+                }
             }
         }
     }
@@ -156,20 +217,32 @@ function WorkflowVersionReactFlow ({
                 case 'add':
                     switch (change.item.sourceHandle) {
                         case 'next':
-                            onEditElement(change.item.source, {
-                                nextElementId: change.item.target,
+                            dispatchWorkflowVersion({
+                                type: 'element-edited',
+                                element: {
+                                    id: change.item.source,
+                                    nextElementId: change.item.target,
+                                },
                             });
                         break;
 
                         case 'true':
-                            onEditElement(change.item.source, {
-                                nextElementIdIfTrue: change.item.target,
+                            dispatchWorkflowVersion({
+                                type: 'element-edited',
+                                element: {
+                                    id: change.item.source,
+                                    nextElementIdIfTrue: change.item.target,
+                                },
                             });
                         break;
 
                         case 'false':
-                            onEditElement(change.item.source, {
-                                nextElementIdIfFalse: change.item.target,
+                            dispatchWorkflowVersion({
+                                type: 'element-edited',
+                                element: {
+                                    id: change.item.source,
+                                    nextElementIdIfFalse: change.item.target,
+                                },
                             });
                         break;
                     }
@@ -202,14 +275,12 @@ function WorkflowVersionReactFlow ({
                 <MiniMap />
             </ReactFlow>
 
-            {openElementSidebarForNode && (
+            {openSidebar && (
                 <ElementSidebar
-                    node={openElementSidebarForNode}
-                    localWorkflowVersion={localWorkflowVersion}
-                    onAddVariable={onAddVariable}
-                    onEditVariable={onEditVariable}
-                    onRemoveVariable={onRemoveVariable}
+                    elementId={openSidebar.elementId}
+                    workflowVersion={workflowVersion}
                     onCloseButtonClick={handleCloseSidebarButtonClick}
+                    dispatchWorkflowVersion={dispatchWorkflowVersion}
                 />
             )}
         </div>
@@ -217,21 +288,18 @@ function WorkflowVersionReactFlow ({
 }
 
 function ElementSidebar ({
-    node,
-    localWorkflowVersion,
-    onAddVariable,
-    onEditVariable,
-    onRemoveVariable,
+    elementId,
+    workflowVersion,
     onCloseButtonClick,
+    dispatchWorkflowVersion,
 }) {
-    switch (node.type) {
+    const element = workflowVersion.elements.find(element => element.id === elementId);
+
+    switch (element.type) {
         case 'start':
             return (
                 <VariablesWorkflowSidebar
-                    onAddVariable={onAddVariable}
-                    onEditVariable={onEditVariable}
-                    onRemoveVariable={onRemoveVariable}
-                    localWorkflowVersion={localWorkflowVersion}
+                    workflowVersion={workflowVersion}
                     onCloseButtonClick={onCloseButtonClick}
                 />
             );
@@ -239,16 +307,20 @@ function ElementSidebar ({
         case 'assign':
             return (
                 <AssignSidebar
-                    localWorkflowVersion={localWorkflowVersion}
+                    assignElement={element}
+                    workflowVersion={workflowVersion}
                     onCloseButtonClick={onCloseButtonClick}
+                    dispatchWorkflowVersion={dispatchWorkflowVersion}
                 />
             );
 
         case 'if':
             return (
                 <IfSidebar
-                    localWorkflowVersion={localWorkflowVersion}
+                    ifElement={element}
+                    workflowVersion={workflowVersion}
                     onCloseButtonClick={onCloseButtonClick}
+                    dispatchWorkflowVersion={dispatchWorkflowVersion}
                 />
             );
     }
