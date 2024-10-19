@@ -1,6 +1,6 @@
 export function Sidebar ({ children }) {
     return (
-        <div className="flex flex-col absolute top-0 right-0 bottom-0 max-w-lg w-full h-full bg-surface-high text-on-surface p-6 gap-4">
+        <div className="flex flex-col absolute top-0 right-0 bottom-0 overflow-x-scroll left-0 md:left-auto lg:max-w-2xl w-full min-h-full bg-surface-high text-on-surface p-6 gap-4">
             {children}
         </div>
     );
