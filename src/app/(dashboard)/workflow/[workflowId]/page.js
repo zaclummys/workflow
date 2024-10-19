@@ -26,7 +26,7 @@ import {
 
 import DateAgo from '~/components/date-ago';
 
-import CreateWorkflowVersionModalButton from '~/components/create-workflow-version-button';
+import CreateWorkflowVersionModalButton from '~/components/modal-buttons/create-workflow-version-modal-button';
 import DeleteWorkflowModalButton from '~/components/modal-buttons/delete-workflow-modal-button';
 import EditWorkflowModalButton from '~/components/modal-buttons/edit-workflow-modal-button';
 

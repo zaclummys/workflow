@@ -12,45 +12,9 @@ import {
 
 import { DestructiveButton, OutlineButton } from '../../../button';
 
-export function RemoveVariableSidebarButton ({
-    variable,
-    onRemoveVariable,
-}) {
-    const [open, setOpen] = useState(false);
 
-    const handleButtonClick = () => {
-        setOpen(true);
-    }
 
-    const handleCancelButtonClick = () => {
-        setOpen(false);
-    }
-
-    const handleConfirmButtonClick = (event) => {
-        setOpen(false);
-
-        onRemoveVariable(variable);
-    }
-
-    return (
-        <>
-            <OutlineButton
-                onClick={handleButtonClick}>
-                Remove
-            </OutlineButton>
-
-            {open && (
-                <RemoveVariableSidebar
-                    variable={variable}
-                    onConfirmButtonClick={handleConfirmButtonClick}
-                    onCancelButtonClick={handleCancelButtonClick}
-                />
-            )}
-        </>
-    );
-}
-
-export function RemoveVariableSidebar ({
+export default function RemoveVariableSidebar ({
     variable,
     onConfirmButtonClick,
     onCancelButtonClick,

@@ -20,45 +20,7 @@ import {
 
 import VariableForm from '../../../variable-form';
 
-export function EditVariableSidebarButton ({
-    variable,
-    onEditVariable,
-}) {
-    const [open, setOpen] = useState(false);
-
-    const handleEditButtonClick = () => {
-        setOpen(true);
-    }
-
-    const handleCancelButtonClick = () => {
-        setOpen(false);
-    }
-
-    const handleFormSubmit = (event, editedVariable) => {
-        setOpen(false);
-
-        onEditVariable(editedVariable);
-    }
-
-    return (
-        <>
-            <OutlineButton
-                onClick={handleEditButtonClick}>
-                Edit
-            </OutlineButton>
-
-            {open && (
-                <EditVariableSidebar
-                    variable={variable}
-                    onFormSubmit={handleFormSubmit}
-                    onCancelButtonClick={handleCancelButtonClick}
-                />
-            )}
-        </>
-    );
-}
-
-export function EditVariableSidebar ({
+export default function EditVariableSidebar ({
     variable,
     onFormSubmit,
     onCancelButtonClick,
@@ -86,8 +48,9 @@ export function EditVariableSidebar ({
                 </OutlineButton>
 
                 <PrimaryButton
+                    type="submit"
                     form={formId}>
-                    Save
+                    Apply
                 </PrimaryButton>
             </SidebarFooter>
         </Sidebar>

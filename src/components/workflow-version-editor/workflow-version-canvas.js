@@ -15,23 +15,21 @@ import {
     ReactFlowProvider,
 } from '@xyflow/react';
 
-
-import VariablesSidebar from './sidebars/variables-sidebar';
-
-import AssignSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/assign-sidebar';
-import IfSidebar from '~/components/workflow-version-editor/sidebars/element-sidebar/if-sidebar';
-
-import NewNode from '~/components/workflow-version-editor/nodes/new-node';
-import StartNode from '~/components/workflow-version-editor/nodes/start-node';
-import IfNode from '~/components/workflow-version-editor/nodes/if-node';
-import AssignNode from '~/components/workflow-version-editor/nodes/assign-node';
-
 import {
     createNode,
     createEdge,
     fromWorkflowElements,
-} from '~/components/workflow-version-editor/react-flow-helpers';
-import VariablesSidebar from './sidebars/variables-sidebar';
+} from './react-flow-helpers';
+
+import AllVariablesSidebar from './sidebars/variable-sidebars/all-variables-sidebar';
+
+import AssignSidebar from './sidebars/element-sidebars/assign-sidebar';
+import IfSidebar from './sidebars/element-sidebars/if-sidebar';
+
+import NewNode from './nodes/new-node';
+import StartNode from './nodes/start-node';
+import IfNode from './nodes/if-node';
+import AssignNode from './nodes/assign-node';
 
 export default function WorkflowVersionCanvas (props) {
     return (
@@ -47,7 +45,6 @@ const nodeTypes = {
     if: IfNode,
     assign: AssignNode,
 }
-
 
 function WorkflowVersionReactFlow ({
     workflowVersion,
@@ -252,7 +249,7 @@ function WorkflowVersionReactFlow ({
         }
     }
 
-    const handleBeforeDelete = ({ nodes, edges }) => {
+    const handleBeforeDelete = ({ nodes }) => {
         return nodes.every(node => node.type !== 'start');
     }
 
@@ -299,9 +296,10 @@ function ElementSidebar ({
     switch (element.type) {
         case 'start':
             return (
-                <VariablesSidebar
+                <AllVariablesSidebar
                     workflowVersion={workflowVersion}
                     onCloseButtonClick={onCloseButtonClick}
+                    dispatchWorkflowVersion={dispatchWorkflowVersion}
                 />
             );
 
