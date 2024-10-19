@@ -86,7 +86,12 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                 nextElementIdIfTrue: element.getNextElementIdIfTrue(),
                                 nextElementIdIfFalse: element.getNextElementIdIfFalse(),
                                 strategy: element.getStrategy(),
-                                conditions: element.getConditions(),
+                                conditions: element.getConditions()
+                                    .map(condition => ({
+                                        variableId: condition.getVariableId(),
+                                        operator: condition.getOperator(),
+                                        value: condition.getValue(),
+                                    }))
                             }
 
                         default:
