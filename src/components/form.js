@@ -7,14 +7,27 @@ export function Form({ className, ...props }) {
 
 export function Field({ children }) {
     return (
-        <div className="flex flex-col flex-grow gap-2">
+        <div className="flex flex-col flex-1 gap-2">
+            {children}
+        </div>
+    );
+}
+
+export function Row({ children }) {
+    return (
+        <div className="flex flex-row items-end gap-4">
             {children}
         </div>
     );
 }
 
 export function Input(props) {
-    return <input className="h-10 px-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded-md transition-all outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />
+    return (
+        <input
+            className="w-full h-10 px-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded-md transition-colors outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]"
+            {...props}
+        />
+    );
 }
 
 export function Radio (props) {
@@ -42,7 +55,7 @@ export function InlineLabel ({ disabled, ...props }) {
 }
 
 export function Select(props) {
-    return <select className="px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-colors outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />;
+    return <select className="appearance-none px-3 py-2 font-normal text-base text-on-surface border border-outline bg-transparent rounded transition-colors outline-none focus:ring focus:ring-primary focus:ring-2 disabled:opacity-[0.38]" {...props} />;
 }
 
 export function Option(props) {
