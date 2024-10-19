@@ -127,7 +127,10 @@ export class WorkflowVersion {
                     return new WorkflowAssignElement(elementData);
 
                 case 'if':
-                    return new WorkflowIfElement(elementData);
+                    return new WorkflowIfElement({
+                        ...elementData,
+                        conditions: elementData.conditions.map(conditionData => new WorkflowCondition(conditionData)),
+                    });
 
                 default:
                     throw new Error(`Unexpected element type: ${elementData.type}`);
