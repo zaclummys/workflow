@@ -124,7 +124,10 @@ export class WorkflowVersion {
                     return new WorkflowStartElement(elementData);
 
                 case 'assign':
-                    return new WorkflowAssignElement(elementData);
+                    return new WorkflowAssignElement({
+                        ...elementData,
+                        assignments: elementData.assignments.map(assignmentData => new WorkflowAssignment(assignmentData)),
+                    });
 
                 case 'if':
                     return new WorkflowIfElement({
