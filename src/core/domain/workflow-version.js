@@ -29,7 +29,6 @@ export class WorkflowVersion {
         variables,
         elements,
         workflowId,
-        forkedFromId,
         createdAt,
         createdById,
     }) {
@@ -71,7 +70,6 @@ export class WorkflowVersion {
         this.variables = variables;
         this.elements = elements;
         this.workflowId = workflowId;
-        this.forkedFromId = forkedFromId;
         this.createdAt = createdAt;
         this.createdById = createdById;
     }
@@ -162,159 +160,6 @@ export class WorkflowVersion {
 
     deactivate() {
         this.status = 'inactive';
-    }
-
-    addVariable(variable) {
-        this.variables.push(variable);
-    }
-
-    addElement ({
-        element,
-        previousElementId,
-        previousElementBranch,
-    }) {
-        if (element instanceof WorkflowStartElement) {
-            throw new Error('Cannot add a start element.');
-        }
-
-        const previousElement = this.findElementById(previousElementId);
-
-        if (!previousElement) {
-            throw new Error(`Previous element not found: ${previousElementId}`);
-        }
-
-        if (previousElement instanceof WorkflowIfElement) {
-            switch (previousElementBranch) {
-                case 'true':
-                    element.setDefaultNextElementId(previousElement.getNextElementIdIfTrue());
-                    previousElement.setNextElementIdIfTrue(element.getId());
-                break;
-    
-                case 'false':
-                    element.setDefaultNextElementId(previousElement.getNextElementIdIfFalse());
-                    previousElement.setNextElementIdIfFalse(element.getId());
-                break;
-    
-                default:
-                    throw new Error(`Invalid branch: ${previousElementBranch}.`);
-            }
-        } else {
-            element.setDefaultNextElementId(previousElement.getNextElementId());
-            previousElement.setNextElementId(element.getId());
-        }
-        
-        this.elements.push(element);
-    }
-
-    editElement ({
-        elementId,
-        elementData,
-    }) {
-        const element = this.findElementById(elementId);
-
-        if (!element) {
-            throw new Error(`Element not found: ${elementId}`);
-        }
-
-        if (element instanceof WorkflowStartElement) {
-            throw new Error('Cannot edit a start element.');
-        }
-
-        element.edit(elementData);
-    }
-
-    removeElement ({
-        elementId,
-        elementBranchToKeep,
-    }) {
-        if (!elementId) {
-            throw new Error('Element ID was not provided');
-        }
-
-        const element = this.findElementById(elementId);
-
-        if (!element) {
-            throw new Error(`Element not found: ${elementId}`);
-        }
-
-        if (element instanceof WorkflowStartElement) {
-            throw new Error('Cannot remove a start element.');
-        }
-
-        let elementIdToKeep;
-
-        if (element instanceof WorkflowIfElement) {
-            const nextElementIdIfFalse = element.getNextElementIdIfFalse();
-            const nextElementIdIfTrue = element.getNextElementIdIfTrue();
-
-            switch (elementBranchToKeep) {
-                case 'true':
-                    if (nextElementIdIfFalse) {
-                        this.removeElement({
-                            elementId: nextElementIdIfFalse,
-                        });
-                    }
-
-                    elementIdToKeep = element.getNextElementIdIfTrue();
-                break;
-
-                case 'false':
-                    if (nextElementIdIfTrue) {
-                        this.removeElement({
-                            elementId: nextElementIdIfTrue,
-                        });
-                    }
-
-                    elementIdToKeep = element.getNextElementIdIfFalse();
-                break;
-
-                default:
-                    if (nextElementIdIfFalse) {
-                        this.removeElement({
-                            elementId: nextElementIdIfFalse,
-                        });
-                    }
-
-                    if (nextElementIdIfTrue) {
-                        this.removeElement({
-                            elementId: nextElementIdIfTrue,
-                        });
-                    }
-                break;
-            }
-        } else {
-            if (elementBranchToKeep) {
-                throw new Error('Cannot specify branch to keep in this type of element');
-            }
-
-            elementIdToKeep = element.getNextElementId();
-        }
-
-        this.elements.forEach(candidatePreviousElement => {
-            if (candidatePreviousElement instanceof WorkflowIfElement) {
-                if (elementId === candidatePreviousElement.getNextElementIdIfTrue()) {
-                    candidatePreviousElement.setNextElementIdIfTrue(elementIdToKeep);
-                }
-                
-                if (elementId === candidatePreviousElement.getNextElementIdIfFalse()) {
-                    candidatePreviousElement.setNextElementIdIfFalse(elementIdToKeep);
-                }
-            } else {
-                if (elementId === candidatePreviousElement.getNextElementId()) {
-                    candidatePreviousElement.setNextElementId(elementIdToKeep);
-                }
-            }
-        });
-
-        this.elements = this.elements.filter(element => elementId !== element.getId());
-    }
-
-    removeVariableById(idToBeRemoved) {
-        this.variables = this.variables.filter(variable => idToBeRemoved !== variable.getId());
-    }
-
-    removeElementById(idToBeRemoved) {
-        this.elements = this.elements.filter(element => idToBeRemoved !== element.getId());
     }
 
     getStartElement() {
@@ -424,17 +269,6 @@ export class WorkflowVariable {
     getMarkedAsOutput() {
         return this.markedAsOutput;
     }
-
-    clone() {
-        return WorkflowVariable.create({
-            name: this.name,
-            type: this.type,
-            description: this.description,
-            defaultValue: this.defaultValue,
-            markedAsInput: this.markedAsInput,
-            markedAsOutput: this.markedAsOutput,
-        });
-    }
 }
 
 export class WorkflowElement {
@@ -511,10 +345,6 @@ export class WorkflowStartElement extends WorkflowElement {
 
     setDefaultNextElementId (nextElementId) {
         this.nextElementId = nextElementId;
-    }
-
-    clone() {
-        return new WorkflowStartElement();
     }
 }
 
@@ -599,13 +429,6 @@ export class WorkflowIfElement extends WorkflowElement {
         this.strategy = strategy;
         this.conditions = conditions.map(condition => new WorkflowCondition(condition));
     }
-
-    clone() {
-        return new WorkflowIfElement({
-            id: this.id,
-            conditions: this.conditions.map(condition => condition.clone()),
-        });
-    }
 }
 
 export class WorkflowCondition {
@@ -651,14 +474,6 @@ export class WorkflowCondition {
 
     getValue() {
         return this.value;
-    }
-
-    clone() {
-        return new WorkflowCondition({
-            variableId: this.variableId,
-            operator: this.operator,
-            expression: this.expression,
-        });
     }
 }
 
@@ -725,15 +540,6 @@ export class WorkflowAssignElement extends WorkflowElement {
         this.description = description;
         this.assignments = assignments.map(assignments => new WorkflowAssignment(assignments));
     }
-
-    clone() {
-        return new WorkflowAssignElement({
-            id: this.id,
-            name: this.name,
-            description: this.description,
-            assignments: this.assignments.map(assignment => assignment.clone()),
-        });
-    }
 }
 
 export class WorkflowAssignment {
@@ -779,13 +585,5 @@ export class WorkflowAssignment {
 
     getValue() {
         return this.value;
-    }
-
-    clone() {
-        return new WorkflowAssignment({
-            variableId: this.variableId,
-            operator: this.operator,
-            value: this.value,
-        });
     }
 }

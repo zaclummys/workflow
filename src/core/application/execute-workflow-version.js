@@ -19,7 +19,6 @@ export default async function executeWorkflowVersion ({
     if (!session) {
         return {
             success: false,
-            message: 'Invalid session token',
         };
     }
 
@@ -28,7 +27,6 @@ export default async function executeWorkflowVersion ({
     if (!workflowVersion) {
         return {
             success: false,
-            message: 'Workflow version not found',
         };
     }
 
