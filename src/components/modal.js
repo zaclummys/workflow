@@ -30,14 +30,6 @@ export function ModalSubtitle ({ children }) {
     );
 }
 
-export function ModalText ({ children }) {
-    return (
-        <span>
-            { children }
-        </span>
-    );
-}
-
 export function ModalFooter ({ className, children }) {
     return (
         <div className={twMerge("flex flex-row justify-between", className)}>
