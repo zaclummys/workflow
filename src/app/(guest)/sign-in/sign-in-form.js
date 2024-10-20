@@ -87,6 +87,7 @@ export default function SignInForm () {
             </Field>
 
             <PrimaryButton
+                type="submit"
                 data-testid="sign-in-submit-button"
                 disabled={pending}>
                 Sign In
