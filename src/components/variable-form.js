@@ -36,6 +36,19 @@ export default function VariableForm ({
         ...initialValues,
     });
 
+    const getDefaultValueFromType = () => {
+        switch (values.type) {
+            case 'string':
+                return '';
+            
+            case 'number':
+                return 0;
+
+            case 'boolean':
+                return false;
+        }
+    }
+
     const handleFormSubmit = event => {
         event.preventDefault();
 
@@ -62,7 +75,7 @@ export default function VariableForm ({
         setValues(values => ({
             ...values,
             type,
-            defaultValue: '',
+            defaultValue: null,
         }));
     }
 
@@ -76,7 +89,7 @@ export default function VariableForm ({
     const handleAddDefaultValueButtonClick = () => {
         setValues(values => ({
             ...values,
-            defaultValue: '',
+            defaultValue: getDefaultValueFromType(),
         }));
     };
 
