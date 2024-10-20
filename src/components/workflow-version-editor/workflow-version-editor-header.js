@@ -10,7 +10,6 @@ export default function WorkflowVersionEditorHeader ({
     disableSaveButton,
     disableToggleButton,
     onVariablesButtonClick,
-    onSaveWorkflowVersion,
 }) {
     return (
         <header className="flex flex-row items-center bg-surface-high text-on-surface px-6 py-2 h-20">
@@ -40,7 +39,6 @@ export default function WorkflowVersionEditorHeader ({
                 <SaveWorkflowVersionButton
                     disabled={disableSaveButton}
                     workflowVersion={workflowVersion}
-                    onSaveWorkflowVersion={onSaveWorkflowVersion}
                 />
 
                 <OutlineButton onClick={onVariablesButtonClick}>

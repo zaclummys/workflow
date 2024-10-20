@@ -113,6 +113,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                     name: variable.getName(),
                     type: variable.getType(),
                     description: variable.getDescription(),
+                    hasDefaultValue: variable.getHasDefaultValue(),
                     defaultValue: variable.getDefaultValue(),
                     markedAsInput: variable.getMarkedAsInput(),
                     markedAsOutput: variable.getMarkedAsOutput(),
