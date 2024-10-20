@@ -20,6 +20,10 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
 
     const [sidebar, setSidebar] = useState(null);
 
+    const handleCloseButtonClick = () => {
+        setSidebar(null);
+    };
+
     const handleVariablesButtonClick = () => {
         setSidebar({ type: 'all-variables' });
     };
@@ -46,10 +50,6 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
 
     const handleCancelRemoveVariableButtonClick = () => {
         setSidebar({ type: 'all-variables' });
-    };
-
-    const handleCloseButtonClick = () => {
-        setSidebar(null);
     };
 
     const handleVariableAdded = () => {
