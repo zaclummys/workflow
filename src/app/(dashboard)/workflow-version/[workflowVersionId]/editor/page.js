@@ -1,3 +1,5 @@
+import { notFound } from 'next/navigation';
+
 import getWorkflowVersionAction from "~/actions/get-workflow-version-action";
 
 import WorkflowVersionEditor from '~/components/workflow-version-editor/workflow-version-editor';
@@ -6,7 +8,7 @@ export default async function WorkflowVersionEditPage ({ params: { workflowVersi
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {
-        return null;
+        return notFound();
     }
 
     return (
