@@ -12,14 +12,12 @@ import { OutlineButton } from '~/components/button';
 
 import ButtonGroup from '~/components/button-group';
 
-import AddVariableSidebarButton from '~/components/workflow-version-editor/sidebar-buttons/add-variable-sidebar-button';
-import EditVariableSidebarButton from '~/components/workflow-version-editor/sidebar-buttons/edit-variable-sidebar-button';
-import RemoveVariableSidebarButton from '~/components/workflow-version-editor/sidebar-buttons/remove-variable-sidebar-button';
-
 export default function AllVariablesSidebar ({
     workflowVersion,
+    onAddVariableButtonClick,
+    onEditVariableButtonClick,
+    onRemoveVariableButtonClick,
     onCloseButtonClick,
-    dispatchWorkflowVersion,
 }) {
     return (
         <>
@@ -29,9 +27,10 @@ export default function AllVariablesSidebar ({
                         Variables
                     </SidebarTitle>
 
-                    <AddVariableSidebarButton
-                        dispatchWorkflowVersion={dispatchWorkflowVersion}
-                    />
+                    <OutlineButton
+                        onClick={onAddVariableButtonClick}>
+                            Add
+                    </OutlineButton>
                 </SidebarHeader>
 
                 <SidebarContent>
@@ -44,15 +43,15 @@ export default function AllVariablesSidebar ({
                                 <span>{variable.name}</span>
 
                                 <ButtonGroup>
-                                    <EditVariableSidebarButton
-                                        variable={variable}
-                                        dispatchWorkflowVersion={dispatchWorkflowVersion}
-                                    />
+                                    <OutlineButton
+                                        onClick={event => onEditVariableButtonClick(event, variable.id)}>
+                                        Edit
+                                    </OutlineButton>
 
-                                    <RemoveVariableSidebarButton
-                                        variable={variable}
-                                        dispatchWorkflowVersion={dispatchWorkflowVersion}
-                                    />
+                                    <OutlineButton
+                                        onClick={event => onRemoveVariableButtonClick(event, variable.id)}>
+                                        Remove
+                                    </OutlineButton>
                                 </ButtonGroup>
                             </div>
                         ))}

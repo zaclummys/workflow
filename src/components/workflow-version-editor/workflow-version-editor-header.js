@@ -3,11 +3,13 @@ import ButtonGroup from '~/components/button-group';
 import WorkflowVersionStatus from "~/components/workflow-version-status";
 import SaveWorkflowVersionButton from '~/components/save-workflow-version-button';
 import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
+import { OutlineButton } from '~/components/button';
 
 export default function WorkflowVersionEditorHeader ({
     workflowVersion,
     disableSaveButton,
     disableToggleButton,
+    onVariablesButtonClick,
     onSaveWorkflowVersion,
 }) {
     return (
@@ -40,6 +42,10 @@ export default function WorkflowVersionEditorHeader ({
                     workflowVersion={workflowVersion}
                     onSaveWorkflowVersion={onSaveWorkflowVersion}
                 />
+
+                <OutlineButton onClick={onVariablesButtonClick}>
+                    Variables
+                </OutlineButton>
 
                 <ToggleWorkflowVersionButton
                     disabled={disableToggleButton}

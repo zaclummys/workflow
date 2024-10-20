@@ -19,20 +19,10 @@ import {
     fromWorkflowElements,
 } from './react-flow-helpers';
 
-import SidebarFacade from '~/components/workflow-version-editor/sidebars/sidebar-facade';
-
 import NewNode from './nodes/new-node';
 import StartNode from './nodes/start-node';
 import IfNode from './nodes/if-node';
 import AssignNode from './nodes/assign-node';
-
-export default function WorkflowVersionCanvas (props) {
-    return (
-        <ReactFlowProvider>
-            <WorkflowVersionReactFlow {...props} />
-        </ReactFlowProvider>
-    );
-}
 
 const nodeTypes = {
     new: NewNode,
@@ -41,7 +31,17 @@ const nodeTypes = {
     assign: AssignNode,
 }
 
+export default function WorkflowVersionEditorCanvas (props) {
+    return (
+        <ReactFlowProvider>
+            <WorkflowVersionReactFlow {...props} />
+        </ReactFlowProvider>
+    );
+}
+
 function WorkflowVersionReactFlow ({
+    onNodeDoubleClick,
+
     workflowVersion,
     dispatchWorkflowVersion,
 }) {
@@ -131,16 +131,6 @@ function WorkflowVersionReactFlow ({
             instance.addNodes(node);
             instance.addEdges(edge);
         }
-    }
-
-    const [openSidebar, setOpenSidebar] = useState(null);
-
-    const handleNodeDoubleClick = (event, node) => {
-        setOpenSidebar({ elementId: node.id });
-    }
-
-    const handleCloseSidebarButtonClick = () => {
-        setOpenSidebar(null);
     }
 
     const handleNodesChange = changes => {
@@ -255,7 +245,7 @@ function WorkflowVersionReactFlow ({
                 nodes={nodes}
                 edges={edges}
                 nodeTypes={nodeTypes}
-                onNodeDoubleClick={handleNodeDoubleClick}
+                onNodeDoubleClick={onNodeDoubleClick}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChanges}
                 onConnectEnd={handleConnectEnd}
@@ -267,15 +257,6 @@ function WorkflowVersionReactFlow ({
                 <Controls />
                 <MiniMap />
             </ReactFlow>
-
-            {openSidebar && (
-                <SidebarFacade
-                    elementId={openSidebar.elementId}
-                    workflowVersion={workflowVersion}
-                    onCloseButtonClick={handleCloseSidebarButtonClick}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            )}
         </div>
     );
 }

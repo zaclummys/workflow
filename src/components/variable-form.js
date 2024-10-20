@@ -113,7 +113,7 @@ export default function VariableForm ({
     return (
         <Form
             id={formId}
-            onSubmit={event => onFormSubmit(event, values)}>
+            onSubmit={handleFormSubmit}>
             <Field>
                 <Label
                     disabled={disabled}

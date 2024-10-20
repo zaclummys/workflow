@@ -8,17 +8,30 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../../../sidebar';
+} from '~/components/sidebar';
 
-import { DestructiveButton, OutlineButton } from '../../../button';
-
-
+import { DestructiveButton, OutlineButton } from '~/components/button';
 
 export default function RemoveVariableSidebar ({
-    variable,
-    onConfirmButtonClick,
+    variableId,
+
+    onVariableRemoved,
     onCancelButtonClick,
+
+    workflowVersion,
+    dispatchWorkflowVersion,
 }) {
+    const variable = workflowVersion.variables.find(variable => variable.id === variableId);
+
+    const handleConfirmButtonClick = () => {
+        dispatchWorkflowVersion({
+            type: 'variable-removed',
+            variableId: variableId,
+        });
+
+        onVariableRemoved();
+    }
+
     return (
         <Sidebar>
             <SidebarTitle>
@@ -38,7 +51,7 @@ export default function RemoveVariableSidebar ({
                 </OutlineButton>
 
                 <DestructiveButton
-                    onClick={onConfirmButtonClick}>
+                    onClick={handleConfirmButtonClick}>
                     Confirm
                 </DestructiveButton>
             </SidebarFooter>

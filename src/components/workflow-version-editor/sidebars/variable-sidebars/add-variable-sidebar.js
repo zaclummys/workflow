@@ -15,10 +15,23 @@ import {
 import VariableForm from '~/components/variable-form';
 
 export default function AddVariableSidebar ({
-    onFormSubmit,
+    onVariableAdded,
     onCancelButtonClick,
+    dispatchWorkflowVersion,
 }) {
     const formId = useId();
+
+    const handleFormSubmit = (event, addedVariable) => {
+        dispatchWorkflowVersion({
+            type: 'variable-added',
+            variable: {
+                ...addedVariable,
+                id: crypto.randomUUID(),
+            },
+        });
+
+        onVariableAdded();
+    };
 
     return (
         <Sidebar>
@@ -29,7 +42,7 @@ export default function AddVariableSidebar ({
             <SidebarContent>
                 <VariableForm
                     formId={formId}
-                    onFormSubmit={onFormSubmit}
+                    onFormSubmit={handleFormSubmit}
                 />
             </SidebarContent>
 

@@ -13,113 +13,108 @@ import {
 import { DestructiveButton, OutlineButton, PrimaryButton } from '~/components/button';
 import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/components/form';
 
-export default function IfSidebar ({
-    ifElement,
+export default function AssignSidebar ({
+    assignElementId,
     workflowVersion,
     onCloseButtonClick,
     dispatchWorkflowVersion,
 }) {
+    const assignElement = workflowVersion.elements.find(element => element.id === assignElementId);
+
     const formId = useId();
 
-    const [localIfElement, setLocalIfElement] = useState({
-        id: ifElement.id,
-        name: ifElement.name,
-        description: ifElement.description,
-        strategy: ifElement.strategy,
-        conditions: ifElement.conditions,
+    const [localAssignElement, setLocalAssignElement] = useState({
+        id: assignElement.id,
+        name: assignElement.name,
+        description: assignElement.description,
+        strategy: assignElement.strategy,
+        assignments: assignElement.assignments,
     });
 
     const handleNameChange = event => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
             name: event.target.value,
         }));
     };
 
     const handleDescriptionChange = event => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
             description: event.target.value,
         }));
     };
 
-    const handleStrategyChange = event => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            strategy: event.target.value,
-        }));
-    };
-
-    const handleConditionVariableChange = (event, conditionId) => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            conditions: localIfElement.conditions.map(condition => {
-                if (condition.id === conditionId) {
+    const handleAssignmentVariableChange = (event, assignmentId) => {
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.map(assignment => {
+                if (assignment.id === assignmentId) {
                     return {
-                        ...condition,
+                        ...assignment,
                         variableId: event.target.value,
                     }
                 } else {
-                    return condition;
+                    return assignment;
                 }
             }),
         }));
     };
 
-    const handleConditionOperatorChange = (event, conditionId) => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            conditions: localIfElement.conditions.map(condition => {
-                if (condition.id === conditionId) {
+    const handleAssignmentOperatorChange = (event, assignmentId) => {
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.map(assignment => {
+                if (assignment.id === assignmentId) {
                     return {
-                        ...condition,
+                        ...assignment,
                         operator: event.target.value,
                     }
                 } else {
-                    return condition;
+                    return assignment;
                 }
             }),
         }));
     };
 
 
-    const handleConditionValueChange = (event, conditionId) => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            conditions: localIfElement.conditions.map(condition => {
-                if (condition.id === conditionId) {
+    const handleAssignmentValueChange = (event, assignmentId) => {
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.map(assignment => {
+                if (assignment.id === assignmentId) {
                     return {
-                        ...condition,
+                        ...assignment,
                         value: event.target.value,
                     }
                 } else {
-                    return condition;
+                    return assignment;
                 }
             }),
         }));
     };
 
 
-    const handleRemoveConditionButtonClick = (event, conditionId) => {
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            conditions: localIfElement.conditions.filter(condition => {
-                return condition.id !== conditionId;
+    const handleRemoveAssignmentButtonClick = (event, assignmentId) => {
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.filter(assignment => {
+                return assignment.id !== assignmentId;
             }),
         }));
     };
 
-    const handleAddConditionButtonClick = event => {
-        const defaultCondition = {
+    const handleAddAssignmentButtonClick = event => {
+        const defaultAssignment = {
             variableId: workflowVersion.variables[0].id,
             operator: 'equal',
             value: '',
         };
 
-        setLocalIfElement(localIfElement => ({
-            ...localIfElement,
-            conditions: localIfElement.conditions.concat({
-                ...defaultCondition,
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.concat({
+                ...defaultAssignment,
                 id: crypto.randomUUID(),
             }),
         }));
@@ -130,7 +125,7 @@ export default function IfSidebar ({
 
         dispatchWorkflowVersion({
             type: 'element-edited',
-            element: localIfElement,
+            element: localAssignElement,
         });
     };
 
@@ -139,7 +134,7 @@ export default function IfSidebar ({
             <Sidebar>
                 <SidebarHeader>
                     <SidebarTitle>
-                        Edit If
+                        Edit Assign
                     </SidebarTitle>
                 </SidebarHeader>
 
@@ -152,7 +147,7 @@ export default function IfSidebar ({
 
                             <Input
                                 required
-                                value={localIfElement.name}
+                                value={localAssignElement.name}
                                 onChange={handleNameChange}
                             />
                         </Field>
@@ -161,41 +156,23 @@ export default function IfSidebar ({
                             <Label>Description</Label>
 
                             <TextArea
-                                value={localIfElement.description}
+                                value={localAssignElement.description}
                                 onChange={handleDescriptionChange}
                             />
                         </Field>
 
                         <span>
-                            Conditions
+                            Assignments
                         </span>
 
-                        <Field>
-                            <Label>
-                                How conditions should be evaluated?
-                            </Label>
-
-                            <Select
-                                value={localIfElement.strategy}
-                                onChange={handleStrategyChange}>
-                                <Option value="all">
-                                    All conditions are met
-                                </Option>
-
-                                <Option value="any">
-                                    Any conditions are met
-                                </Option>
-                            </Select>
-                        </Field>
-
-                        {localIfElement.conditions.map(condition => (
-                            <Row key={condition.id}>
+                        {localAssignElement.assignments.map(assignment => (
+                            <Row key={assignment.id}>
                                 <Field>
                                     <Label>Variable</Label>
 
                                     <Select
-                                        value={condition.variableId}
-                                        onChange={event => handleConditionVariableChange(event, condition.id)}
+                                        value={assignment.variableId}
+                                        onChange={event => handleAssignmentVariableChange(event, assignment.id)}
                                     >
                                         {workflowVersion.variables.map(variable => (
                                             <Option
@@ -212,25 +189,20 @@ export default function IfSidebar ({
                                     <Label>Operator</Label>
 
                                     <Select
-                                        value={condition.operator}
-                                        onChange={event => handleConditionOperatorChange(event, condition.id)}
+                                        value={assignment.operator}
+                                        onChange={event => handleAssignmentOperatorChange(event, assignment.id)}
                                     >
                                         <Option value="equal">
                                             Equal
                                         </Option>
 
-                                        <Option value="not-equal">
-                                            Not equal
+                                        <Option value="increment">
+                                            Increment
                                         </Option>
 
-                                        <Option value="greater-than">
-                                            Greater Than
+                                        <Option value="decrement">
+                                            Decrement
                                         </Option>
-
-                                        <Option value="less-than">
-                                            Less Than
-                                        </Option>
-
                                     </Select>
                                 </Field>
 
@@ -239,13 +211,13 @@ export default function IfSidebar ({
                                     <Label>Value</Label>
 
                                     <Input
-                                        value={condition.value}
-                                        onChange={event => handleConditionValueChange(event, condition.id)}
+                                        value={assignment.value}
+                                        onChange={event => handleAssignmentValueChange(event, assignment.id)}
                                     />
                                 </Field>
 
                                 <DestructiveButton
-                                    onClick={event => handleRemoveConditionButtonClick(event, condition.id)}>
+                                    onClick={event => handleRemoveAssignmentButtonClick(event, assignment.id)}>
                                     Remove
                                 </DestructiveButton>
                             </Row>
@@ -254,8 +226,8 @@ export default function IfSidebar ({
                         <OutlineButton
                             className="self-start"
                             disabled={workflowVersion.variables.length === 0}
-                            onClick={handleAddConditionButtonClick}>
-                            Add condition
+                            onClick={handleAddAssignmentButtonClick}>
+                            Add assignment
                         </OutlineButton>
                     </Form>
                 </SidebarContent>

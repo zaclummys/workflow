@@ -21,11 +21,25 @@ import {
 import VariableForm from '../../../variable-form';
 
 export default function EditVariableSidebar ({
-    variable,
-    onFormSubmit,
+    variableId,
+    onVariableEdited,
     onCancelButtonClick,
+
+    workflowVersion,
+    dispatchWorkflowVersion,
 }) {
+    const variable = workflowVersion.variables.find(variable => variable.id === variableId);
+
     const formId = useId();
+
+    const handleFormSubmit = (event, editedVariable) => {
+        dispatchWorkflowVersion({
+            type: 'variable-edited',
+            variable: editedVariable,
+        });
+
+        onVariableEdited();
+    };
 
     return (
         <Sidebar>
@@ -37,7 +51,7 @@ export default function EditVariableSidebar ({
                 <VariableForm
                     formId={formId}
                     initialValues={variable}
-                    onFormSubmit={onFormSubmit}
+                    onFormSubmit={handleFormSubmit}
                 />                    
             </SidebarContent>
 
