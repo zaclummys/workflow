@@ -69,10 +69,12 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             case 'if': {
                 setSidebar({ type: 'if-element', elementId: node.id });
             }
+            break;
 
             case 'assign': {
                 setSidebar({ type: 'assign-element', elementId: node.id });
             }
+            break;
         }
     };
 

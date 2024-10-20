@@ -70,6 +70,7 @@ export function fromWorkflowElements (workflowElements) {
 
                     edges.push(edge);
                 }
+            break;
 
             case 'if':
                 if (element.nextElementIdIfFalse) {
@@ -91,6 +92,7 @@ export function fromWorkflowElements (workflowElements) {
 
                     edges.push(edge);
                 }
+            break;
         }
 
         return edges;

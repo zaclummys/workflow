@@ -172,6 +172,7 @@ function WorkflowVersionReactFlow ({
                                 },
                             });
                         }
+                        break;
 
                         case 'assign': {
                             dispatchWorkflowVersion({
@@ -186,8 +187,10 @@ function WorkflowVersionReactFlow ({
                                 },
                             });
                         }
+                        break;
                     }
-                }
+                };
+                break;
             }
         }
     }
