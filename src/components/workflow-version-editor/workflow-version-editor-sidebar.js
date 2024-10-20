@@ -35,6 +35,7 @@ export default function WorkflowVersionEditorSidebar ({
                     onAddVariableButtonClick={onAddVariableButtonClick}
                     onEditVariableButtonClick={onEditVariableButtonClick}
                     onRemoveVariableButtonClick={onRemoveVariableButtonClick}
+                    
                     onCloseButtonClick={onCloseButtonClick}
                     
                     workflowVersion={workflowVersion}
