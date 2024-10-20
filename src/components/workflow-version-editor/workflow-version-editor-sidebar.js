@@ -20,6 +20,9 @@ export default function WorkflowVersionEditorSidebar ({
     onCancelEditVariableButtonClick,
     onCancelRemoveVariableButtonClick,
 
+    onIfElementedEdited,
+    onAssignElementEdited,
+
     onCloseButtonClick,
 
     onVariableAdded,
@@ -84,6 +87,7 @@ export default function WorkflowVersionEditorSidebar ({
                 <IfElementSidebar
                     ifElementId={sidebar.elementId}
                     onCloseButtonClick={onCloseButtonClick}
+                    onIfElementedEdited={onIfElementedEdited}
 
                     workflowVersion={workflowVersion}
                     dispatchWorkflowVersion={dispatchWorkflowVersion}
@@ -95,6 +99,7 @@ export default function WorkflowVersionEditorSidebar ({
                 <AssignElementSidebar
                     assignElementId={sidebar.elementId}
                     onCloseButtonClick={onCloseButtonClick}
+                    onAssignElementEdited={onAssignElementEdited}
 
                     workflowVersion={workflowVersion}
                     dispatchWorkflowVersion={dispatchWorkflowVersion}

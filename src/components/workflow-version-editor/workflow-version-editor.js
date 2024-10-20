@@ -78,6 +78,14 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         }
     };
 
+    const handleIfElementEdited = () => {
+        setSidebar(null);
+    };
+
+    const handleAssignElementEdited = () => {
+        setSidebar(null);
+    };
+
     const localWorkflowVersionIsSame = localWorkflowVersion === workflowVersion;
 
     return (
@@ -112,6 +120,9 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
                     onCancelAddVariableButtonClick={handleCancelAddVariableButtonClick}
                     onCancelEditVariableButtonClick={handleCancelEditVariableButtonClick}
                     onCancelRemoveVariableButtonClick={handleCancelRemoveVariableButtonClick}
+
+                    onIfElementedEdited={handleIfElementEdited}
+                    onAssignElementEdited={handleAssignElementEdited}
 
                     onCloseButtonClick={handleCloseButtonClick}
 

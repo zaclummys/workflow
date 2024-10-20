@@ -17,6 +17,7 @@ export default function AssignSidebar ({
     assignElementId,
     workflowVersion,
     onCloseButtonClick,
+    onAssignElementEdited,
     dispatchWorkflowVersion,
 }) {
     const assignElement = workflowVersion.elements.find(element => element.id === assignElementId);
@@ -94,7 +95,6 @@ export default function AssignSidebar ({
         }));
     };
 
-
     const handleRemoveAssignmentButtonClick = (event, assignmentId) => {
         setLocalAssignElement(localAssignElement => ({
             ...localAssignElement,
@@ -127,6 +127,8 @@ export default function AssignSidebar ({
             type: 'element-edited',
             element: localAssignElement,
         });
+
+        onAssignElementEdited?.();
     };
 
     return (

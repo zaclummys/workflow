@@ -16,6 +16,7 @@ import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/comp
 export default function IfSidebar ({
     ifElementId,
     workflowVersion,
+    onIfElementedEdited,
     onCloseButtonClick,
     dispatchWorkflowVersion,
 }) {
@@ -84,7 +85,6 @@ export default function IfSidebar ({
         }));
     };
 
-
     const handleConditionValueChange = (event, conditionId) => {
         setLocalIfElement(localIfElement => ({
             ...localIfElement,
@@ -134,6 +134,8 @@ export default function IfSidebar ({
             type: 'element-edited',
             element: localIfElement,
         });
+
+        onIfElementedEdited?.();
     };
 
     return (
