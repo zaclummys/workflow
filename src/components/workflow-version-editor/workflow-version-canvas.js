@@ -5,8 +5,6 @@ import { useEffect, useState } from 'react';
 import {
     ReactFlow,
     Background,
-    Position,
-    Handle,
     Controls,
     MiniMap,
     useNodesState,
@@ -21,10 +19,7 @@ import {
     fromWorkflowElements,
 } from './react-flow-helpers';
 
-import AllVariablesSidebar from './sidebars/variable-sidebars/all-variables-sidebar';
-
-import AssignSidebar from './sidebars/element-sidebars/assign-sidebar';
-import IfSidebar from './sidebars/element-sidebars/if-sidebar';
+import SidebarFacade from '~/components/workflow-version-editor/sidebars/sidebar-facade';
 
 import NewNode from './nodes/new-node';
 import StartNode from './nodes/start-node';
@@ -274,7 +269,7 @@ function WorkflowVersionReactFlow ({
             </ReactFlow>
 
             {openSidebar && (
-                <ElementSidebar
+                <SidebarFacade
                     elementId={openSidebar.elementId}
                     workflowVersion={workflowVersion}
                     onCloseButtonClick={handleCloseSidebarButtonClick}
@@ -284,44 +279,3 @@ function WorkflowVersionReactFlow ({
         </div>
     );
 }
-
-function ElementSidebar ({
-    elementId,
-    workflowVersion,
-    onCloseButtonClick,
-    dispatchWorkflowVersion,
-}) {
-    const element = workflowVersion.elements.find(element => element.id === elementId);
-
-    switch (element.type) {
-        case 'start':
-            return (
-                <AllVariablesSidebar
-                    workflowVersion={workflowVersion}
-                    onCloseButtonClick={onCloseButtonClick}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            );
-
-        case 'assign':
-            return (
-                <AssignSidebar
-                    assignElement={element}
-                    workflowVersion={workflowVersion}
-                    onCloseButtonClick={onCloseButtonClick}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            );
-
-        case 'if':
-            return (
-                <IfSidebar
-                    ifElement={element}
-                    workflowVersion={workflowVersion}
-                    onCloseButtonClick={onCloseButtonClick}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            );
-    }
-}
-
