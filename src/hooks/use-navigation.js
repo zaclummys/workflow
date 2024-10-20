@@ -22,8 +22,8 @@ export default function useNavigation () {
             router.push(`/workflow-version/${workflowVersionId}`);
         },
 
-        navigateToEditWorkflowVersion: (workflowVersionId) => {
-            router.push(`/workflow-version/${workflowVersionId}/edit`);
+        navigateToWorkflowVersionEditor: (workflowVersionId) => {
+            router.push(`/workflow-version/${workflowVersionId}/editor`);
         },
 
         navigateToWorkflowExecution: (workflowExecutionId) => {

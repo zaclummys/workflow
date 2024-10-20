@@ -10,7 +10,7 @@ import {
     SectionActions,
 } from '~/components/section';
 
-import EditWorkflowVersionButton from '~/components/edit-workflow-version-button';
+import OpenWorkflowVersionEditorButton from '~/components/open-workflow-version-editor-button';
 
 import {
     Details,
@@ -42,6 +42,7 @@ import {
 } from '~/components/workflow-execution-grid';
 
 import GoBack from '~/components/go-back';
+import { notFound } from 'next/navigation';
 
 export const title = 'Workflow Version';
 
@@ -49,13 +50,13 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {
-        return null;
+        return notFound();
     }
 
     const { workflowExecutionIds } = await getWorkflowExecutionsAction(workflowVersionId);
 
     if (!workflowExecutionIds) {
-        return null;
+        return notFound;
     }
 
     return (
@@ -72,7 +73,7 @@ export default async function WorkflowVersion ({ params: { workflowVersionId } }
                         </SectionTitle>
 
                         <SectionActions>
-                            <EditWorkflowVersionButton
+                            <OpenWorkflowVersionEditorButton
                                 workflowVersionId={workflowVersion.id} />
 
                             <ExecuteWorkflowVersionModalButton
