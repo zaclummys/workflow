@@ -1,5 +1,8 @@
 export default function workflowVersionReducer (workflowVersion, action) {
     switch (action.type) {
+        case 'reset':
+            return action.workflowVersion;
+            
         case 'variable-added':
             return {
                 ...workflowVersion,
