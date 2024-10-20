@@ -100,12 +100,6 @@ function CreateWorkflowModal ({
                 onSubmit={handleSubmit}
             />
 
-            {error && (
-                <Error>
-                    {error}
-                </Error>
-            )}
-
             <ModalFooter>
                 <OutlineButton
                     disabled={pending}

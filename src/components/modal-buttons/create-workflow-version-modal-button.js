@@ -40,14 +40,10 @@ export default function CreateWorkflowVersionModalButton ({ workflowId }) {
             if (success) {
                 navigateToWorkflowVersion(workflowVersionId);
             }
-        } finally {
+        } catch {
             setPending(false);
         }
     };
-
-    if (!workflowId) {
-        return null;
-    }
 
     return (
         <>

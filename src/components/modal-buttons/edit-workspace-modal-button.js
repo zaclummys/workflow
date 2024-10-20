@@ -85,7 +85,8 @@ export default function EditWorkspaceModalButton ({ workspace }) {
                                 type="text"
                                 name="name"
                                 required
-                                defaultValue={workspace.name} />
+                                defaultValue={workspace.name}
+                            />
                         </Field>
 
                         <Field>
@@ -95,8 +96,8 @@ export default function EditWorkspaceModalButton ({ workspace }) {
 
                             <TextArea
                                 name="description"
-                                required
-                                defaultValue={workspace.description} />
+                                defaultValue={workspace.description}
+                            />
                         </Field>
                     </Form>
 
@@ -108,6 +109,7 @@ export default function EditWorkspaceModalButton ({ workspace }) {
                         </OutlineButton>
 
                         <PrimaryButton
+                            type="submit"
                             disabled={isSaving}
                             form={formId}>
                             Save

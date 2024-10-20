@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { 
+    useState,
+} from 'react';
 
 import {
     OutlineButton,
@@ -10,7 +12,6 @@ import {
 import {
     Modal,
     ModalTitle,
-    ModalText,
     ModalFooter,
 } from '~/components/modal';
 
@@ -35,11 +36,15 @@ export default function WorkflowVersionModalButton({ workflowVersion }) {
     const onConfirmButtonClick = async () => {
         setIsDeleting(true);
 
-        const { success } = await deleteWorkflowVersionAction(workflowVersion.id);
+        try {
+            const { success } = await deleteWorkflowVersionAction(workflowVersion.id);
 
-        if (success) {
-            navigateToWorkflow(workflowVersion.workflow.id);
-        } else {
+            if (success) {
+                navigateToWorkflow(workflowVersion.workflow.id);
+            } else {
+                setIsDeleting(false);
+            }
+        } catch {
             setIsDeleting(false);
         }
     };
@@ -57,9 +62,9 @@ export default function WorkflowVersionModalButton({ workflowVersion }) {
                         Delete Workflow Version
                     </ModalTitle>
 
-                    <ModalText>
+                    <span>
                         Are you sure you want to delete this version?
-                    </ModalText>
+                    </span>
 
                     <ModalFooter>
                         <OutlineButton

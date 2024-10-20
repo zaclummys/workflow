@@ -5,18 +5,16 @@ import {
 } from 'react';
 
 import {
-    Modal,
-    ModalTitle,
-    ModalFooter,
-    ModalText,
-} from '~/components/modal';
-
-import {
     OutlineButton,
     DestructiveButton,
 } from '~/components/button';
 
-import Tooltip from '~/components/tooltip';
+import {
+    Modal,
+    ModalTitle,
+    ModalText,
+    ModalFooter,
+} from '~/components/modal';
 
 import deleteWorkflowAction from '~/actions/delete-workflow-action';
 
@@ -28,8 +26,7 @@ export default function DeleteWorkflowModalButton({
     const { navigateToWorkspace } = useNavigation();
 
     const [isOpen, setIsOpen] = useState(false);
-
-    const [pending, setPending] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const onDeleteButtonClick = () => {
         setIsOpen(true);
@@ -40,14 +37,18 @@ export default function DeleteWorkflowModalButton({
     };
 
     const onConfirmButtonClick = async () => {
-        setPending(true);
+        setIsDeleting(true);
 
-        const { success } = await deleteWorkflowAction(workflow.id);
+        try {
+            const { success } = await deleteWorkflowAction(workflow.id);
 
-        if (success) {
-            navigateToWorkspace(workflow.workspace.id);
-        } else {
-            setPending(false);
+            if (success) {
+                navigateToWorkspace(workflow.workspace.id);
+            } else {
+                setIsDeleting(false);
+            }
+        } catch {
+            setIsDeleting(false);
         }
     };
 
@@ -64,19 +65,19 @@ export default function DeleteWorkflowModalButton({
                         Delete Workflow
                     </ModalTitle>
 
-                    <ModalText>
+                    <span>
                         Are you sure you want to delete <span className="font-medium">{workflow.name}</span>?
-                    </ModalText>
+                    </span>
 
                     <ModalFooter>
                         <OutlineButton
-                            disabled={pending}
+                            disabled={isDeleting}
                             onClick={onCancelButtonClick}>
                             Cancel
                         </OutlineButton>
 
                         <DestructiveButton
-                            disabled={pending}
+                            disabled={isDeleting}
                             onClick={onConfirmButtonClick}>
                             Confirm
                         </DestructiveButton>

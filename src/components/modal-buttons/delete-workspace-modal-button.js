@@ -5,15 +5,15 @@ import {
 } from 'react';
 
 import {
+    OutlineButton,
+    DestructiveButton, 
+} from '~/components/button';
+
+import {
     Modal,
     ModalTitle,
     ModalFooter, 
 } from '~/components/modal';
-
-import {
-    OutlineButton,
-    DestructiveButton, 
-} from '~/components/button';
 
 import deleteWorkspaceAction from '~/actions/delete-workspace-action';
 
@@ -25,7 +25,6 @@ export default function DeleteWorkspaceModalButton({
     const { navigateToHome } = useNavigation();
 
     const [isOpen, setIsOpen] = useState(false);
-
     const [isDeleting, setIsDeleting] = useState(false);
 
     const onDeleteButtonClick = () => {
@@ -45,7 +44,7 @@ export default function DeleteWorkspaceModalButton({
             if (success) {
                 navigateToHome();
             }
-        } finally {
+        } catch {
             setIsDeleting(false);
         }        
     };
@@ -63,7 +62,9 @@ export default function DeleteWorkspaceModalButton({
                         Delete Workspace
                     </ModalTitle>
 
-                    <span>Are you sure you want to delete <span className="font-medium">{workspace.name}</span>?</span>
+                    <span>
+                        Are you sure you want to delete <span className="font-medium">{workspace.name}</span>?
+                    </span>
 
                     <ModalFooter>
                         <OutlineButton
