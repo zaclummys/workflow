@@ -1,21 +1,30 @@
 'use client';
 
 import {
-    useId, useState, 
+    useId,
+    useState, 
 } from 'react';
+
 import {
-    useRouter, 
-} from 'next/navigation';
-import useForm from '~/hooks/use-form';
-import {
-    OutlineButton, PrimaryButton, 
+    OutlineButton, 
+    PrimaryButton, 
 } from '~/components/button';
+
 import {
-    Modal, ModalFooter, ModalTitle, 
+    Modal, 
+    ModalFooter, 
+    ModalTitle, 
 } from '~/components/modal';
+
 import {
-    Form, Field, Input, Label, TextArea, 
+    Form, 
+    Field, 
+    Input, 
+    Label, 
+    TextArea, 
 } from '~/components/form';
+
+import useNavigation from '~/hooks/use-navigation';
 import createWorkspaceAction from '~/actions/create-workspace-action';
 
 export default function NewWorkspaceModalButton () {
@@ -45,22 +54,35 @@ export default function NewWorkspaceModalButton () {
 }
 
 function CreateWorkspaceModal ({ onCancelButtonClick }) {
-    const router = useRouter();
+    const { navigateToWorkspace } = useNavigation();
+
+    const [pending, setPending] = useState(false);
 
     const formId = useId();
-
     const nameId = useId();
-
     const descriptionId = useId();
 
-    const { pending, error, onSubmit } = useForm(async (event) => {
-        return createWorkspaceAction({
-            name: event.target.name.value,
-            description: event.target.description.value,
-        });
-    }, ({ workspaceId }) => {
-        router.push(`/workspace/${workspaceId}`);
-    });
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        setPending(true);
+
+        try {
+            const {
+                success,
+                workspaceId,
+            } = await createWorkspaceAction({
+                name: event.target.name.value,
+                description: event.target.description.value,
+            });
+    
+            if (success) {
+                navigateToWorkspace(workspaceId);
+            }
+        } catch {
+            setPending(false);
+        }
+    }
 
     return (
         <Modal>
@@ -70,7 +92,7 @@ function CreateWorkspaceModal ({ onCancelButtonClick }) {
 
             <Form
                 id={formId}
-                onSubmit={onSubmit}>
+                onSubmit={handleSubmit}>
                 <Field>
                     <Label
                         htmlFor={nameId}>
@@ -98,12 +120,6 @@ function CreateWorkspaceModal ({ onCancelButtonClick }) {
                     />
                 </Field>
             </Form>
-
-            {error && (
-                <span className="text-danger">
-                    {error}
-                </span>
-            )}
 
             <ModalFooter>
                 <OutlineButton

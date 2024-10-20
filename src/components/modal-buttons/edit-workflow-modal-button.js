@@ -47,17 +47,20 @@ export default function EditWorkflowModalButton ({
 
         setIsSaving(true);
 
-        const { success } = await editWorkflowAction({
-            name: event.target.name.value,
-            description: event.target.description.value,
-            workflowId: workflow.id,
-        });
-
-        if (success) {
-            setIsOpen(false);
+        try {
+            const { success } = await editWorkflowAction({
+                name: event.target.name.value,
+                description: event.target.description.value,
+                workflowId: workflow.id,
+            });
+    
+            if (success) {
+                setIsOpen(false);
+            }
+            
+        } finally {
+            setIsSaving(false);
         }
-        
-        setIsSaving(false);
     };
 
     return (
@@ -96,7 +99,6 @@ export default function EditWorkflowModalButton ({
 
                             <TextArea
                                 name="description"
-                                required
                                 disabled={isSaving}
                                 defaultValue={workflow.description} />
                         </Field>
@@ -110,6 +112,7 @@ export default function EditWorkflowModalButton ({
                         </OutlineButton>
 
                         <PrimaryButton
+                            type="submit"
                             disabled={isSaving}
                             form={formId}>
                             Save

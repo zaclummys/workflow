@@ -25,7 +25,6 @@ export default async function createWorkflow ({
     if (!session) {
         return {
             success: false,
-            message: 'You must be logged in to create a workflow.',
         };
     }
 
@@ -34,7 +33,6 @@ export default async function createWorkflow ({
     if (!workspace) {
         return {
             success: false,
-            message: 'Workspace not found.',
         };
     }
     
