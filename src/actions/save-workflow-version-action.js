@@ -19,9 +19,9 @@ export default async function saveWorkflowVersionAction ({
 
     if (success) {
         if (savedWorkflowVersionId === workflowVersionId) {
-            revalidatePath(`/workflow-version/${savedWorkflowVersionId}/edit`);
+            revalidatePath(`/workflow-version/${savedWorkflowVersionId}/editor`);
         } else {
-            redirect(`/workflow-version/${savedWorkflowVersionId}/edit`);
+            redirect(`/workflow-version/${savedWorkflowVersionId}/editor`);
         }
     }
 
