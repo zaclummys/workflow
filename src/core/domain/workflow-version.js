@@ -335,30 +335,12 @@ export class WorkflowVersion {
 }
 
 export class WorkflowVariable {
-    static create({
-        name,
-        type,
-        description,
-        defaultValue,
-        markedAsInput,
-        markedAsOutput,
-    }) {
-        return new WorkflowVariable({
-            id: randomUUID(),
-            name,
-            type,
-            description,
-            defaultValue,
-            markedAsInput,
-            markedAsOutput,
-        });
-    }
-
     constructor({
         id,
         name,
         type,
         description,
+        hasDefaultValue,
         defaultValue,
         markedAsInput,
         markedAsOutput,
@@ -381,12 +363,16 @@ export class WorkflowVariable {
             throw new Error(`Type must be one of ${validTypes.join(', ')}, got ${type}.`);
         }
 
-        if (defaultValue === undefined) {
-            throw new Error('Default value cannot be undefined');
+        if (typeof hasDefaultValue !== 'boolean') {
+            throw new Error('Has default value option must be a boolean, received: ' + typeof hasDefaultValue);
         }
 
-        if (defaultValue !== null && typeof defaultValue !== type) {
-            throw new Error('Default value must be of the same type as the variable. Expected ' + type + ' but got ' + typeof defaultValue + '.');
+        if (!hasDefaultValue && defaultValue != null) {
+            throw new Error('Default value is not allowed.');
+        }
+
+        if (hasDefaultValue && defaultValue == null) {
+            throw new Error('Default value is required.');
         }
 
         if (typeof markedAsInput !== 'boolean') {
@@ -401,6 +387,7 @@ export class WorkflowVariable {
         this.name = name;
         this.type = type;
         this.description = description;
+        this.hasDefaultValue = hasDefaultValue;
         this.defaultValue = defaultValue;
         this.markedAsInput = markedAsInput;
         this.markedAsOutput = markedAsOutput;
@@ -420,6 +407,10 @@ export class WorkflowVariable {
 
     getDescription() {
         return this.description;
+    }
+
+    getHasDefaultValue() {
+        return this.hasDefaultValue;
     }
 
     getDefaultValue() {

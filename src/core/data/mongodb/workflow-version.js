@@ -92,10 +92,24 @@ export function fromWorkflowVersion (workflowVersion) {
         status: workflowVersion.getStatus(),
         elements: workflowVersion.getElements()
             .map(fromWorkflowElement),
-        variables: workflowVersion.getVariables(),
+        variables: workflowVersion.getVariables()
+            .map(fromWorkflowVariable),
         workflowId: workflowVersion.getWorkflowId(),
         createdAt: workflowVersion.getCreatedAt(),
         createdById: workflowVersion.getCreatedById(),
+    };
+}
+
+export function fromWorkflowVariable (workflowVariable) {
+    return {
+        id: workflowVariable.getId(),
+        name: workflowVariable.getName(),
+        description: workflowVariable.getDescription(),
+        hasDefaultValue: workflowVariable.getHasDefaultValue(),
+        defaultValue: workflowVariable.getDefaultValue(),
+        type: workflowVariable.getType(),
+        markedAsInput: workflowVariable.getMarkedAsInput(),
+        markedAsOutput: workflowVariable.getMarkedAsOutput(),
     };
 }
 
@@ -152,7 +166,7 @@ export function fromWorkflowElement (workflowElement) {
     }
 }
 
-function fromWorkflowCondition (workflowCondition) {
+export function fromWorkflowCondition (workflowCondition) {
     return {
         id: workflowCondition.getId(),
         variableId: workflowCondition.getVariableId(),
@@ -161,7 +175,7 @@ function fromWorkflowCondition (workflowCondition) {
     };
 }
 
-function fromWorkflowAssignment (workflowAssignment) {
+export function fromWorkflowAssignment (workflowAssignment) {
     return {
         id: workflowAssignment.getId(),
         variableId: workflowAssignment.getVariableId(),
