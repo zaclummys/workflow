@@ -43,7 +43,9 @@ import GoBack from '~/components/go-back';
 
 export const title = 'Workspace';
 
-export default async function Workspace({ params: { workspaceId } }) {
+export default async function Workspace({ params }) {
+    const { workspaceId } = await params;
+
     const { workspace } = await getWorkspaceAction(workspaceId);
 
     if (!workspace) {

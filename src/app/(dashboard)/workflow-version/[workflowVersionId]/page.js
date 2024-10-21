@@ -46,7 +46,9 @@ import { notFound } from 'next/navigation';
 
 export const title = 'Workflow Version';
 
-export default async function WorkflowVersion ({ params: { workflowVersionId } }) {
+export default async function WorkflowVersion ({ params }) {
+    const { workflowVersionId } = await params;
+
     const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {

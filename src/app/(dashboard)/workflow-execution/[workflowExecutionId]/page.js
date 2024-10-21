@@ -23,7 +23,9 @@ import getWorkflowExecutionAction from "~/actions/get-workflow-execution-action"
 
 export const title = 'Workflow Execution';
 
-export default async function WorkflowExecution ({ params: { workflowExecutionId } }) {
+export default async function WorkflowExecution ({ params }) {
+    const { workflowExecutionId } = await params;
+
     const { workflowExecution } = await getWorkflowExecutionAction(workflowExecutionId);
 
     return (

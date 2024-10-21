@@ -42,7 +42,9 @@ import GoBack from '~/components/go-back';
 
 export const title = 'Workflow';
 
-export default async function Workflow({ params: { workflowId } }) {
+export default async function Workflow({ params }) {
+    const { workflowId } = await params;
+
     const { workflow } = await getWorkflowAction(workflowId);
 
     if (!workflow) {
