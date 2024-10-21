@@ -366,10 +366,22 @@ export class WorkflowIfElement extends WorkflowElement {
             throw new Error('Name is required');
         }
 
+        if (description == null) {
+            throw new Error('Description cannot be null');
+        }
+
+        if (!strategy) {
+            throw new Error('Strategy is required');
+        }
+
+        if (!conditions) {
+            throw new Error('Conditions are required');
+        }
+
         this.name = name;
         this.description = description;
-        this.strategy = strategy || 'all';
-        this.conditions = conditions || [];
+        this.strategy = strategy;
+        this.conditions = conditions;
         this.nextElementIdIfTrue = nextElementIdIfTrue;
         this.nextElementIdIfFalse = nextElementIdIfFalse;
     }
@@ -493,9 +505,17 @@ export class WorkflowAssignElement extends WorkflowElement {
             throw new Error('Name is required.');
         }
 
+        if (description == null) {
+            throw new Error('Description cannot be null.');
+        }
+
+        if (!assignments) {
+            throw new Error('Assignments are required.');
+        }
+
         this.name = name;
         this.description = description;
-        this.assignments = assignments || [];
+        this.assignments = assignments;
         this.nextElementId = nextElementId;
     }
 

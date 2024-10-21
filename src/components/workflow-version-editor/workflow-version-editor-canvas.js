@@ -168,6 +168,7 @@ function WorkflowVersionReactFlow ({
                                     positionX: change.item.position.x,
                                     positionY: change.item.position.y,
                                     strategy: 'all',
+                                    description: '',
                                     conditions: [],
                                 },
                             });
@@ -183,6 +184,7 @@ function WorkflowVersionReactFlow ({
                                     name: change.item.data.label,
                                     positionX: change.item.position.x,
                                     positionY: change.item.position.y,
+                                    description: '',
                                     assignments: [],
                                 },
                             });
