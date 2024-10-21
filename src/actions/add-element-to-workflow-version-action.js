@@ -12,7 +12,7 @@ export default async function addElementToWorkflowVersionAction ({
     previousElementBranch,
     workflowVersionId,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const output = await addElementToWorkflowVersion({
         elementType,

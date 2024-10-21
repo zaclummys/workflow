@@ -5,7 +5,7 @@ import { getSessionToken } from '~/cookies';
 import validateSession from '~/core/application/validate-session';
 
 export async function POST (request) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const validateSessionOutput = await validateSession({
         sessionToken,

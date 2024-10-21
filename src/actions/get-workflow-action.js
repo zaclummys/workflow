@@ -4,7 +4,7 @@ import {
 import getWorkflow from "~/core/application/get-workflow";
 
 export default async function getWorkflowAction (workflowId) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return getWorkflow({
         workflowId,

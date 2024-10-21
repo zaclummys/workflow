@@ -9,7 +9,7 @@ export default async function saveWorkflowVersionAction ({
     workflowVersionId,
     workflowVersionChanges,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const { success, savedWorkflowVersionId } = await saveWorkflowVersion({
         sessionToken,

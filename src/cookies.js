@@ -2,12 +2,12 @@ import {
     cookies, 
 } from 'next/headers';
 
-import { redirect } from 'next/navigation'
-
 export const sessionTokenCookieName = 'session_token';
 
-export function getSessionToken () {
-    const sessionTokenCookie = cookies().get(sessionTokenCookieName);
+export async function getSessionToken () {
+    const currentCookies = await cookies();
+
+    const sessionTokenCookie = currentCookies.get(sessionTokenCookieName);
     
     if (!sessionTokenCookie || !sessionTokenCookie.value) {
         return null;
@@ -16,8 +16,8 @@ export function getSessionToken () {
     return sessionTokenCookie.value;
 }
 
-export function setSessionToken (sessionToken) {
-    cookies().set(sessionTokenCookieName, sessionToken, {
+export async function setSessionToken (sessionToken) {
+    await cookies().set(sessionTokenCookieName, sessionToken, {
         path: '/',
         httpOnly: true,
     });

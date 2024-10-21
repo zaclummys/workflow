@@ -6,7 +6,7 @@ import { getSessionToken } from "../cookies";
 import deactivateWorkflowVersion from '~/core/application/deactivate-workflow-version'
 
 export default async function deactivateWorkflowVersionAction (workflowVersionId) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const output = deactivateWorkflowVersion({
         sessionToken,

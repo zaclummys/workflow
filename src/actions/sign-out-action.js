@@ -9,7 +9,7 @@ import {
 } from '~/cookies';
 
 export default async function signOutAction () {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     if (sessionToken) {
         await signOut({

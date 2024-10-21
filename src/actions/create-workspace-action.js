@@ -9,7 +9,7 @@ export default async function createWorkspaceAction ({
     name,
     description,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return createWorkspace({
         name,

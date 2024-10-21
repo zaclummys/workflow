@@ -10,7 +10,7 @@ export default async function createWorkflowAction ({
     description,
     workspaceId,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return createWorkflow({
         name,

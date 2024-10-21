@@ -10,7 +10,7 @@ export default async function editWorkflowAction ({
     description,
     workflowId,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const output = editWorkflow({
         name,

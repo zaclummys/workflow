@@ -7,7 +7,7 @@ import {
 } from '~/cookies';
 
 export default async function getWorkspacesAction () {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return getWorkspaces({
         sessionToken,

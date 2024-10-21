@@ -8,7 +8,7 @@ export default async function executeWorkflowVersionAction ({
     workflowVersionId,
     inputValues,
 }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return executeWorkflowVersion({
         workflowVersionId,

@@ -6,7 +6,7 @@ import { getSessionToken } from '../cookies';
 import removeMemberFromWorkspace from '~/core/application/remove-member-from-workspace';
 
 export default async function removeMemberFromWorkspaceAction ({ userId, workspaceId }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const output = await removeMemberFromWorkspace({
         userId,

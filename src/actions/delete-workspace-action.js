@@ -7,7 +7,7 @@ import {
 import deleteWorkspace from '~/core/application/delete-workspace';
 
 export default async function deleteWorkspaceAction (workspaceId) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return deleteWorkspace({
         workspaceId,

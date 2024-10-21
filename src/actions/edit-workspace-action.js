@@ -6,7 +6,7 @@ import { getSessionToken } from "../cookies";
 import editWorkspace from '~/core/application/edit-workspace';
 
 export default async function editWorkspaceAction ({ id, name, description }) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const output = editWorkspace({
         id,

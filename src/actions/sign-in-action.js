@@ -17,7 +17,7 @@ export default async function signInAction ({ email, password }) {
     });
 
     if (success) {        
-        setSessionToken(sessionToken);
+        await setSessionToken(sessionToken);
     }
 
     return {

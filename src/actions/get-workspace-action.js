@@ -4,7 +4,7 @@ import {
 import getWorkspace from '~/core/application/get-workspace';
 
 export default async function getWorkspaceAction (workspaceId) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return getWorkspace({
         workspaceId,

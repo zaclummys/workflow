@@ -7,7 +7,7 @@ import {
 import deleteWorkflowVersion from '~/core/application/delete-workflow-version';
 
 export default async function deleteWorkflowVersionAction (workflowVersionId) {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     return deleteWorkflowVersion({
         workflowVersionId,

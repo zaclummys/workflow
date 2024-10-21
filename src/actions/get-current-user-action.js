@@ -6,7 +6,7 @@ import {
 } from '~/cookies';
 
 export default async function getCurrentUserAction () {
-    const sessionToken = getSessionToken();
+    const sessionToken = await getSessionToken();
 
     const { currentUser } = await getCurrentUser({
         sessionToken, 
