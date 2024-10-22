@@ -175,7 +175,98 @@ export class WorkflowVersion {
     }
 
     execute (inputValues) {
-        return [];
+        const executionVariables = this.variables.map(variable => {
+            if (variable.getMarkedAsInput()) {
+                const inputValue = inputValues.find(inputValue => inputValue.variableId === variable.getId());
+
+                if (!inputValue) {
+                    throw new Error(`Input value not provided for variable ${variable.getName()}`);
+                }
+
+                return {
+                    variableId: variable.getId(),
+                    value: inputValue.value ?? variable.getDefaultValue(),
+                }
+            } else {
+                return {
+                    variableId: variable.getId(),
+                    value: variable.getDefaultValue(),
+                };
+            }
+        });
+
+        const context = new WorkflowExecutionContext(executionVariables);
+
+        let currentElement = this.getStartElement();
+
+        while (true) {
+            const nextElementId = currentElement.execute(context);
+
+            if (!nextElementId) {
+                break;
+            }
+
+            currentElement = this.findElementById(nextElementId);
+        }
+    }
+}
+
+class WorkflowExecutionContext {
+    constructor ({ variables }) {
+        this.variables = variables;
+    }
+
+    findVariableById (variableId) {
+        const variable = this.variables.find(variable => variableId === variable.getId());
+
+        if (!variable) {
+            throw new Error(`Variable with ID ${variableId} not found.`);
+        }
+
+        return variable;
+    }
+}
+
+class WorkflowExecutionVariable {
+    constructor ({ variableId, value }) {
+        this.variableId = variableId;
+        this.value = value;
+    }
+
+    equalTo (value) {
+        return this.value === value;
+    }
+
+    differentThan (value) {
+        return this.value !== value;
+    }
+
+    greaterThan (value) {
+        return this.value > value;
+    }
+
+    lessThan (value) {
+        return this.value < value;
+    }
+
+    set (value) {
+        this.value = value;
+    }
+
+    add (value) {
+        this.value += value;
+    }
+
+    subtract (value) {
+        this.value -= value;
+    }
+
+    multiply (value) {
+        this.value *= value;
+    }
+
+    divide (value) {
+        this.value /= value;
     }
 }
 
@@ -305,6 +396,10 @@ export class WorkflowElement {
     getPositionY () {
         return this.positionY;
     }
+
+    execute (context) {
+        throw new Error('Not implemented.');
+    }
 }
 
 export class WorkflowStartElement extends WorkflowElement {
@@ -345,6 +440,10 @@ export class WorkflowStartElement extends WorkflowElement {
 
     setDefaultNextElementId (nextElementId) {
         this.nextElementId = nextElementId;
+    }
+
+    execute () {
+        return this.nextElementId;
     }
 }
 
@@ -430,16 +529,31 @@ export class WorkflowIfElement extends WorkflowElement {
         this.nextElementIdIfTrue = defaultNextElementId;
     }
 
-    edit ({
-        name,
-        description,
-        strategy,
-        conditions,
-    }) {
-        this.name = name;
-        this.description = description;
-        this.strategy = strategy;
-        this.conditions = conditions.map(condition => new WorkflowCondition(condition));
+    execute (context) {
+        switch (this.strategy) {
+            case 'all': {
+                const allConditionsTrue = this.conditions.every(condition => condition.evaluate(context));
+
+                if (allConditionsTrue) {
+                    return this.nextElementIdIfTrue;
+                } else {
+                    return this.nextElementIdIfFalse;
+                }
+            }
+
+            case 'any': {
+                const anyConditionTrue = this.conditions.some(condition => condition.evaluate(context));
+
+                if (anyConditionTrue) {
+                    return this.nextElementIdIfTrue;
+                } else {
+                    return this.nextElementIdIfFalse;
+                }
+            }
+
+            default:
+                throw new Error(`Unexpected strategy: ${this.strategy}`);
+        }
     }
 }
 
@@ -486,6 +600,27 @@ export class WorkflowCondition {
 
     getValue() {
         return this.value;
+    }
+
+    evaluate (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        switch (this.operator) {
+            case 'equal-to':
+                return variable.equalTo(this.value);
+
+            case 'different-than':
+                return variable.differentThan(this.value);
+
+            case 'greater-than':
+                return variable.greaterThan(this.value);
+
+            case 'less-than':
+                return variable.lessThan(this.value);
+
+            default:
+                throw new Error(`Unexpected operator: ${this.operator}`);
+        }
     }
 }
 
@@ -551,14 +686,12 @@ export class WorkflowAssignElement extends WorkflowElement {
         this.nextElementId = defaultNextElementId;
     }
 
-    edit ({
-        name,
-        description,
-        assignments,
-    }) {
-        this.name = name;
-        this.description = description;
-        this.assignments = assignments.map(assignments => new WorkflowAssignment(assignments));
+    execute (context) {
+        for (const assignment of this.assignments) {
+            assignment.assign(context);
+        }
+
+        return this.nextElementId;
     }
 }
 
@@ -605,5 +738,34 @@ export class WorkflowAssignment {
 
     getValue() {
         return this.value;
+    }
+
+    assign (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        switch (this.operator) {
+            case 'set':
+                variable.set(this.value);
+            break;
+
+            case 'add':
+                variable.add(this.value);
+            break;
+
+            case 'subtract':
+                variable.subtract(this.value);
+            break;
+
+            case 'multiply':
+                variable.multiply(this.value);
+            break;
+
+            case 'divide':
+                variable.divide(this.value);
+            break;
+
+            default:
+                throw new Error(`Unexpected operator: ${this.operator}`);
+        }
     }
 }
