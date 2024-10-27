@@ -10,7 +10,6 @@ function extractUriFromEnv () {
         return process.env.MONGODB_URI;
     }
 }
-
 const uri = extractUriFromEnv();
 
 if (!uri) {

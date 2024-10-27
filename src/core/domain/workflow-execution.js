@@ -94,36 +94,97 @@ export class WorkflowExecution {
         return this.executedById;
     }
 
-    setStatus (status) {
-        this.status = status;
+    start () {
+        this.status = 'running';
+        this.startedAt = new Date();
     }
 
-    setStartedAt (startedAt) {
-        this.startedAt = startedAt;
-    }
-
-    setFinishedAt (finishedAt) {
-        this.finishedAt = finishedAt;
+    finish () {
+        this.status = 'finished';
+        this.finishedAt = new Date();
     }
 }
 
-export class WorkflowExecutionInputValue {
-    static create ({
-        variableId,
-        value,
-    }) {
-        return new WorkflowExecutionInputValue({
-            variableId,
-            value,
-        });
+export class WorkflowExecutionContext {
+    constructor (variables) {
+        this.variables = variables;
     }
 
+    findVariableById (variableId) {
+        const variable = this.variables.find(variable => variableId === variable.getVariableId());
+
+        if (!variable) {
+            throw new Error(`Variable with ID ${variableId} not found.`);
+        }
+
+        return variable;
+    }
+
+    fillVariables (inputs) {
+        this.variables
+            .filter(variable => variable.isMarkedAsInput())
+            .forEach(variable => {
+                console.log(variable.constructor.name);
+                const input = inputs.find(input => input.variableId === variable.getVariableId());
+
+                if (!input) {
+                    throw new Error(`Input for variable ${variable.variableId} not found.`);
+                }
+
+                variable.set(input.value);
+            });
+    }
+
+    extractVariables () {
+        return this.variables
+            .filter(variable => variable.isMarkedAsOutput())
+            .map(variable => {
+                return new WorkflowExecutionOutput({
+                    variableId: variable.getVariableId(),
+                    value: variable.getValue(),
+                });
+            });
+    }
+}
+
+export class WorkflowExecutionInput {
     constructor ({
         variableId,
         value,
     }) {
         if (!variableId) {
             throw new Error('Variable ID is required');
+        }
+
+        if (value == null) {
+            throw new Error('Value cannot be null');
+        }
+
+
+        this.variableId = variableId;
+        this.value = value;
+    }
+
+    getVariableId () {
+        return this.variableId;
+    }
+
+    getValue () {
+        return this.value;
+    }
+}
+
+export class WorkflowExecutionOutput {
+    constructor ({
+        variableId,
+        value,
+    }) {
+        if (!variableId) {
+            throw new Error('Variable ID is required');
+        }
+
+        if (value == null) {
+            throw new Error('Value cannot be null');
         }
 
         this.variableId = variableId;
@@ -139,28 +200,34 @@ export class WorkflowExecutionInputValue {
     }
 }
 
-export class WorkflowExecutionOutputValue {
-    static create ({
-        variableId,
-        value,
-    }) {
-        return new WorkflowExecutionOutputValue({
-            variableId,
-            value,
-        });
-    }
-
+export class WorkflowExecutionVariable {
     constructor ({
-        variableId,
+        variableId, 
+        // markedAsInput,
+        // markedAsOutput,
         value,
-    }) {
+     }) {
         if (!variableId) {
             throw new Error('Variable ID is required');
         }
 
+        if (value == null) {
+            throw new Error('Value cannot be null');
+        }
+
         this.variableId = variableId;
+        // this.markedAsInput = markedAsInput;
+        // this.markedAsOutput = markedAsOutput;
         this.value = value;
     }
+
+    // isMarkedAsInput () {
+    //     return this.markedAsInput;
+    // }
+
+    // isMarkedAsOutput () {
+    //     return this.markedAsOutput;
+    // }
 
     getVariableId () {
         return this.variableId;
@@ -168,5 +235,41 @@ export class WorkflowExecutionOutputValue {
 
     getValue () {
         return this.value;
+    }
+
+    equalTo (value) {
+        return this.value === value;
+    }
+
+    differentThan (value) {
+        return this.value !== value;
+    }
+
+    greaterThan (value) {
+        return this.value > value;
+    }
+
+    lessThan (value) {
+        return this.value < value;
+    }
+
+    set (value) {
+        this.value = value;
+    }
+
+    add (value) {
+        this.value += value;
+    }
+
+    subtract (value) {
+        this.value -= value;
+    }
+
+    multiply (value) {
+        this.value *= value;
+    }
+
+    divide (value) {
+        this.value /= value;
     }
 }

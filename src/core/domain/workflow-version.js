@@ -1,12 +1,26 @@
 import { randomUUID } from 'crypto';
 
+import {
+    WorkflowExecutionContext,
+    WorkflowExecutionOutput,
+    WorkflowExecutionVariable,
+} from './workflow-execution';
+
+import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
+import { WorkflowAssignElement } from './workflow-version/workflow-assign-element';
+import { WorkflowIfElement } from '~/core/domain/workflow-version/workflow-if-element';
+
 export class WorkflowVersion {
     static create({
         number,
         workflowId,
         createdById,
     }) {
-        const startElement = WorkflowStartElement.create();
+        const startElement = new WorkflowStartElement({
+            id: randomUUID(),
+            positionX: 0.0,
+            positionY: 0.0,
+        });
 
         return new WorkflowVersion({
             number,
@@ -174,32 +188,80 @@ export class WorkflowVersion {
         return this.variables.find(variable => variableId === variable.getId());
     }
 
-    execute (inputValues) {
-        const executionVariables = this.variables.map(variable => {
-            if (variable.getMarkedAsInput()) {
-                const inputValue = inputValues.find(inputValue => inputValue.variableId === variable.getId());
+    fillExecutionVariables (inputs) {
+        inputs.forEach(input => {
+            if (input.variableId == null) {
+                throw new Error('Input Variable ID cannot be null.');
+            }
 
-                if (!inputValue) {
-                    throw new Error(`Input value not provided for variable ${variable.getName()}`);
-                }
+            if (input.value == null) {
+                throw new Error(`Input value cannot be null.`);
+            }
 
-                return {
-                    variableId: variable.getId(),
-                    value: inputValue.value ?? variable.getDefaultValue(),
-                }
-            } else {
-                return {
-                    variableId: variable.getId(),
-                    value: variable.getDefaultValue(),
-                };
+            const variable = this.variables.find(variable => input.variableId === variable.getId());
+
+            if (!variable) {
+                throw new Error(`Variable '${input.variableId}' does not exist.`);
+            }
+
+            if (!variable.getMarkedAsInput()) {
+                throw new Error(`Variable '${variable.getName()}' is not marked as input.`);
+            }
+
+            const inputType = typeof input.value;
+            const variableType = variable.getType();
+
+            if (inputType !== variableType) {
+                throw new Error(`Input value for variable '${variable.getName()}' must be a ${variable.getType()}, got ${inputType}.`);
             }
         });
+
+        return this.variables.map(variable => {
+            if (!variable.getMarkedAsInput()) {
+                return new WorkflowExecutionVariable({
+                    variableId: variable.getId(),
+                    value: variable.getDefaultValue(),
+                });
+            }
+
+            const input = inputs.find(input => input.variableId === variable.getId());
+                
+            if (input) {
+                return new WorkflowExecutionVariable({
+                    variableId: input.variableId,
+                    value: input.value,
+                });
+            } 
+
+            if (!variable.getHasDefaultValue()) {
+                throw new Error(`Variable '${variable.name}' does not have a default value and an input was not provided.`);
+            }
+
+            return new WorkflowExecutionVariable({
+                variableId: variable.getId(),
+                value: variable.getDefaultValue(),
+            });
+        });
+    }
+
+    async execute ({
+        inputs,
+    }) {
+        if (this.status !== 'active') {
+            throw new Error('Cannot execute a workflow version that is not active');
+        }
+
+        const executionVariables = this.fillExecutionVariables(inputs);
 
         const context = new WorkflowExecutionContext(executionVariables);
 
         let currentElement = this.getStartElement();
 
+        const elementIdHistory = []; 
+
         while (true) {
+            elementIdHistory.push(currentElement.getId());
+
             const nextElementId = currentElement.execute(context);
 
             if (!nextElementId) {
@@ -207,66 +269,27 @@ export class WorkflowVersion {
             }
 
             currentElement = this.findElementById(nextElementId);
-        }
-    }
-}
 
-class WorkflowExecutionContext {
-    constructor ({ variables }) {
-        this.variables = variables;
-    }
-
-    findVariableById (variableId) {
-        const variable = this.variables.find(variable => variableId === variable.getId());
-
-        if (!variable) {
-            throw new Error(`Variable with ID ${variableId} not found.`);
+            if (!currentElement) {
+                throw new Error(`Element with ID ${nextElementId} not found.`);
+            }
         }
 
-        return variable;
-    }
-}
+        const outputExecutionVariables = this.variables
+            .filter(variable => variable.getMarkedAsOutput())
+            .map(variable => {
+                const executionVariable = context.findVariableById(variable.getId());
 
-class WorkflowExecutionVariable {
-    constructor ({ variableId, value }) {
-        this.variableId = variableId;
-        this.value = value;
-    }
+                return new WorkflowExecutionOutput({
+                    variableId: executionVariable.getVariableId(),
+                    value: executionVariable.getValue(),
+                });
+            });
 
-    equalTo (value) {
-        return this.value === value;
-    }
-
-    differentThan (value) {
-        return this.value !== value;
-    }
-
-    greaterThan (value) {
-        return this.value > value;
-    }
-
-    lessThan (value) {
-        return this.value < value;
-    }
-
-    set (value) {
-        this.value = value;
-    }
-
-    add (value) {
-        this.value += value;
-    }
-
-    subtract (value) {
-        this.value -= value;
-    }
-
-    multiply (value) {
-        this.value *= value;
-    }
-
-    divide (value) {
-        this.value /= value;
+        return {
+            history: elementIdHistory,
+            outputs: outputExecutionVariables,
+        };
     }
 }
 
@@ -303,6 +326,10 @@ export class WorkflowVariable {
             throw new Error('Has default value option must be a boolean, received: ' + typeof hasDefaultValue);
         }
 
+        if (defaultValue === undefined) {
+            throw new Error('Default value cannot be undefined.');
+        }
+
         if (!hasDefaultValue && defaultValue != null) {
             throw new Error('Default value is not allowed.');
         }
@@ -317,6 +344,10 @@ export class WorkflowVariable {
 
         if (typeof markedAsOutput !== 'boolean') {
             throw new Error('Marked as output option must be a boolean.');
+        }
+
+        if (!markedAsInput && !hasDefaultValue) {
+            throw new Error('If a variable is not marked as input, it must have a default value.');
         }
 
         this.id = id;
@@ -362,410 +393,3 @@ export class WorkflowVariable {
     }
 }
 
-export class WorkflowElement {
-    constructor ({
-        id,
-        positionX,
-        positionY,
-    }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
-        if (positionX == null) {
-            throw new Error('Position X cannot be null');
-        }
-
-        if (positionY == null) {
-            throw new Error('Position Y cannot be null');
-        }
-
-        this.id = id;
-        this.positionX = positionX;
-        this.positionY = positionY;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getPositionX () {
-        return this.positionX;
-    }
-
-    getPositionY () {
-        return this.positionY;
-    }
-
-    execute (context) {
-        throw new Error('Not implemented.');
-    }
-}
-
-export class WorkflowStartElement extends WorkflowElement {
-    static create () {
-        return new WorkflowStartElement({
-            id: randomUUID(),
-            positionX: 0.0,
-            positionY: 0.0,
-        });
-    }
-    
-    constructor ({
-        id,
-        positionX,
-        positionY,
-        nextElementId,
-    }) {
-        super({ id, positionX, positionY });
-
-        this.nextElementId = nextElementId;
-    }
-
-    getType() {
-        return 'start';
-    }
-
-    getName() {
-        return 'Start';
-    }
-
-    getNextElementId() {
-        return this.nextElementId;
-    }
-
-    setNextElementId (nextElementId) {
-        this.nextElementId = nextElementId;
-    }
-
-    setDefaultNextElementId (nextElementId) {
-        this.nextElementId = nextElementId;
-    }
-
-    execute () {
-        return this.nextElementId;
-    }
-}
-
-export class WorkflowIfElement extends WorkflowElement {
-    constructor({
-        id,
-        name,
-        description,
-        strategy,
-        conditions,
-        nextElementIdIfTrue,
-        nextElementIdIfFalse,
-        positionX,
-        positionY,
-    }) {
-        super({ id, name, positionX, positionY });
-
-        if (!name) {
-            throw new Error('Name is required');
-        }
-
-        if (description == null) {
-            throw new Error('Description cannot be null');
-        }
-
-        if (!strategy) {
-            throw new Error('Strategy is required');
-        }
-
-        if (!conditions) {
-            throw new Error('Conditions are required');
-        }
-
-        this.name = name;
-        this.description = description;
-        this.strategy = strategy;
-        this.conditions = conditions;
-        this.nextElementIdIfTrue = nextElementIdIfTrue;
-        this.nextElementIdIfFalse = nextElementIdIfFalse;
-    }
-
-    getType () {
-        return 'if';
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getName () {
-        return this.name;
-    }
-
-    getDescription() {
-        return this.description;
-    }
-
-    getStrategy() {
-        return this.strategy;
-    }
-
-    getConditions() {
-        return this.conditions;
-    }
-
-    getNextElementIdIfTrue() {
-        return this.nextElementIdIfTrue;
-    }
-
-    getNextElementIdIfFalse() {
-        return this.nextElementIdIfFalse;
-    }
-
-    setNextElementIdIfTrue (nextElementIdIfTrue) {
-        this.nextElementIdIfTrue = nextElementIdIfTrue;
-    }
-
-    setNextElementIdIfFalse (nextElementIdIfFalse) {
-        this.nextElementIdIfFalse = nextElementIdIfFalse;
-    }
-
-    setDefaultNextElementId (defaultNextElementId) {
-        this.nextElementIdIfTrue = defaultNextElementId;
-    }
-
-    execute (context) {
-        switch (this.strategy) {
-            case 'all': {
-                const allConditionsTrue = this.conditions.every(condition => condition.evaluate(context));
-
-                if (allConditionsTrue) {
-                    return this.nextElementIdIfTrue;
-                } else {
-                    return this.nextElementIdIfFalse;
-                }
-            }
-
-            case 'any': {
-                const anyConditionTrue = this.conditions.some(condition => condition.evaluate(context));
-
-                if (anyConditionTrue) {
-                    return this.nextElementIdIfTrue;
-                } else {
-                    return this.nextElementIdIfFalse;
-                }
-            }
-
-            default:
-                throw new Error(`Unexpected strategy: ${this.strategy}`);
-        }
-    }
-}
-
-export class WorkflowCondition {
-    constructor({
-        id,
-        variableId,
-        operator,
-        value,
-    }) {
-        if (!id) {
-            throw new Error('ID is required.')
-        }
-
-        if (!variableId) {
-            throw new Error('Variable ID is required.');
-        }
-
-        if (!operator) {
-            throw new Error('Operator is required.');
-        }
-
-        if (value === undefined) {
-            throw new Error('Value cannot be undefined.');
-        }
-
-        this.id = id;
-        this.variableId = variableId;
-        this.operator = operator;
-        this.value = value;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getVariableId() {
-        return this.variableId;
-    }
-
-    getOperator() {
-        return this.operator;
-    }
-
-    getValue() {
-        return this.value;
-    }
-
-    evaluate (context) {
-        const variable = context.findVariableById(this.variableId);
-
-        switch (this.operator) {
-            case 'equal-to':
-                return variable.equalTo(this.value);
-
-            case 'different-than':
-                return variable.differentThan(this.value);
-
-            case 'greater-than':
-                return variable.greaterThan(this.value);
-
-            case 'less-than':
-                return variable.lessThan(this.value);
-
-            default:
-                throw new Error(`Unexpected operator: ${this.operator}`);
-        }
-    }
-}
-
-export class WorkflowAssignElement extends WorkflowElement {
-    constructor({
-        id,
-        positionX,
-        positionY,
-        name,
-        description,
-        assignments,
-        nextElementId,
-    }) {
-        super({ id, positionX, positionY });
-
-        if (!name) {
-            throw new Error('Name is required.');
-        }
-
-        if (description == null) {
-            throw new Error('Description cannot be null.');
-        }
-
-        if (!assignments) {
-            throw new Error('Assignments are required.');
-        }
-
-        this.name = name;
-        this.description = description;
-        this.assignments = assignments;
-        this.nextElementId = nextElementId;
-    }
-
-    getType () {
-        return 'assign';
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getName() {
-        return this.name;
-    }
-
-    getDescription() {
-        return this.description;
-    }
-
-    getAssignments() {
-        return this.assignments;
-    }
-
-    getNextElementId () {
-        return this.nextElementId;
-    }
-
-    setNextElementId (nextElementId) {
-        this.nextElementId = nextElementId;
-    }
-
-    setDefaultNextElementId (defaultNextElementId) {
-        this.nextElementId = defaultNextElementId;
-    }
-
-    execute (context) {
-        for (const assignment of this.assignments) {
-            assignment.assign(context);
-        }
-
-        return this.nextElementId;
-    }
-}
-
-export class WorkflowAssignment {
-    constructor({
-        id,
-        variableId,
-        operator,
-        value,
-    }) {
-        if (!id) {
-            throw new Error('ID is required.');
-        }
-
-        if (!variableId) {
-            throw new Error('Variable ID is required.');
-        }
-
-        if (!operator) {
-            throw new Error('Operator is required.');
-        }
-
-        if (value === undefined) {
-            throw new Error('Value cannot be undefined.');
-        }
-
-        this.id = id;
-        this.variableId = variableId;
-        this.operator = operator;
-        this.value = value;
-    }
-
-    getId() {
-        return this.id;
-    }
-
-    getVariableId() {
-        return this.variableId;
-    }
-
-    getOperator() {
-        return this.operator;
-    }
-
-    getValue() {
-        return this.value;
-    }
-
-    assign (context) {
-        const variable = context.findVariableById(this.variableId);
-
-        switch (this.operator) {
-            case 'set':
-                variable.set(this.value);
-            break;
-
-            case 'add':
-                variable.add(this.value);
-            break;
-
-            case 'subtract':
-                variable.subtract(this.value);
-            break;
-
-            case 'multiply':
-                variable.multiply(this.value);
-            break;
-
-            case 'divide':
-                variable.divide(this.value);
-            break;
-
-            default:
-                throw new Error(`Unexpected operator: ${this.operator}`);
-        }
-    }
-}

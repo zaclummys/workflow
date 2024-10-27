@@ -1,12 +1,12 @@
 import {
-    WorkflowStartElement,
     WorkflowVariable,
     WorkflowAssignElement,
-    WorkflowIfElement,
     WorkflowVersion,
     WorkflowAssignment,
     WorkflowCondition,
 } from '~/core/domain/workflow-version';
+import { WorkflowIfElement } from '~/core/domain/workflow-version/workflow-if-element';
+import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
 
 import database from './database';
 

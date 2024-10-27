@@ -4,9 +4,9 @@ import {
 } from '~/core/data/mongodb/workflow-version';
 
 import {
-    WorkflowIfElement,
     WorkflowAssignElement,
 } from '~/core/domain/workflow-version';
+import { WorkflowIfElement } from '../domain/workflow-version/workflow-if-element';
 
 export default async function addElementToWorkflowVersion ({
     elementType,
