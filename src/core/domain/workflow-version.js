@@ -276,6 +276,10 @@ export class WorkflowVersion {
     async execute ({
         inputs,
     }) {
+        if (inputs == null) {
+            throw new Error('Inputs cannot be null.');
+        }
+
         if (this.status !== 'active') {
             throw new Error('Cannot execute a workflow version that is not active');
         }

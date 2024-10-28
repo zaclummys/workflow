@@ -17,28 +17,39 @@ const assignmentTypes = [
     {
         name: 'set',
         label: 'Set',
+        supportedVariableTypes: ['string', 'number', 'boolean'],
     },
 
     {
         name: 'add',
         label: 'Add',
+        supportedVariableTypes: ['number'],
     },
 
     {
         name: 'subtract',
         label: 'Subtract',
+        supportedVariableTypes: ['number'],
     },
 
     {
         name: 'multiply',
         label: 'Multiply',
+        supportedVariableTypes: ['number'],
     },
 
     {
         name: 'divide',
         label: 'Divide',
+        supportedVariableTypes: ['number'],
     },
 ];
+
+const findAllSupportedAssignmentTypes = (variableType) => {
+    return assignmentTypes.filter(assignmentType => {
+        return assignmentType.supportedVariableTypes.includes(variableType);
+    });
+};
 
 export default function AssignSidebar ({
     assignElementId,
@@ -59,6 +70,10 @@ export default function AssignSidebar ({
         assignments: assignElement.assignments,
     });
 
+    const findVariableById = variableId => {
+        return workflowVersion.variables.find(variable => variable.id === variableId);
+    };
+
     const handleNameChange = event => {
         setLocalAssignElement(localAssignElement => ({
             ...localAssignElement,
@@ -78,9 +93,13 @@ export default function AssignSidebar ({
             ...localAssignElement,
             assignments: localAssignElement.assignments.map(assignment => {
                 if (assignment.id === assignmentId) {
+                    const variableId = event.target.value;
+
                     return {
                         ...assignment,
-                        variableId: event.target.value,
+                        variableId,
+                        type: 'set',
+                        value: '',
                     }
                 } else {
                     return assignment;
@@ -104,7 +123,6 @@ export default function AssignSidebar ({
             }),
         }));
     };
-
 
     const handleAssignmentValueChange = (event, assignmentId) => {
         setLocalAssignElement(localAssignElement => ({
@@ -134,7 +152,7 @@ export default function AssignSidebar ({
     const handleAddAssignmentButtonClick = event => {
         const defaultAssignment = {
             variableId: workflowVersion.variables[0].id,
-            operator: 'equal',
+            type: 'set',
             value: '',
         };
 
@@ -195,58 +213,15 @@ export default function AssignSidebar ({
                         </span>
 
                         {localAssignElement.assignments.map(assignment => (
-                            <Row key={assignment.id}>
-                                <Field>
-                                    <Label>Variable</Label>
-
-                                    <Select
-                                        value={assignment.variableId}
-                                        onChange={event => handleAssignmentVariableChange(event, assignment.id)}
-                                    >
-                                        {workflowVersion.variables.map(variable => (
-                                            <Option
-                                                key={variable.id}
-                                                value={variable.id}
-                                            >
-                                                {variable.name}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Field>
-
-                                <Field>
-                                    <Label>Type</Label>
-
-                                    <Select
-                                        value={assignment.type}
-                                        onChange={event => handleAssignmentTypeChange(event, assignment.id)}
-                                    >
-                                        {assignmentTypes.map(assignmentType => (
-                                            <Option
-                                                key={assignmentType.name}
-                                                value={assignmentType.name}
-                                            >
-                                                {assignmentType.label}
-                                            </Option>
-                                        ))}
-                                    </Select>
-                                </Field>
-
-
-                                <Field>
-                                    <Label>Value</Label>
-
-                                    <Input
-                                        value={assignment.value}
-                                        onChange={event => handleAssignmentValueChange(event, assignment.id)}
-                                    />
-                                </Field>
-
-                                <DestructiveButton
-                                    onClick={event => handleRemoveAssignmentButtonClick(event, assignment.id)}>
-                                    Remove
-                                </DestructiveButton>
-                            </Row>
+                            <Assignment
+                                key={assignment.id}
+                                assignment={assignment}
+                                workflowVersion={workflowVersion}
+                                onVariableChange={event => handleAssignmentVariableChange(event, assignment.id)}
+                                onTypeChange={event => handleAssignmentTypeChange(event, assignment.id)}
+                                onValueChange={event => handleAssignmentValueChange(event, assignment.id)}
+                                onRemoveButtonClick={event => handleRemoveAssignmentButtonClick(event, assignment.id)}
+                            />
                         ))}
 
                         <OutlineButton
@@ -274,4 +249,75 @@ export default function AssignSidebar ({
             </Sidebar>
         </>
     );
+}
+
+function Assignment ({
+    assignment,
+    workflowVersion,
+
+    onVariableChange,
+    onTypeChange,
+    onValueChange,
+    onRemoveButtonClick,
+}) {
+    const variable = workflowVersion.variables.find(variable => variable.id === assignment.variableId);
+
+    const supportedAssignmentTypes = assignmentTypes.filter(assignmentType => {
+        return assignmentType.supportedVariableTypes.includes(variable.type);
+    });
+
+    console.log(assignment.type);
+
+    return (
+        <Row>
+            <Field>
+                <Label>Variable</Label>
+
+                <Select
+                    value={assignment.variableId}
+                    onChange={onVariableChange}>
+                    {workflowVersion.variables.map(variable => (
+                        <Option
+                            key={variable.id}
+                            value={variable.id}>
+                            {variable.name}
+                        </Option>
+                    ))}
+                </Select>
+            </Field>
+
+            <Field>
+                <Label>Type</Label>
+
+                <Select
+                    required
+                    value={assignment.type}
+                    onChange={onTypeChange}
+                >
+                    {supportedAssignmentTypes.map(assignmentType => (
+                        <Option
+                            key={assignmentType.name}
+                            value={assignmentType.name}>
+                            {assignmentType.label}
+                        </Option>
+                    ))}
+                </Select>
+            </Field>
+
+
+            <Field>
+                <Label>Value</Label>
+
+                <Input
+                    value={assignment.value}
+                    onChange={onValueChange}
+                />
+            </Field>
+
+            <DestructiveButton
+                onClick={onRemoveButtonClick}>
+                Remove
+            </DestructiveButton>
+        </Row>
+    )
 }

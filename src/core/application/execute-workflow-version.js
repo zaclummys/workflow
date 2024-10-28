@@ -1,17 +1,9 @@
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkflowVersionById } from '~/core/data/mongodb/workflow-version';
 
-import {
-    findWorkflowExecutionById,
-    insertWorkflowExecution,
-    updateWorkflowExecution,
-} from '~/core/data/mongodb/workflow-execution';
-
-import { WorkflowExecution } from '~/core/domain/workflow-execution';
-
 export default async function executeWorkflowVersion ({
+    inputs,
     workflowVersionId,
-    inputValues,
     sessionToken,
 }) {
     const session = await findSessionByToken(sessionToken);
@@ -30,37 +22,7 @@ export default async function executeWorkflowVersion ({
         };
     }
 
-    const workflowExecution = WorkflowExecution.create({
-        inputValues,
-        workflowVersionId,
-        executedById: session.getUserId(),
-    });
+    const execution = await workflowVersion.execute({ inputs });
 
-    await insertWorkflowExecution(workflowExecution);
-
-    try {
-        workflowExecution.setStatus('running');
-        workflowExecution.setStartedAt(new Date());
-    
-        await updateWorkflowExecution(workflowExecution);
-
-        workflowVersion.execute();
-    
-        workflowExecution.setStatus('success');
-        workflowExecution.setFinishedAt(new Date());
-    
-        await updateWorkflowExecution(workflowExecution);
-    } catch (error) {
-        console.error(error);
-        
-        workflowExecution.setStatus('error');
-        workflowExecution.setFinishedAt(new Date());
-    
-        await updateWorkflowExecution(workflowExecution);
-    }
-
-    return {
-        success: true,
-        workflowExecutionId: workflowExecution.getId(),
-    };
+    console.log(execution);
 }

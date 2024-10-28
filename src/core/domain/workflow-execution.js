@@ -99,8 +99,13 @@ export class WorkflowExecution {
         this.startedAt = new Date();
     }
 
-    finish () {
-        this.status = 'finished';
+    finishWithSuccess () {
+        this.status = 'success';
+        this.finishedAt = new Date();
+    }
+
+    finishWithError () {
+        this.status = 'error';
         this.finishedAt = new Date();
     }
 }

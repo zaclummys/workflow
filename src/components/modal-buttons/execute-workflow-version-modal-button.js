@@ -46,11 +46,11 @@ export default function ExecuteWorkflowVersionModalButton({
 
         try {
             const { success, workflowExecutionId } = await executeWorkflowVersionAction({
+                inputs: [],
                 workflowVersionId: workflowVersion.id,
-                inputValues: [],
             });
 
-            if (success) {
+            if (success && workflowExecutionId) {
                 navigateToWorkflowExecution(workflowExecutionId);
             } else {
                 setError(defaultError);
