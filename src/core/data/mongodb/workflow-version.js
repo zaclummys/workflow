@@ -10,7 +10,11 @@ import {
 
 import {
     WorkflowAssignElement,
-    WorkflowAssignment,
+    WorkflowSetAssignment,
+    WorkflowAddAssignment,
+    WorkflowSubtractAssignment,
+    WorkflowMultiplyAssignment,
+    WorkflowDivideAssignment,
 } from '~/core/domain/workflow-version/workflow-assign-element';
 
 import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
@@ -186,7 +190,7 @@ export function fromWorkflowAssignment (workflowAssignment) {
     return {
         id: workflowAssignment.getId(),
         variableId: workflowAssignment.getVariableId(),
-        operator: workflowAssignment.getOperator(),
+        type: workflowAssignment.getType(),
         value: workflowAssignment.getValue(),
     };
 }
@@ -240,7 +244,25 @@ export function toWorkflowElement (workflowElementData) {
 }
 
 export function toWorkflowAssignment (workflowAssignmentData) {
-    return new WorkflowAssignment(workflowAssignmentData);
+    switch (workflowAssignmentData.type) {
+        case 'set':
+            return new WorkflowSetAssignment(workflowAssignmentData);
+
+        case 'add':
+            return new WorkflowAddAssignment(workflowAssignmentData);
+
+        case 'subtract':
+            return new WorkflowSubtractAssignment(workflowAssignmentData);
+
+        case 'multiply':
+            return new WorkflowMultiplyAssignment(workflowAssignmentData);
+
+        case 'divide':
+            return new WorkflowDivideAssignment(workflowAssignmentData);
+
+        default:
+            throw new Error(`Unknown assignment type: ${workflowAssignmentData.type}`);
+    }
 }
 
 export function toWorkflowCondition (workflowConditionData) {

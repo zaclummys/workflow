@@ -10,7 +10,7 @@ import {
 
 import {
     WorkflowAssignElement,
-    WorkflowAssignment,
+    WorkflowSetAssignment,
 } from '~/core/domain/workflow-version/workflow-assign-element';
 
 import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
@@ -516,12 +516,10 @@ describe('Workflow Version', () => {
                                     positionX: 100,
                                     positionY: 0,
                                     assignments: [
-                                        new WorkflowAssignment({
+                                        new WorkflowSetAssignment({
                                             id: 'assign-1-1',
                                             variableId: 'variable',
-                                            operator: 'set',
                                             value: 'xyz',
-                                            nextElementId: null,
                                         })
                                     ],
                                     nextElementId: null,

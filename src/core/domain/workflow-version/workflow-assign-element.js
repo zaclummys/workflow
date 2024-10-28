@@ -75,7 +75,6 @@ export class WorkflowAssignment {
     constructor({
         id,
         variableId,
-        operator,
         value,
     }) {
         if (!id) {
@@ -86,17 +85,12 @@ export class WorkflowAssignment {
             throw new Error('Variable ID is required.');
         }
 
-        if (!operator) {
-            throw new Error('Operator is required.');
-        }
-
         if (value === undefined) {
             throw new Error('Value cannot be undefined.');
         }
 
         this.id = id;
         this.variableId = variableId;
-        this.operator = operator;
         this.value = value;
     }
 
@@ -108,40 +102,75 @@ export class WorkflowAssignment {
         return this.variableId;
     }
 
-    getOperator() {
-        return this.operator;
-    }
-
     getValue() {
         return this.value;
+    }
+
+    getType () {
+        throw new Error(`Not implemented for ${this.constructor.name}.`);
+    }
+
+    assign (context) {
+        throw new Error(`Not implemented for ${this.constructor.name}.`);
+    }
+}
+
+export class WorkflowSetAssignment extends WorkflowAssignment {
+    getType () {
+        return 'set';
     }
 
     assign (context) {
         const variable = context.findVariableById(this.variableId);
 
-        switch (this.operator) {
-            case 'set':
-                variable.set(this.value);
-            break;
+        variable.set(this.value);
+    }
+} 
 
-            case 'add':
-                variable.add(this.value);
-            break;
+export class WorkflowAddAssignment extends WorkflowAssignment {
+    getType () {
+        return 'add';
+    }
 
-            case 'subtract':
-                variable.subtract(this.value);
-            break;
+    assign (context) {
+        const variable = context.findVariableById(this.variableId);
 
-            case 'multiply':
-                variable.multiply(this.value);
-            break;
+        variable.add(this.value);
+    }
+}
 
-            case 'divide':
-                variable.divide(this.value);
-            break;
+export class WorkflowSubtractAssignment extends WorkflowAssignment {
+    getType () {
+        return 'subtract';
+    }
 
-            default:
-                throw new Error(`Unexpected operator: ${this.operator}`);
-        }
+    assign (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        variable.subtract(this.value);
+    }
+}
+
+export class WorkflowMultiplyAssignment extends WorkflowAssignment {
+    getType () {
+        return 'multiply';
+    }
+
+    assign (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        variable.multiply(this.value);
+    }
+}
+
+export class WorkflowDivideAssignment extends WorkflowAssignment {
+    getType () {
+        return 'divide';
+    }
+    
+    assign (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        variable.divide(this.value);
     }
 }

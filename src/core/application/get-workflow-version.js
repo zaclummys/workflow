@@ -77,7 +77,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                                     .map(assignment => ({
                                         id: assignment.getId(),
                                         variableId: assignment.getVariableId(),
-                                        operator: assignment.getOperator(),
+                                        type: assignment.getType(),
                                         value: assignment.getValue(),
                                     }))
                             };

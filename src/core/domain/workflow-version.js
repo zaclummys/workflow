@@ -7,7 +7,16 @@ import {
 } from './workflow-execution';
 
 import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
-import { WorkflowAssignElement } from './workflow-version/workflow-assign-element';
+
+import {
+    WorkflowAssignElement,
+    WorkflowSetAssignment,
+    WorkflowAddAssignment,
+    WorkflowSubtractAssignment,
+    WorkflowMultiplyAssignment,
+    WorkflowDivideAssignment,
+} from './workflow-version/workflow-assign-element';
+
 import { WorkflowIfElement } from '~/core/domain/workflow-version/workflow-if-element';
 
 export class WorkflowVersion {
@@ -138,7 +147,27 @@ export class WorkflowVersion {
                 case 'assign':
                     return new WorkflowAssignElement({
                         ...elementData,
-                        assignments: elementData.assignments.map(assignmentData => new WorkflowAssignment(assignmentData)),
+                        assignments: elementData.assignments.map(assignmentData => {
+                            switch (assignmentData.type) {
+                                case 'set':
+                                    return new WorkflowSetAssignment(assignmentData);
+
+                                case 'add':
+                                    return new WorkflowAddAssignment(assignmentData);
+
+                                case 'subtract':
+                                    return new WorkflowSubtractAssignment(assignmentData);
+
+                                case 'multiply':
+                                    return new WorkflowMultiplyAssignment(assignmentData);
+
+                                case 'divide':
+                                    return new WorkflowDivideAssignment(assignmentData);
+
+                                default:
+                                    throw new Error(`Unexpected assignment type: ${assignmentData.type}`);
+                            }
+                        }),
                     });
 
                 case 'if':

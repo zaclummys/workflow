@@ -13,6 +13,33 @@ import {
 import { DestructiveButton, OutlineButton, PrimaryButton } from '~/components/button';
 import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/components/form';
 
+const assignmentTypes = [
+    {
+        name: 'set',
+        label: 'Set',
+    },
+
+    {
+        name: 'add',
+        label: 'Add',
+    },
+
+    {
+        name: 'subtract',
+        label: 'Subtract',
+    },
+
+    {
+        name: 'multiply',
+        label: 'Multiply',
+    },
+
+    {
+        name: 'divide',
+        label: 'Divide',
+    },
+];
+
 export default function AssignSidebar ({
     assignElementId,
     workflowVersion,
@@ -62,14 +89,14 @@ export default function AssignSidebar ({
         }));
     };
 
-    const handleAssignmentOperatorChange = (event, assignmentId) => {
+    const handleAssignmentTypeChange = (event, assignmentId) => {
         setLocalAssignElement(localAssignElement => ({
             ...localAssignElement,
             assignments: localAssignElement.assignments.map(assignment => {
                 if (assignment.id === assignmentId) {
                     return {
                         ...assignment,
-                        operator: event.target.value,
+                        type: event.target.value,
                     }
                 } else {
                     return assignment;
@@ -188,23 +215,20 @@ export default function AssignSidebar ({
                                 </Field>
 
                                 <Field>
-                                    <Label>Operator</Label>
+                                    <Label>Type</Label>
 
                                     <Select
-                                        value={assignment.operator}
-                                        onChange={event => handleAssignmentOperatorChange(event, assignment.id)}
+                                        value={assignment.type}
+                                        onChange={event => handleAssignmentTypeChange(event, assignment.id)}
                                     >
-                                        <Option value="equal">
-                                            Equal
-                                        </Option>
-
-                                        <Option value="increment">
-                                            Increment
-                                        </Option>
-
-                                        <Option value="decrement">
-                                            Decrement
-                                        </Option>
+                                        {assignmentTypes.map(assignmentType => (
+                                            <Option
+                                                key={assignmentType.name}
+                                                value={assignmentType.name}
+                                            >
+                                                {assignmentType.label}
+                                            </Option>
+                                        ))}
                                     </Select>
                                 </Field>
 
