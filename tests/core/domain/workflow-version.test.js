@@ -5,8 +5,8 @@ import {
 
 import {
     WorkflowVersion,
-    WorkflowVariable,
 } from '~/core/domain/workflow-version';
+import { WorkflowVariable } from '~/core/domain/workflow-version/workflow-variable';
 
 import {
     WorkflowAssignElement,

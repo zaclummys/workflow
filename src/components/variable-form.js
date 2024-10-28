@@ -25,16 +25,22 @@ export default function VariableForm ({
         name: '',
         description: '',
         type: 'string',
-        hasDefaultValue: false,
-        defaultValue: null,
+        hasDefaultValue: true,
+        defaultValue: '',
         markedAsInput: false,
         markedAsOutput: false,
     };
 
     const [values, setValues] = useState(initialValues ?? defaultValues);
 
+    const noInitialValue = !values.hasDefaultValue && !values.markedAsInput;
+
     const handleFormSubmit = event => {
         event.preventDefault();
+
+        if (noInitialValue) {
+            return;
+        }
 
         onFormSubmit(event, values);
     }
@@ -207,6 +213,12 @@ export default function VariableForm ({
                     </InlineLabel>
                 </div>
             </div>
+
+            {noInitialValue && (
+                <span className="text-danger">
+                    This variable must be marked as input or have a default value.
+                </span>
+            )}
         </Form>
     );
 }
