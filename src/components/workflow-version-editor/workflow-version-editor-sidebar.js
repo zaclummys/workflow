@@ -60,8 +60,9 @@ export default function WorkflowVersionEditorSidebar ({
         case 'edit-variable':
             return (
                 <EditVariableSidebar
-                    variableId={sidebar.variableId}
+                    key={sidebar.variableId}
                     
+                    variableId={sidebar.variableId}
                     onVariableEdited={onVariableEdited}
                     onCancelButtonClick={onCancelEditVariableButtonClick}
 
@@ -73,6 +74,8 @@ export default function WorkflowVersionEditorSidebar ({
         case 'remove-variable':
             return (
                 <RemoveVariableSidebar
+                    key={sidebar.variableId}
+
                     variableId={sidebar.variableId}
                     onVariableRemoved={onVariableRemoved}
                     onCancelButtonClick={onCancelRemoveVariableButtonClick}
@@ -85,6 +88,8 @@ export default function WorkflowVersionEditorSidebar ({
         case 'if-element':
             return (
                 <IfElementSidebar
+                    key={sidebar.elementId}
+
                     ifElementId={sidebar.elementId}
                     onCloseButtonClick={onCloseButtonClick}
                     onIfElementedEdited={onIfElementedEdited}
@@ -97,6 +102,8 @@ export default function WorkflowVersionEditorSidebar ({
         case 'assign-element':
             return (
                 <AssignElementSidebar
+                    key={sidebar.elementId}
+
                     assignElementId={sidebar.elementId}
                     onCloseButtonClick={onCloseButtonClick}
                     onAssignElementEdited={onAssignElementEdited}
