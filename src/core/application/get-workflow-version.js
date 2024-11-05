@@ -83,24 +83,7 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                             };
 
                         case 'if':
-                            return {
-                                id: element.getId(),
-                                type: element.getType(),
-                                name: element.getName(),
-                                positionX: element.getPositionX(),
-                                positionY: element.getPositionY(),
-                                description: element.getDescription(),
-                                nextElementIdIfTrue: element.getNextElementIdIfTrue(),
-                                nextElementIdIfFalse: element.getNextElementIdIfFalse(),
-                                strategy: element.getStrategy(),
-                                conditions: element.getConditions()
-                                    .map(condition => ({
-                                        id: condition.getId(),
-                                        variableId: condition.getVariableId(),
-                                        operator: condition.getOperator(),
-                                        value: condition.getValue(),
-                                    }))
-                            }
+                            return fromWorkflowIfElement(element);
 
                         default:
                             return null;
@@ -137,5 +120,26 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
 
             numberOfExecutions,
         },
+    };
+}
+
+export function fromWorkflowIfElement (element) {
+    return {
+        id: element.getId(),
+        type: element.getType(),
+        name: element.getName(),
+        positionX: element.getPositionX(),
+        positionY: element.getPositionY(),
+        description: element.getDescription(),
+        nextElementIdIfTrue: element.getNextElementIdIfTrue(),
+        nextElementIdIfFalse: element.getNextElementIdIfFalse(),
+        strategy: element.getStrategy(),
+        conditions: element.getConditions()
+            .map(condition => ({
+                id: condition.getId(),
+                variableId: condition.getVariableId(),
+                type: condition.getType(),
+                value: condition.getValue(),
+            }))
     };
 }
