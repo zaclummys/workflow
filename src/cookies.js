@@ -17,7 +17,9 @@ export async function getSessionToken () {
 }
 
 export async function setSessionToken (sessionToken) {
-    await cookies().set(sessionTokenCookieName, sessionToken, {
+    const currentCookies = await cookies();
+    
+    currentCookies.set(sessionTokenCookieName, sessionToken, {
         path: '/',
         httpOnly: true,
     });
