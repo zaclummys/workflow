@@ -124,15 +124,38 @@ export default function AssignSidebar ({
         }));
     };
 
-    const handleAssignmentValueChange = (event, assignmentId) => {
+    const handleAssignmentOperandTypeChange = (event, assignmentId) => {
+        setLocalAssignElement(localAssignElement => ({
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.map(assignment => {
+                if (assignment.id === assignmentId) {
+                    switch (event.target.value) {}
+                    return {
+                        ...assignment,
+                        operand: {
+                            type: event.target.value,
+                            value: '',
+                        },
+                    }
+                } else {
+                    return assignment;
+                }
+            }),
+        }));
+    };
+
+    const handleAssignmentOperandValueChange = (event, assignmentId) => {
         setLocalAssignElement(localAssignElement => ({
             ...localAssignElement,
             assignments: localAssignElement.assignments.map(assignment => {
                 if (assignment.id === assignmentId) {
                     return {
                         ...assignment,
-                        value: event.target.value,
-                    }
+                        operand: {
+                            ...assignment.operand,
+                            value: event.target.value,
+                        }
+                    };
                 } else {
                     return assignment;
                 }
@@ -153,7 +176,10 @@ export default function AssignSidebar ({
         const defaultAssignment = {
             variableId: workflowVersion.variables[0].id,
             type: 'set',
-            value: '',
+            operand: {
+                type: 'variable',
+                value: '',
+            }
         };
 
         setLocalAssignElement(localAssignElement => ({
@@ -219,7 +245,8 @@ export default function AssignSidebar ({
                                 workflowVersion={workflowVersion}
                                 onVariableChange={event => handleAssignmentVariableChange(event, assignment.id)}
                                 onTypeChange={event => handleAssignmentTypeChange(event, assignment.id)}
-                                onValueChange={event => handleAssignmentValueChange(event, assignment.id)}
+                                onOperandTypeChange={event => handleAssignmentOperandTypeChange(event, assignment.id)}
+                                onOperandValueChange={event => handleAssignmentOperandValueChange(event, assignment.id)}
                                 onRemoveButtonClick={event => handleRemoveAssignmentButtonClick(event, assignment.id)}
                             />
                         ))}
@@ -257,7 +284,9 @@ function Assignment ({
 
     onVariableChange,
     onTypeChange,
-    onValueChange,
+    onOperandTypeChange,
+    onOperandValueChange,
+
     onRemoveButtonClick,
 }) {
     const variable = workflowVersion.variables.find(variable => variable.id === assignment.variableId);
@@ -265,8 +294,6 @@ function Assignment ({
     const supportedAssignmentTypes = assignmentTypes.filter(assignmentType => {
         return assignmentType.supportedVariableTypes.includes(variable.type);
     });
-
-    console.log(assignment.type);
 
     return (
         <Row>
@@ -304,15 +331,43 @@ function Assignment ({
                 </Select>
             </Field>
 
-
             <Field>
-                <Label>Value</Label>
+                <Label>Operand Type</Label>
 
-                <Input
-                    value={assignment.value}
-                    onChange={onValueChange}
-                />
+                <Select onChange={onOperandTypeChange}>
+                    <Option value="variable">Variable</Option>
+                    <Option value="value">Value</Option>
+                </Select>
             </Field>
+
+            {assignment.operand.type === 'variable' && (
+                <Field>
+                    <Label>Operand Variable</Label>
+
+                    <Select
+                        value={assignment.operand.value}
+                        onChange={onOperandValueChange}>
+                        {workflowVersion.variables.map(variable => (
+                            <Option
+                                key={variable.id}
+                                value={variable.id}>
+                                {variable.name}
+                            </Option>
+                        ))}
+                    </Select>
+                </Field>
+            )}
+
+            {assignment.operand.type === 'value' && (
+                <Field>
+                    <Label>Operand Value</Label>
+
+                    <Input
+                        value={assignment.operand.value}
+                        onChange={onOperandValueChange}
+                    />
+                </Field>
+            )}
 
             <DestructiveButton
                 onClick={onRemoveButtonClick}>

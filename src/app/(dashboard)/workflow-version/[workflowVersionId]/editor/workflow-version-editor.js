@@ -4,9 +4,9 @@ import { useState, useEffect, useReducer } from 'react';
 
 import WorkflowVersionEditorHeader from './workflow-version-editor-header';
 import WorkflowVersionEditorCanvas from './workflow-version-editor-canvas';
-import WorkflowVersionEditorSidebar from '~/components/workflow-version-editor/workflow-version-editor-sidebar';
+import WorkflowVersionEditorSidebar from './workflow-version-editor-sidebar';
 
-import workflowVersionReducer from '~/components/workflow-version-editor/workflow-version-reducer';
+import workflowVersionReducer from './workflow-version-reducer';
 
 export default function WorkflowVersionEditor ({ workflowVersion }) {
     const [localWorkflowVersion, dispatchLocalWorkflowVersion] = useReducer(

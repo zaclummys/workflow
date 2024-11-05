@@ -116,9 +116,26 @@ function WorkflowVersionReactFlow ({
                 positionX: position.x,
                 positionY: position.y,
                 data: {
-                    position,
-                    sourceNodeId,
-                    sourceHandleId,
+                    onNodeTypeSelected: ({ type, label }) => {
+                        const node = createNode({
+                            id: crypto.randomUUID(),
+                            type,
+                            positionX: position.x,
+                            positionY: position.y,
+                            data: {
+                                label
+                            },
+                        });
+                
+                        const edge = createEdge({
+                            sourceNodeId,
+                            sourceHandleId,
+                            targetNodeId: node.id,
+                        });
+                
+                        instance.addNodes(node);
+                        instance.addEdges(edge);
+                    },
                 }
             })
 

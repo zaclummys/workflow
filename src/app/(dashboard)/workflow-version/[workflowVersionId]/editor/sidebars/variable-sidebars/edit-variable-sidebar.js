@@ -8,7 +8,7 @@ import {
 import {
     PrimaryButton,
     OutlineButton,
-} from '../../../button';
+} from '../../../../../../../components/button';
 
 
 import {
@@ -16,9 +16,9 @@ import {
     SidebarTitle,
     SidebarContent,
     SidebarFooter,
-} from '../../../sidebar';
+} from '../../../../../../../components/sidebar';
 
-import VariableForm from '../../../variable-form';
+import VariableForm from '../../../../../../../components/variable-form';
 
 export default function EditVariableSidebar ({
     variableId,

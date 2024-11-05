@@ -1,10 +1,10 @@
-import AllVariablesSidebar from '~/components/workflow-version-editor/sidebars/variable-sidebars/all-variables-sidebar';
-import AddVariableSidebar from '~/components/workflow-version-editor/sidebars/variable-sidebars/add-variable-sidebar';
-import EditVariableSidebar from '~/components/workflow-version-editor/sidebars/variable-sidebars/edit-variable-sidebar';
-import RemoveVariableSidebar from '~/components/workflow-version-editor/sidebars/variable-sidebars/remove-variable-sidebar';
+import AllVariablesSidebar from './sidebars/variable-sidebars/all-variables-sidebar';
+import AddVariableSidebar from './sidebars/variable-sidebars/add-variable-sidebar';
+import EditVariableSidebar from './sidebars/variable-sidebars/edit-variable-sidebar';
+import RemoveVariableSidebar from './sidebars/variable-sidebars/remove-variable-sidebar';
 
-import IfElementSidebar from '~/components/workflow-version-editor/sidebars/element-sidebars/if-element-sidebar';
-import AssignElementSidebar from '~/components/workflow-version-editor/sidebars/element-sidebars/assign-element-sidebar';
+import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar';
+import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar';
 
 export default function WorkflowVersionEditorSidebar ({
     sidebar,

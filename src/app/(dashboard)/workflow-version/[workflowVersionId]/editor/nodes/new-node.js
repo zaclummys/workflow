@@ -8,54 +8,39 @@ import { Split, Equal, X } from 'lucide-react';
 
 import { Menu, MenuItem } from '~/components/menu';
 
-import { createNode, createEdge } from '~/components/workflow-version-editor/react-flow-helpers';
-
-export default function NewNode ({ id, data: { sourceNodeId, sourceHandleId, position } }) {
+export default function NewNode ({ id, data: { onNodeTypeSelected } }) {
     const instance = useReactFlow();
 
-    const addNode = ({ type, label }) => {
-        const node = createNode({
-            id: crypto.randomUUID(),
-            type,
-            positionX: position.x,
-            positionY: position.y,
-            data: {
-                label
-            },
-        });
-
-        const edge = createEdge({
-            sourceNodeId,
-            sourceHandleId,
-            targetNodeId: node.id,
-        });
-
-        instance.addNodes(node);
-        instance.addEdges(edge);
-
+    const close = () => {
         instance.deleteElements({
-            nodes: [{ id }]
+            nodes: [{ id }],
         });
     }
 
     const handleIfClick = () => {
-        addNode({
+        onNodeTypeSelected({
             type: 'if',
             label: 'New If',
         });
+
+        close();
     }
 
     const handleAssignClick = () => {
-        addNode({
+        onNodeTypeSelected({
             type: 'assign',
             label: 'New Assign',
         });
+
+        close();
     }
 
     const handleCancelClick = () => {
         instance.deleteElements({
             nodes: [{ id }],
         });
+
+        close();
     }
 
     return (
