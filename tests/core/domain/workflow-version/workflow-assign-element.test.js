@@ -1,4 +1,4 @@
-import { WorkflowAssignment } from '~/core/domain/workflow-version/workflow-assign-element';
+import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
 
 describe('Workflow Assign Element', () => {
     describe('Assignment', () => {

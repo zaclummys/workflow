@@ -5,8 +5,6 @@ export default function useNavigation () {
 
     return {
         navigateToHome: () => {
-            console.debug('Navigating to home...');
-            
             router.push('/');
         },
 

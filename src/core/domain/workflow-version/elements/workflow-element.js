@@ -1,4 +1,4 @@
-export class WorkflowElement {
+export default class WorkflowElement {
     constructor ({
         id,
         positionX,
@@ -21,7 +21,7 @@ export class WorkflowElement {
         this.positionY = positionY;
     }
 
-    getId() {
+    getId () {
         return this.id;
     }
 
@@ -34,6 +34,6 @@ export class WorkflowElement {
     }
 
     execute (context) {
-        throw new Error('Not implemented.');
+        throw new Error(`Not implemented for ${this.constructor.name}.`);
     }
 }

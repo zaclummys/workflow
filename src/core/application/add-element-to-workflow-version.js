@@ -6,7 +6,8 @@ import {
 import {
     WorkflowAssignElement,
 } from '~/core/domain/workflow-version';
-import { WorkflowIfElement } from '../domain/workflow-version/workflow-if-element';
+
+import { WorkflowIfElement } from '../domain/workflow-version/elements/if/workflow-if-element';
 
 export default async function addElementToWorkflowVersion ({
     elementType,

@@ -1,19 +1,24 @@
 import {
-    WorkflowExecutionVariable,
-    WorkflowExecutionOutput,
-} from '~/core/domain/workflow-execution';
-
-import {
     WorkflowVersion,
 } from '~/core/domain/workflow-version';
-import { WorkflowVariable } from '~/core/domain/workflow-version/workflow-variable';
+
+import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
+import WorkflowExecutionVariable from '~/core/domain/workflow-execution/workflow-execution-variable';
+
+import WorkflowAssignElement from '~/core/domain/workflow-version/elements/assign/workflow-assign-element';
+import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
+
+import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
 
 import {
-    WorkflowAssignElement,
-    WorkflowSetAssignment,
-} from '~/core/domain/workflow-version/workflow-assign-element';
+    WorkflowValueOperand,
+    WorkflowVariableOperand,
+} from '~/core/domain/workflow-version/operands/workflow-operand';
 
-import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
+import WorkflowStartElement from '~/core/domain/workflow-version/elements/start/workflow-start-element';
+
+import { WorkflowExecutionOutput } from '~/core/domain/workflow-execution';
+import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
 
 const createWorkflowVersion = ({
     status,
@@ -40,6 +45,107 @@ const createWorkflowVersion = ({
 };
 
 describe('Workflow Version', () => {
+    describe('Change Workflow Version', () => {
+        describe('Change elements', () => {
+            it('Should change the elements', () => {
+                const workflowVersion = createWorkflowVersion({
+                    status: 'draft',
+                    elements: [
+                        new WorkflowStartElement({
+                            id: 'start',
+                            positionX: 0,
+                            positionY: 0,
+                            nextElementId: null,
+                        }),
+                    ],
+                });
+
+                const newElements = [
+                    {
+                        type: 'start',
+                        id: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'assign-1',
+                    },
+
+                    {
+                        type: 'assign',
+                        id: 'assign-1',
+                        name: 'Assign 1',
+                        description: '',
+                        positionX: 100,
+                        positionY: 0,
+                        assignments: [],
+                        nextElementId: null,
+                    },
+                ];
+
+                workflowVersion.change({
+                    variables: [],
+                    elements: newElements,
+                });
+
+                expect(workflowVersion.elements).toStrictEqual([
+                    new WorkflowStartElement({
+                        id: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'assign-1',
+                    }),
+
+                    new WorkflowAssignElement({
+                        id: 'assign-1',
+                        name: 'Assign 1',
+                        description: '',
+                        positionX: 100,
+                        positionY: 0,
+                        assignments: [],
+                        nextElementId: null,
+                    }),
+                ]);
+            });
+        });
+
+        describe('Change variables', () => {
+            it('Should change the variables', () => {
+                const workflowVersion = createWorkflowVersion({
+                    status: 'draft',
+                    variables: [],
+                });
+
+                const newVariables = [
+                    {
+                        id: 'variable',
+                        name: 'Variable',
+                        type: 'string',
+                        hasDefaultValue: true,
+                        defaultValue: 'abc',
+                        markedAsInput: false,
+                        markedAsOutput: false,
+                    }
+                ];
+
+                workflowVersion.change({
+                    variables: newVariables,
+                    elements: [],
+                });
+
+                expect(workflowVersion.variables).toStrictEqual([
+                    new WorkflowVariable({
+                        id: 'variable',
+                        name: 'Variable',
+                        type: 'string',
+                        hasDefaultValue: true,
+                        defaultValue: 'abc',
+                        markedAsInput: false,
+                        markedAsOutput: false,
+                    }),
+                ]);
+            });
+        });
+    });
+
     describe('Fill Execution Variables', () => {
         describe('When variable has default value', () => {
             describe('And variable is marked as input', () => {
@@ -98,7 +204,7 @@ describe('Workflow Version', () => {
                         expect(variables).toStrictEqual([
                             new WorkflowExecutionVariable({
                                 variableId: 'variable',
-                                value: 'abc',
+                                value: new WorkflowStringValue('abc'),
                             }),
                         ]);
                     });
@@ -156,7 +262,7 @@ describe('Workflow Version', () => {
                         expect(variables).toStrictEqual([
                             new WorkflowExecutionVariable({
                                 variableId: 'variable',
-                                value: 'abc',
+                                value: new WorkflowStringValue('abc'),
                             }),
                         ]);
                     });
@@ -493,9 +599,9 @@ describe('Workflow Version', () => {
                                 new WorkflowVariable({
                                     id: 'variable',
                                     name: 'Variable',
-                                    type: 'string',
+                                    type: 'number',
                                     hasDefaultValue: true,
-                                    defaultValue: 'abc',
+                                    defaultValue: 1,
                                     markedAsInput: false,
                                     markedAsOutput: true,
                                 }),
@@ -512,15 +618,22 @@ describe('Workflow Version', () => {
                                 new WorkflowAssignElement({
                                     id: 'assign-1',
                                     name: 'Assign 1',
-                                    description: '',
+                                    description: 'This is first assign element.',
                                     positionX: 100,
                                     positionY: 0,
                                     assignments: [
-                                        new WorkflowSetAssignment({
+                                        {
                                             id: 'assign-1-1',
+                                            operator: 'set',
                                             variableId: 'variable',
-                                            value: 'xyz',
-                                        })
+                                            operand: {
+                                                type: 'value',
+                                                value: {
+                                                    type: 'number',
+                                                    number: 2,
+                                                }
+                                            },
+                                        }
                                     ],
                                     nextElementId: null,
                                 })
@@ -534,7 +647,7 @@ describe('Workflow Version', () => {
                         expect(outputs).toStrictEqual([
                             new WorkflowExecutionOutput({
                                 variableId: 'variable',
-                                value: 'xyz',
+                                value: new WorkflowNumberValue(2),
                             }),
                         ]);
                     });
@@ -564,7 +677,7 @@ describe('Workflow Version', () => {
                         expect(outputs).toStrictEqual([
                             new WorkflowExecutionOutput({
                                 variableId: 'variable',
-                                value: 'abc',
+                                value: new WorkflowStringValue('abc'),
                             }),
                         ]);
                     });

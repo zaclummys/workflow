@@ -1,6 +1,17 @@
-export class WorkflowVariable {
+import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
+import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
+import WorkflowBooleanValue from '~/core/domain/workflow-version/values/workflow-boolean-value';
+
+export default class WorkflowVariable {
     constructor({
-        id, name, type, description, hasDefaultValue, defaultValue, markedAsInput, markedAsOutput,
+        id,
+        name,
+        type,
+        description,
+        hasDefaultValue,
+        defaultValue,
+        markedAsInput,
+        markedAsOutput,
     }) {
         const validTypes = ['number', 'string', 'boolean'];
 
@@ -28,14 +39,6 @@ export class WorkflowVariable {
             throw new Error('Default value cannot be undefined.');
         }
 
-        if (!hasDefaultValue && defaultValue != null) {
-            throw new Error('Default value is not allowed.');
-        }
-
-        if (hasDefaultValue && defaultValue == null) {
-            throw new Error('Default value is required.');
-        }
-
         if (typeof markedAsInput !== 'boolean') {
             throw new Error('Marked as input option must be a boolean.');
         }
@@ -48,10 +51,33 @@ export class WorkflowVariable {
             throw new Error('If a variable is not marked as input, it must have a default value.');
         }
 
-        const typeOfDefaultValue = typeof defaultValue;
-
-        if (hasDefaultValue && typeOfDefaultValue !== type) {
-            throw new Error(`Default value must be a ${type}, got ${typeOfDefaultValue}.`);
+        let defaultValueInstance;
+        
+        if (hasDefaultValue) {
+            if (defaultValue != null) {
+                switch (type) {
+                    case 'number':
+                        defaultValueInstance = new WorkflowNumberValue(defaultValue);
+                    break;
+    
+                    case 'string':
+                        defaultValueInstance = new WorkflowStringValue(defaultValue);
+                    break;
+    
+                    case 'boolean':
+                        defaultValueInstance = new WorkflowBooleanValue(defaultValue);
+                    break;
+    
+                    default:
+                        throw new Error(`Invalid type to create a default value: ${type}`);
+                }
+            } else {
+                throw new Error('Default value is required.');
+            }
+        } else {
+            if (defaultValue != null) {
+                throw new Error('Default value is not allowed.');
+            }
         }
 
         this.id = id;
@@ -59,7 +85,7 @@ export class WorkflowVariable {
         this.type = type;
         this.description = description;
         this.hasDefaultValue = hasDefaultValue;
-        this.defaultValue = defaultValue;
+        this.defaultValue = defaultValueInstance;
         this.markedAsInput = markedAsInput;
         this.markedAsOutput = markedAsOutput;
     }

@@ -3,22 +3,19 @@ import { randomUUID } from 'crypto';
 import {
     WorkflowExecutionContext,
     WorkflowExecutionOutput,
-    WorkflowExecutionVariable,
-} from './workflow-execution';
+} from '~/core/domain/workflow-execution.js';
 
-import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
+import WorkflowExecutionVariable from '~/core/domain/workflow-execution/workflow-execution-variable';
 
-import {
-    WorkflowAssignElement,
-    WorkflowSetAssignment,
-    WorkflowAddAssignment,
-    WorkflowSubtractAssignment,
-    WorkflowMultiplyAssignment,
-    WorkflowDivideAssignment,
-} from './workflow-version/workflow-assign-element';
+import WorkflowStartElement from '~/core/domain/workflow-version/elements/start/workflow-start-element';
 
-import { WorkflowIfElement } from '~/core/domain/workflow-version/workflow-if-element';
-import { WorkflowVariable } from '~/core/domain/workflow-version/workflow-variable';
+import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
+import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
+
+import WorkflowAssignElement from '~/core/domain/workflow-version/elements/assign/workflow-assign-element';
+import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
+
+import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 
 export class WorkflowVersion {
     static create({
@@ -149,33 +146,12 @@ export class WorkflowVersion {
                     return new WorkflowAssignElement({
                         ...elementData,
                         assignments: elementData.assignments.map(assignmentData => {
-                            switch (assignmentData.type) {
-                                case 'set':
-                                    return new WorkflowSetAssignment(assignmentData);
-
-                                case 'add':
-                                    return new WorkflowAddAssignment(assignmentData);
-
-                                case 'subtract':
-                                    return new WorkflowSubtractAssignment(assignmentData);
-
-                                case 'multiply':
-                                    return new WorkflowMultiplyAssignment(assignmentData);
-
-                                case 'divide':
-                                    return new WorkflowDivideAssignment(assignmentData);
-
-                                default:
-                                    throw new Error(`Unexpected assignment type: ${assignmentData.type}`);
-                            }
+                            return new WorkflowAssignment(assignmentData);
                         }),
                     });
 
                 case 'if':
-                    return new WorkflowIfElement({
-                        ...elementData,
-                        conditions: elementData.conditions.map(conditionData => new WorkflowCondition(conditionData)),
-                    });
+                    return WorkflowIfElement.create(elementData);
 
                 default:
                     throw new Error(`Unexpected element type: ${elementData.type}`);
@@ -246,30 +222,28 @@ export class WorkflowVersion {
             }
         });
 
-        return this.variables.map(variable => {
+        const getValue = (variable) => {
             if (!variable.getMarkedAsInput()) {
-                return new WorkflowExecutionVariable({
-                    variableId: variable.getId(),
-                    value: variable.getDefaultValue(),
-                });
+                return variable.getDefaultValue();
             }
 
             const input = inputs.find(input => input.variableId === variable.getId());
                 
             if (input) {
-                return new WorkflowExecutionVariable({
-                    variableId: input.variableId,
-                    value: input.value,
-                });
+                return input.value;
             } 
 
             if (!variable.getHasDefaultValue()) {
                 throw new Error(`Variable '${variable.name}' does not have a default value and an input was not provided.`);
             }
 
+            return variable.getDefaultValue();
+        }
+
+        return this.variables.map(variable => {
             return new WorkflowExecutionVariable({
                 variableId: variable.getId(),
-                value: variable.getDefaultValue(),
+                value: getValue(variable),
             });
         });
     }

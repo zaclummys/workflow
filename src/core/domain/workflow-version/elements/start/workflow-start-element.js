@@ -1,8 +1,6 @@
-import { randomUUID } from 'crypto';
+import WorkflowElement from '../workflow-element';
 
-import { WorkflowElement } from './workflow-element';
-
-export class WorkflowStartElement extends WorkflowElement {
+export default class WorkflowStartElement extends WorkflowElement {
     constructor({
         id, positionX, positionY, nextElementId,
     }) {

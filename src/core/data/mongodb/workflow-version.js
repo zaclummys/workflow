@@ -1,25 +1,18 @@
+import database from './database';
+
 import {
     WorkflowVersion,
 } from '~/core/domain/workflow-version';
-import { WorkflowVariable } from '~/core/domain/workflow-version/workflow-variable';
 
-import {
-    WorkflowIfElement,
-    WorkflowCondition,
-} from '~/core/domain/workflow-version/workflow-if-element';
+import WorkflowStartElement from '~/core/domain/workflow-version/elements/start/workflow-start-element';
 
-import {
-    WorkflowAssignElement,
-    WorkflowSetAssignment,
-    WorkflowAddAssignment,
-    WorkflowSubtractAssignment,
-    WorkflowMultiplyAssignment,
-    WorkflowDivideAssignment,
-} from '~/core/domain/workflow-version/workflow-assign-element';
+import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
+import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
 
-import { WorkflowStartElement } from '~/core/domain/workflow-version/workflow-start-element';
+import WorkflowAssignElement from '~/core/domain/workflow-version/elements/assign/workflow-assign-element';
+import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
 
-import database from './database';
+import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 
 export async function insertWorkflowVersion (workflowVersion) {
     await database
@@ -155,33 +148,38 @@ export function fromWorkflowElement (workflowElement) {
             };
 
         case 'if':
-            return {
-                id: workflowElement.getId(),
-
-                type: workflowElement.getType(),
-                name: workflowElement.getName(),
-                description: workflowElement.getDescription(),
-                strategy: workflowElement.getStrategy(),
-                conditions: workflowElement.getConditions()
-                    .map(fromWorkflowCondition),
-
-                nextElementIdIfTrue: workflowElement.getNextElementIdIfTrue(),
-                nextElementIdIfFalse: workflowElement.getNextElementIdIfFalse(),
-
-                positionX: workflowElement.getPositionX(),
-                positionY: workflowElement.getPositionY(),
-            };
+            return fromWorkflowIfElement(workflowElement);
 
         default:
             throw new Error(`Unknown element type: ${workflowElement.getType()}`);
     }
 }
 
+export function fromWorkflowIfElement (workflowIfElement) {
+    return {
+        id: workflowIfElement.getId(),
+
+        type: workflowIfElement.getType(),
+        name: workflowIfElement.getName(),
+        description: workflowIfElement.getDescription(),
+        conditions: workflowIfElement.getConditions()
+            .map(fromWorkflowCondition),
+
+        strategy: workflowIfElement.getStrategy(),
+
+        nextElementIdIfTrue: workflowIfElement.getNextElementIdIfTrue(),
+        nextElementIdIfFalse: workflowIfElement.getNextElementIdIfFalse(),
+
+        positionX: workflowIfElement.getPositionX(),
+        positionY: workflowIfElement.getPositionY(),
+    };
+}
+
 export function fromWorkflowCondition (workflowCondition) {
     return {
         id: workflowCondition.getId(),
         variableId: workflowCondition.getVariableId(),
-        operator: workflowCondition.getOperator(),
+        type: workflowCondition.getType(),
         value: workflowCondition.getValue(),
     };
 }
@@ -190,9 +188,57 @@ export function fromWorkflowAssignment (workflowAssignment) {
     return {
         id: workflowAssignment.getId(),
         variableId: workflowAssignment.getVariableId(),
-        type: workflowAssignment.getType(),
-        value: workflowAssignment.getValue(),
+        operator: workflowAssignment.getOperator(),
+        operand: fromAssignmentOperand(workflowAssignment.getOperand()),
     };
+}
+
+export function fromValue (value) {
+    switch (value.getType()) {
+        case 'number':
+            return {
+                type: value.getType(),
+                number: value.getNumber(),
+            };
+
+        case 'string':
+            return {
+                type: value.getType(),
+                string: value.getString(),
+            };
+
+        case 'boolean':
+            return {
+                type: value.getType(),
+                boolean: value.getBoolean(),
+            };
+
+        default:
+            throw new Error(`Unknown value type: ${value.getType()}`);
+    }
+}
+
+export function fromAssignmentOperand (operand) {
+    switch (operand.getType()) {
+        case 'variable':
+            return {
+                type: operand.getType(),
+                variableId: operand.getVariableId(),
+            };
+
+        case 'value':
+            return {
+                type: operand.getType(),
+                value: fromValue(operand.getValue()),
+            };
+
+        default:
+            throw new Error(`Unknown operand type: ${operand.getType()}`);
+    }
+}
+
+export function fromWorkflowIfStrategy (workflowIfStrategy) {
+    return workflowIfStrategy.getType();
 }
 
 export function toWorkflowVersion ({
@@ -233,36 +279,22 @@ export function toWorkflowElement (workflowElementData) {
             });
 
         case 'if':
-            return new WorkflowIfElement({
-                ...workflowElementData,
-                conditions: workflowElementData.conditions.map(toWorkflowCondition)
-            });
+            return toWorkflowIfElement(workflowElementData);
 
         default:
             throw new Error(`Unknown element type: ${workflowElementData.type}`);
     }
 }
 
+export function toWorkflowIfElement (workflowIfElementData) {
+    return new WorkflowIfElement({
+        ...workflowIfElementData,
+        conditions: workflowIfElementData.conditions.map(toWorkflowCondition)
+    });
+}
+
 export function toWorkflowAssignment (workflowAssignmentData) {
-    switch (workflowAssignmentData.type) {
-        case 'set':
-            return new WorkflowSetAssignment(workflowAssignmentData);
-
-        case 'add':
-            return new WorkflowAddAssignment(workflowAssignmentData);
-
-        case 'subtract':
-            return new WorkflowSubtractAssignment(workflowAssignmentData);
-
-        case 'multiply':
-            return new WorkflowMultiplyAssignment(workflowAssignmentData);
-
-        case 'divide':
-            return new WorkflowDivideAssignment(workflowAssignmentData);
-
-        default:
-            throw new Error(`Unknown assignment type: ${workflowAssignmentData.type}`);
-    }
+    return new WorkflowAssignment(workflowAssignmentData);
 }
 
 export function toWorkflowCondition (workflowConditionData) {
