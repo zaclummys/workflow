@@ -27,12 +27,13 @@
     "@playwright/test": "^1.47",
     "@tailwindcss/typography": "^0.5",
     "@types/node": "^22.5",
+    "@vitest/coverage-v8": "^2.1.4",
     "autoprefixer": "^10.4",
     "eslint": "^8.0",
     "eslint-config-next": "14.2",
     "postcss": "^8.4",
     "postcss-loader": "^8.1",
     "tailwindcss": "^3.4",
-    "vitest": "^1.6"
+    "vitest": "^2.1.4"
   }
 }
