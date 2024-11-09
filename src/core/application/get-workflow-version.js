@@ -51,57 +51,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
             id: workflowVersion.getId(),
             number: workflowVersion.getNumber(),
             status: workflowVersion.getStatus(),
+
             elements: workflowVersion.getElements()
-                .map(element => {
-                    switch (element.getType()) {
-                        case 'start':
-                            return {
-                                id: element.getId(),
-                                type: element.getType(),
-                                name: element.getName(),
-                                positionX: element.getPositionX(),
-                                positionY: element.getPositionY(),
-                                nextElementId: element.getNextElementId(),
-                            };
-
-                        case 'assign':
-                            return {
-                                id: element.getId(),
-                                type: element.getType(),
-                                name: element.getName(),
-                                positionX: element.getPositionX(),
-                                positionY: element.getPositionY(),
-                                description: element.getDescription(),
-                                nextElementId: element.getNextElementId(),
-                                assignments: element.getAssignments()
-                                    .map(assignment => ({
-                                        id: assignment.getId(),
-                                        variableId: assignment.getVariableId(),
-                                        type: assignment.getType(),
-                                        value: assignment.getValue(),
-                                    }))
-                            };
-
-                        case 'if':
-                            return fromWorkflowIfElement(element);
-
-                        default:
-                            return null;
-                    }
-                }),
-
+                .map(fromWorkflowElement),
+    
             variables: workflowVersion.getVariables()
-                .map(variable => ({
-                    id: variable.getId(),
-                    name: variable.getName(),
-                    type: variable.getType(),
-                    description: variable.getDescription(),
-                    hasDefaultValue: variable.getHasDefaultValue(),
-                    defaultValue: variable.getDefaultValue(),
-                    markedAsInput: variable.getMarkedAsInput(),
-                    markedAsOutput: variable.getMarkedAsOutput(),
-                })),
-
+                .map(fromWorkflowVariable),
+    
             workflow: {
                 id: workflow.getId(),
                 name: workflow.getName(),
@@ -115,12 +71,93 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
                 id: createdBy.getId(),
                 name: createdBy.getName(),
             },
-
+    
             createdAt: workflowVersion.getCreatedAt(),
-
+    
             numberOfExecutions,
         },
     };
+}
+
+export function fromDefaultValue (defaultValue) {
+    if (defaultValue == null) {
+        return null;
+    }
+
+    switch (defaultValue.getType()) {
+        case 'number':
+            return {
+                type: defaultValue.getType(),
+                number: defaultValue.getNumber(),
+            };
+
+        case 'string':
+            return {
+                type: defaultValue.getType(),
+                string: defaultValue.getString(),
+            };
+
+        case 'boolean':
+            return {
+                type: defaultValue.getType(),
+                boolean: defaultValue.getBoolean(),
+            };
+
+        default:
+            return null;
+    }
+}
+
+
+export function fromWorkflowVariable (variable) {
+    return {
+        id: variable.getId(),
+        name: variable.getName(),
+        type: variable.getType(),
+        description: variable.getDescription(),
+        hasDefaultValue: variable.getHasDefaultValue(),
+        defaultValue: fromDefaultValue(variable.getDefaultValue()),
+        markedAsInput: variable.getMarkedAsInput(),
+        markedAsOutput: variable.getMarkedAsOutput(),
+    };
+}
+
+export function fromWorkflowElement (element) {
+    switch (element.getType()) {
+        case 'start':
+            return {
+                id: element.getId(),
+                type: element.getType(),
+                name: element.getName(),
+                positionX: element.getPositionX(),
+                positionY: element.getPositionY(),
+                nextElementId: element.getNextElementId(),
+            };
+
+        case 'assign':
+            return {
+                id: element.getId(),
+                type: element.getType(),
+                name: element.getName(),
+                positionX: element.getPositionX(),
+                positionY: element.getPositionY(),
+                description: element.getDescription(),
+                nextElementId: element.getNextElementId(),
+                assignments: element.getAssignments()
+                    .map(assignment => ({
+                        id: assignment.getId(),
+                        variableId: assignment.getVariableId(),
+                        type: assignment.getType(),
+                        value: assignment.getValue(),
+                    }))
+            };
+
+        case 'if':
+            return fromWorkflowIfElement(element);
+
+        default:
+            return null;
+    }
 }
 
 export function fromWorkflowIfElement (element) {
