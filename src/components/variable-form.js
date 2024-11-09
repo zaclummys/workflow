@@ -16,6 +16,125 @@ import {
     Checkbox,
 } from './form';
 
+const createDefaultValue = (type) => {
+    switch (type) {
+        case 'string':
+            return {
+                type: 'string',
+                string: '',
+            };
+
+        case 'number':
+            return {
+                type: 'number',
+                number: '0',
+            };
+
+        case 'boolean':
+            return {
+                type: 'boolean',
+                boolean: 'false',
+            };
+    }
+}
+
+const updateDefaultValue = ({ type, value }) => {
+    switch (type) {
+        case 'string':
+            return {
+                type: 'string',
+                string: value,
+            };
+
+        case 'number':
+            return {
+                type: 'number',
+                number: value,
+            };
+
+        case 'boolean':
+            return {
+                type: 'boolean',
+                boolean: value,
+            };
+    }
+}
+
+const coerceDefaultValue = (defaultValue) => {
+    if (defaultValue == null) {
+        return null;
+    }
+
+    switch (defaultValue.type) {
+        case 'string':
+            return {
+                type: 'string',
+                string: defaultValue.string,
+            };
+
+        case 'number':
+            return {
+                type: 'number',
+                number: coerceNumber(defaultValue.number),
+            };
+
+        case 'boolean':
+            return {
+                type: 'boolean',
+                boolean: coerceBoolean(defaultValue.boolean),
+            };
+    }
+}
+
+const decoerceDefaultValue = (defaultValue) => {
+    if (defaultValue == null) {
+        return null;
+    }
+
+    switch (defaultValue.type) {
+        case 'string':
+            return {
+                type: 'string',
+                string: defaultValue.string,
+            };
+
+        case 'number':
+            return {
+                type: 'number',
+                number: defaultValue.number.toString(),
+            };
+
+        case 'boolean':
+            return {
+                type: 'boolean',
+                boolean: defaultValue.boolean.toString(),
+            };
+    }
+}
+
+const coerceNumber = (number) => {
+    const coercedNumber = Number(number);
+
+    if (isNaN(coercedNumber)) {
+        throw new Error('Invalid number value.');
+    }
+
+    return coercedNumber;
+};
+
+const coerceBoolean = (boolean) => {
+    switch (boolean) {
+        case 'true':
+            return true;
+
+        case 'false':
+            return false;
+
+        default:
+            throw new Error(`Invalid boolean value: ${boolean}.`);
+    }
+};
+
 export default function VariableForm ({
     formId,
     initialValues,
@@ -25,24 +144,32 @@ export default function VariableForm ({
         name: '',
         description: '',
         type: 'string',
-        hasDefaultValue: true,
-        defaultValue: '',
-        markedAsInput: false,
-        markedAsOutput: false,
+        defaultValue: null,
+        markedAsInput: true,
+        markedAsOutput: true,
     };
 
-    const [values, setValues] = useState(initialValues ?? defaultValues);
+    const [values, setValues] = useState({
+        ...defaultValues,
+        ...initialValues,
+        defaultValue: decoerceDefaultValue(initialValues?.defaultValue),
+    });
 
-    const noInitialValue = !values.hasDefaultValue && !values.markedAsInput;
+    const variableHasNotInitialValue = values.defaultValue == null && !values.markedAsInput;
 
     const handleFormSubmit = event => {
         event.preventDefault();
 
-        if (noInitialValue) {
+        if (variableHasNotInitialValue) {
             return;
         }
+        
+        const submitValues = {
+            ...values,
+            defaultValue: coerceDefaultValue(values.defaultValue),
+        };
 
-        onFormSubmit(event, values);
+        onFormSubmit(event, submitValues);
     }
 
     const handleNameChange = event => {
@@ -65,14 +192,13 @@ export default function VariableForm ({
         setValues(values => ({
             ...values,
             type,
-            defaultValue: null,
+            defaultValue: values.defaultValue === null ? null : createDefaultValue(type),
         }));
     }
 
     const handleRemoveDefaultValueButtonClick = () => {
         setValues(values => ({
             ...values,
-            hasDefaultValue: false,
             defaultValue: null,
         }));
     };
@@ -80,15 +206,17 @@ export default function VariableForm ({
     const handleAddDefaultValueButtonClick = () => {
         setValues(values => ({
             ...values,
-            hasDefaultValue: true,
-            defaultValue: null,
+            defaultValue: createDefaultValue(values.type)
         }));
     };
 
     const handleDefaultValueChange = (event) => {
         setValues(values => ({
             ...values,
-            defaultValue: event.target.value,
+            defaultValue: updateDefaultValue({
+                type: values.type,
+                value: event.target.value,
+            }),
         }));
     }
 
@@ -167,25 +295,26 @@ export default function VariableForm ({
                 <div className="flex flex-row justify-between">
                     <Label
                         htmlFor={defaultValueId}
-                        disabled={!values.hasDefaultValue}
+                        disabled={values.defaultValue == null}
                     >
                         Default Value
                     </Label>
 
                     <ToggleDefaultValue
-                        hasDefaultValue={values.hasDefaultValue}
+                        hasDefaultValue={values.defaultValue != null}
                         onAddButtonClick={handleAddDefaultValueButtonClick}
                         onRemoveButtonClick={handleRemoveDefaultValueButtonClick}
                     />
                 </div>
 
-                <DefaultValue
-                    id={defaultValueId}
-                    type={values.type}
-                    value={values.defaultValue}
-                    disabled={!values.hasDefaultValue}
-                    onChange={handleDefaultValueChange}
-                />
+                {values.defaultValue != null && (
+                    <DefaultValueFacade
+                        id={defaultValueId}
+                        type={values.type}
+                        value={values.defaultValue}
+                        onChange={handleDefaultValueChange}
+                    />
+                )}
             </Field>
 
             <div className="flex flex-col gap-2">
@@ -214,7 +343,7 @@ export default function VariableForm ({
                 </div>
             </div>
 
-            {noInitialValue && (
+            {variableHasNotInitialValue && (
                 <span className="text-danger">
                     This variable must be marked as input or have a default value.
                 </span>
@@ -233,7 +362,7 @@ function DefaultValueString ({
         <Input
             required
             id={id}
-            value={value ?? ''}
+            value={value}
             disabled={disabled}
             onChange={onChange}
             type="text"
@@ -251,7 +380,7 @@ function DefaultValueNumber({
         <Input
             required
             id={id}
-            value={value ?? ''}
+            value={value}
             disabled={disabled}
             onChange={onChange}
             type="number"
@@ -309,19 +438,18 @@ function DefaultValueBoolean({
     );
 }
 
-function DefaultValue ({
+function DefaultValueFacade ({
     id,
-    type,
     value,
     disabled,
     onChange,
 }) {
-    switch (type) {
+    switch (value.type) {
         case 'string':
             return (
                 <DefaultValueString
                     id={id}
-                    value={value}
+                    value={value.string}
                     disabled={disabled}
                     onChange={onChange}
                 />
@@ -331,7 +459,7 @@ function DefaultValue ({
             return (
                 <DefaultValueNumber
                     id={id}
-                    value={value}
+                    value={value.number}
                     disabled={disabled}
                     onChange={onChange}
                 />
@@ -340,7 +468,7 @@ function DefaultValue ({
         case 'boolean':
             return (
                 <DefaultValueBoolean
-                    value={value}
+                    value={value.boolean}
                     disabled={disabled}
                     onChange={onChange}
                 />
