@@ -15,6 +15,10 @@ export default  class WorkflowStringValue extends WorkflowValue {
         return 'string';
     }
 
+    getString () {
+        return this.string;
+    }
+
     set (string) {
         return new WorkflowStringValue(string);
     }

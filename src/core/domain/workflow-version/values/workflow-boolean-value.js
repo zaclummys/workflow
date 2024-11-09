@@ -15,6 +15,10 @@ export default class WorkflowBooleanValue extends WorkflowValue {
         return 'boolean';
     }
 
+    getBoolean () {
+        return this.boolean;
+    }
+
     set (boolean) {
         return new WorkflowBooleanValue(boolean);
     }
