@@ -1,6 +1,6 @@
 import WorkflowIfAllStrategy from '~/core/domain/workflow-version/elements/if/strategies/workflow-all-strategy';
 import WorkflowIfAnyStrategy from '~/core/domain/workflow-version/elements/if/strategies/workflow-any-strategy';
-
+import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
 import WorkflowElement from '~/core/domain/workflow-version/elements/workflow-element';
 
 export default class WorkflowIfElement extends WorkflowElement {
@@ -15,12 +15,6 @@ export default class WorkflowIfElement extends WorkflowElement {
             default:
                 throw new Error(`Unexpected strategy: ${strategy}`);
         }
-    }
-    
-    static createConditions (conditions) {
-        return conditions.map(conditionData => {
-            return new WorkflowCondition(conditionData);
-        });
     }
 
     constructor({
@@ -61,9 +55,9 @@ export default class WorkflowIfElement extends WorkflowElement {
         this.description = description;
         this.nextElementIdIfTrue = nextElementIdIfTrue;
         this.nextElementIdIfFalse = nextElementIdIfFalse;
+        this.conditions = conditions.map(conditionData =>  new WorkflowCondition(conditionData));
 
         this.strategy = WorkflowIfElement.createStrategy(strategy);
-        this.conditions = WorkflowIfElement.createConditions(conditions);
     }
 
     getType() {

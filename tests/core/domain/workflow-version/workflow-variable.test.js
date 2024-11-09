@@ -1,3 +1,4 @@
+import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 
 describe('Workflow Variable', () => {
@@ -11,21 +12,24 @@ describe('Workflow Variable', () => {
                         description: 'This is a variable',
                         type: 'string',
                         hasDefaultValue: true,
-                        defaultValue: 'abc',
+                        defaultValue: {
+                            type: 'string',
+                            string: 'abc',
+                        },
                         markedAsInput: true,
                         markedAsOutput: true,
                     });
 
-                    expect(variable).toStrictEqual(new WorkflowVariable({
+                    expect(variable).toEqual({
                         id: '1',
                         name: 'Variable',
                         description: 'This is a variable',
                         type: 'string',
                         hasDefaultValue: true,
-                        defaultValue: 'abc',
+                        defaultValue: new WorkflowStringValue('abc'),
                         markedAsInput: true,
                         markedAsOutput: true,
-                    }));
+                    });
                 });
             });
         });

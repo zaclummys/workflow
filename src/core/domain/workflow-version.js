@@ -143,15 +143,10 @@ export class WorkflowVersion {
                     return new WorkflowStartElement(elementData);
 
                 case 'assign':
-                    return new WorkflowAssignElement({
-                        ...elementData,
-                        assignments: elementData.assignments.map(assignmentData => {
-                            return new WorkflowAssignment(assignmentData);
-                        }),
-                    });
+                    return new WorkflowAssignElement(elementData);
 
                 case 'if':
-                    return WorkflowIfElement.create(elementData);
+                    return new WorkflowIfElement(elementData);
 
                 default:
                     throw new Error(`Unexpected element type: ${elementData.type}`);

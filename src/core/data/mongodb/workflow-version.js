@@ -110,7 +110,7 @@ export function fromWorkflowVariable (workflowVariable) {
         name: workflowVariable.getName(),
         description: workflowVariable.getDescription(),
         hasDefaultValue: workflowVariable.getHasDefaultValue(),
-        defaultValue: workflowVariable.getDefaultValue(),
+        defaultValue: fromValue(workflowVariable.getDefaultValue()),
         type: workflowVariable.getType(),
         markedAsInput: workflowVariable.getMarkedAsInput(),
         markedAsOutput: workflowVariable.getMarkedAsOutput(),
@@ -179,8 +179,8 @@ export function fromWorkflowCondition (workflowCondition) {
     return {
         id: workflowCondition.getId(),
         variableId: workflowCondition.getVariableId(),
-        type: workflowCondition.getType(),
-        value: workflowCondition.getValue(),
+        operator: workflowCondition.getOperator(),
+        operand: workflowCondition.getOperand(),
     };
 }
 
@@ -194,6 +194,10 @@ export function fromWorkflowAssignment (workflowAssignment) {
 }
 
 export function fromValue (value) {
+    if (value == null) {
+        return null;
+    }
+    
     switch (value.getType()) {
         case 'number':
             return {
@@ -273,30 +277,12 @@ export function toWorkflowElement (workflowElementData) {
             return new WorkflowStartElement(workflowElementData);
 
         case 'assign':
-            return new WorkflowAssignElement({
-                ...workflowElementData,
-                assignments: workflowElementData.assignments.map(toWorkflowAssignment),
-            });
+            return new WorkflowAssignElement(workflowElementData);
 
         case 'if':
-            return toWorkflowIfElement(workflowElementData);
+            return new WorkflowIfElement(workflowElementData);
 
         default:
             throw new Error(`Unknown element type: ${workflowElementData.type}`);
     }
-}
-
-export function toWorkflowIfElement (workflowIfElementData) {
-    return new WorkflowIfElement({
-        ...workflowIfElementData,
-        conditions: workflowIfElementData.conditions.map(toWorkflowCondition)
-    });
-}
-
-export function toWorkflowAssignment (workflowAssignmentData) {
-    return new WorkflowAssignment(workflowAssignmentData);
-}
-
-export function toWorkflowCondition (workflowConditionData) {
-    return new WorkflowCondition(workflowConditionData);
 }

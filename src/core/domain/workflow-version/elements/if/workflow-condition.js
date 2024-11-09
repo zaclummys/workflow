@@ -18,7 +18,7 @@ export default class WorkflowCondition {
         }
 
         if (!operand) {
-            throw new Error('Operand be is required.');
+            throw new Error('Operand is required.');
         }
 
         this.id = id;
@@ -47,4 +47,3 @@ export default class WorkflowCondition {
 
     }
 }
-
