@@ -12,7 +12,7 @@ import {
     OutlineButton,
 } from '~/components/button';
 
-import VariableForm from '~/components/variable-form';
+import VariableForm from './variable-form';
 
 export default function AddVariableSidebar ({
     onVariableAdded,

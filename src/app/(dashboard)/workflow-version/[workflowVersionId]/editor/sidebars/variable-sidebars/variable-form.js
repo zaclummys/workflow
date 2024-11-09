@@ -14,126 +14,13 @@ import {
     TextArea,
     InlineLabel,
     Checkbox,
-} from './form';
+} from '~/components/form';
 
-const createDefaultValue = (type) => {
-    switch (type) {
-        case 'string':
-            return {
-                type: 'string',
-                string: '',
-            };
-
-        case 'number':
-            return {
-                type: 'number',
-                number: '0',
-            };
-
-        case 'boolean':
-            return {
-                type: 'boolean',
-                boolean: 'false',
-            };
-    }
-}
-
-const updateDefaultValue = ({ type, value }) => {
-    switch (type) {
-        case 'string':
-            return {
-                type: 'string',
-                string: value,
-            };
-
-        case 'number':
-            return {
-                type: 'number',
-                number: value,
-            };
-
-        case 'boolean':
-            return {
-                type: 'boolean',
-                boolean: value,
-            };
-    }
-}
-
-const coerceDefaultValue = (defaultValue) => {
-    if (defaultValue == null) {
-        return null;
-    }
-
-    switch (defaultValue.type) {
-        case 'string':
-            return {
-                type: 'string',
-                string: defaultValue.string,
-            };
-
-        case 'number':
-            return {
-                type: 'number',
-                number: coerceNumber(defaultValue.number),
-            };
-
-        case 'boolean':
-            return {
-                type: 'boolean',
-                boolean: coerceBoolean(defaultValue.boolean),
-            };
-    }
-}
-
-const decoerceDefaultValue = (defaultValue) => {
-    if (defaultValue == null) {
-        return null;
-    }
-
-    switch (defaultValue.type) {
-        case 'string':
-            return {
-                type: 'string',
-                string: defaultValue.string,
-            };
-
-        case 'number':
-            return {
-                type: 'number',
-                number: defaultValue.number.toString(),
-            };
-
-        case 'boolean':
-            return {
-                type: 'boolean',
-                boolean: defaultValue.boolean.toString(),
-            };
-    }
-}
-
-const coerceNumber = (number) => {
-    const coercedNumber = Number(number);
-
-    if (isNaN(coercedNumber)) {
-        throw new Error('Invalid number value.');
-    }
-
-    return coercedNumber;
-};
-
-const coerceBoolean = (boolean) => {
-    switch (boolean) {
-        case 'true':
-            return true;
-
-        case 'false':
-            return false;
-
-        default:
-            throw new Error(`Invalid boolean value: ${boolean}.`);
-    }
-};
+import {
+    createValue,
+    coerceValue,
+    decoerceValue,
+} from '../value';
 
 export default function VariableForm ({
     formId,
@@ -152,7 +39,7 @@ export default function VariableForm ({
     const [values, setValues] = useState({
         ...defaultValues,
         ...initialValues,
-        defaultValue: decoerceDefaultValue(initialValues?.defaultValue),
+        defaultValue: decoerceValue(initialValues?.defaultValue),
     });
 
     const variableHasNotInitialValue = values.defaultValue == null && !values.markedAsInput;
@@ -166,7 +53,7 @@ export default function VariableForm ({
         
         const submitValues = {
             ...values,
-            defaultValue: coerceDefaultValue(values.defaultValue),
+            defaultValue: coerceValue(values.defaultValue),
         };
 
         onFormSubmit(event, submitValues);
@@ -192,7 +79,7 @@ export default function VariableForm ({
         setValues(values => ({
             ...values,
             type,
-            defaultValue: values.defaultValue === null ? null : createDefaultValue(type),
+            defaultValue: values.defaultValue === null ? null : createValue({ type }),
         }));
     }
 
@@ -206,14 +93,16 @@ export default function VariableForm ({
     const handleAddDefaultValueButtonClick = () => {
         setValues(values => ({
             ...values,
-            defaultValue: createDefaultValue(values.type)
+            defaultValue: createValue({
+                type: values.type
+            }),
         }));
     };
 
     const handleDefaultValueChange = (event) => {
         setValues(values => ({
             ...values,
-            defaultValue: updateDefaultValue({
+            defaultValue: createValue({
                 type: values.type,
                 value: event.target.value,
             }),
@@ -360,7 +249,6 @@ function DefaultValueString ({
 }) {
     return (
         <Input
-            required
             id={id}
             value={value}
             disabled={disabled}
@@ -378,7 +266,6 @@ function DefaultValueNumber({
 }) {
     return (
         <Input
-            required
             id={id}
             value={value}
             disabled={disabled}
@@ -390,51 +277,17 @@ function DefaultValueNumber({
 }
 
 function DefaultValueBoolean({
-    value,
+    boolean,
     onChange,
-    disabled,
 }) {
-    const trueId = useId();
-    const falseId = useId();
-
     return (
-        <>
-            <div className="flex flex-row items-center gap-2">
-                <Radio
-                    required
-                    id={trueId}
-                    disabled={disabled}
-                    value="true"
-                    checked={value === 'true'}
-                    onChange={onChange}
-                />
-
-                <InlineLabel
-                    disabled={disabled}
-                    htmlFor={trueId}
-                >
-                    True
-                </InlineLabel>
-            </div>
-
-            <div className="flex flex-row items-center gap-2">
-                <Radio
-                    required
-                    id={falseId}
-                    disabled={disabled}
-                    value="false"
-                    checked={value === 'false'}
-                    onChange={onChange}
-                />
-
-                <InlineLabel
-                    disabled={disabled}
-                    htmlFor={falseId}
-                >
-                    False
-                </InlineLabel>
-            </div>
-        </>
+        <Select
+            value={boolean}
+            onChange={onChange}
+        >
+            <Option value="true">True</Option>
+            <Option value="false">False</Option>
+        </Select>
     );
 }
 
