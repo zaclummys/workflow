@@ -23,6 +23,4 @@ export default async function executeWorkflowVersion ({
     }
 
     const execution = await workflowVersion.execute({ inputs });
-
-    console.log(execution);
 }

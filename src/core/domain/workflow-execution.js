@@ -129,7 +129,6 @@ export class WorkflowExecutionContext {
         this.variables
             .filter(variable => variable.isMarkedAsInput())
             .forEach(variable => {
-                console.log(variable.constructor.name);
                 const input = inputs.find(input => input.variableId === variable.getVariableId());
 
                 if (!input) {

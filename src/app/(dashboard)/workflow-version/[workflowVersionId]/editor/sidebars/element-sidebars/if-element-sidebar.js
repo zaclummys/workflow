@@ -146,8 +146,6 @@ export default function IfSidebar ({
         onIfElementedEdited?.();
     };
 
-    console.log(localIfElement.conditions)
-
     return (
         <>
             <Sidebar>

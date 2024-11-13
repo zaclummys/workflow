@@ -5,7 +5,6 @@ export default class WorkflowNumberValue extends WorkflowValue {
         super();
 
         if (typeof number !== 'number') {
-            console.error(number)
             throw new Error('Expected a number');
         }
 
