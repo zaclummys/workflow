@@ -119,7 +119,6 @@ describe('Workflow Version', () => {
                         id: 'variable',
                         name: 'Variable',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'string',
                             string: 'abc',
@@ -139,7 +138,6 @@ describe('Workflow Version', () => {
                         id: 'variable',
                         name: 'Variable',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'string',
                             string: 'abc',
@@ -164,7 +162,6 @@ describe('Workflow Version', () => {
                                     id: 'variable',
                                     name: 'Variable',
                                     type: 'string',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'string',
                                         string: 'abc',
@@ -200,7 +197,6 @@ describe('Workflow Version', () => {
                                     id: 'variable',
                                     name: 'Variable',
                                     type: 'string',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'string',
                                         string: 'abc',
@@ -233,7 +229,6 @@ describe('Workflow Version', () => {
                                     id: 'variable-1',
                                     name: 'Variable 1',
                                     type: 'string',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'string',
                                         string: 'abc',
@@ -264,7 +259,6 @@ describe('Workflow Version', () => {
                                     id: 'variable',
                                     name: 'Variable',
                                     type: 'string',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'string',
                                         string: 'abc',
@@ -298,7 +292,6 @@ describe('Workflow Version', () => {
                                 id: 'variable',
                                 name: 'Variable',
                                 type: 'string',
-                                hasDefaultValue: false,
                                 defaultValue: null,
                                 markedAsInput: true,
                                 markedAsOutput: false,
@@ -331,7 +324,6 @@ describe('Workflow Version', () => {
                                 id: 'variable-1',
                                 name: 'Variable 1',
                                 type: 'string',
-                                hasDefaultValue: false,
                                 defaultValue: null,
                                 markedAsInput: true,
                                 markedAsOutput: false,
@@ -341,7 +333,7 @@ describe('Workflow Version', () => {
 
                     expect(() => {
                         workflowVersion.fillExecutionVariables([]);
-                    }).toThrow('Variable \'Variable 1\' does not have a default value and an input was not provided.');
+                    }).toThrow('Input value for variable \'Variable 1\' is required.');
                 });
             });
         });
@@ -373,7 +365,6 @@ describe('Workflow Version', () => {
                             id: 'variable-1',
                             name: 'Variable 1',
                             type: 'string',
-                            hasDefaultValue: true,
                             defaultValue: {
                                 type: 'string',
                                 string: 'abc',
@@ -405,7 +396,6 @@ describe('Workflow Version', () => {
                                 id: 'variable',
                                 name: 'Variable',
                                 type: 'string',
-                                hasDefaultValue: false,
                                 defaultValue: null,
                                 markedAsInput: true,
                                 markedAsOutput: false,
@@ -438,7 +428,6 @@ describe('Workflow Version', () => {
                                 id: 'variable',
                                 name: 'Variable',
                                 type: 'string',
-                                hasDefaultValue: false,
                                 defaultValue: null,
                                 markedAsInput: true,
                                 markedAsOutput: false,
@@ -466,7 +455,6 @@ describe('Workflow Version', () => {
                                 id: 'variable',
                                 name: 'Variable',
                                 type: 'string',
-                                hasDefaultValue: false,
                                 defaultValue: null,
                                 markedAsInput: true,
                                 markedAsOutput: false,
@@ -496,7 +484,6 @@ describe('Workflow Version', () => {
                             id: 'variable-1',
                             name: 'Variable 1',
                             type: 'string',
-                            hasDefaultValue: false,
                             defaultValue: null,
                             markedAsInput: true,
                             markedAsOutput: false,
@@ -621,7 +608,6 @@ describe('Workflow Version', () => {
                                     id: 'variable',
                                     name: 'Variable',
                                     type: 'number',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'number',
                                         number: 1,
@@ -686,7 +672,6 @@ describe('Workflow Version', () => {
                                     id: 'variable',
                                     name: 'Variable',
                                     type: 'string',
-                                    hasDefaultValue: true,
                                     defaultValue: {
                                         type: 'string',
                                         string: 'abc',
@@ -720,7 +705,6 @@ describe('Workflow Version', () => {
                                 id: 'variable',
                                 name: 'Variable',
                                 type: 'string',
-                                hasDefaultValue: true,
                                 defaultValue: {
                                     type: 'string',
                                     string: 'abc',

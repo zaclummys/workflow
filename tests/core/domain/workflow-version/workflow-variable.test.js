@@ -11,7 +11,6 @@ describe('Workflow Variable', () => {
                         name: 'Variable',
                         description: 'This is a variable',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'string',
                             string: 'abc',
@@ -25,7 +24,6 @@ describe('Workflow Variable', () => {
                         name: 'Variable',
                         description: 'This is a variable',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: new WorkflowStringValue('abc'),
                         markedAsInput: true,
                         markedAsOutput: true,

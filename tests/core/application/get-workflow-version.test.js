@@ -46,7 +46,6 @@ describe('Get Workflow Version', () => {
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    hasDefaultValue: false,
                     defaultValue: null,
                     markedAsInput: true,
                     markedAsOutput: true,
@@ -59,7 +58,6 @@ describe('Get Workflow Version', () => {
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    hasDefaultValue: false,
                     defaultValue: null,
                     markedAsInput: true,
                     markedAsOutput: true,
@@ -75,7 +73,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'string',
                             string: 'abc',
@@ -91,7 +88,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'string',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'string',
                             string: 'abc',
@@ -109,7 +105,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'number',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'number',
                             number: 1,
@@ -125,7 +120,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'number',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'number',
                             number: 1,
@@ -143,7 +137,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'boolean',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'boolean',
                             boolean: true,
@@ -159,7 +152,6 @@ describe('Get Workflow Version', () => {
                         name: 'Name',
                         description: 'Description',
                         type: 'boolean',
-                        hasDefaultValue: true,
                         defaultValue: {
                             type: 'boolean',
                             boolean: true,

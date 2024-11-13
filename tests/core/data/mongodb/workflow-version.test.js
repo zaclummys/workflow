@@ -1,9 +1,11 @@
 import {
     fromValue,
-    fromWorkflowAssignment,
+    fromWorkflowVariable,
     fromWorkflowIfElement,
+    fromWorkflowAssignment,
 } from '~/core/data/mongodb/workflow-version';
 
+import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
 import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
 import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
@@ -210,6 +212,66 @@ describe('Workflow Version', () => {
                     nextElementIdIfFalse: '3',
                     positionX: 1,
                     positionY: 2,
+                });
+            });
+        });
+    });
+
+    describe('Given a Workflow Variable', () => {
+        describe('When there is no default value', () => {
+            it('Should convert', () => {
+                const variable = new WorkflowVariable({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'string',
+                    defaultValue: null,
+                    markedAsInput: true,
+                    markedAsOutput: true,
+                });
+
+                const output = fromWorkflowVariable(variable);
+
+                expect(output).toEqual({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'string',
+                    defaultValue: null,
+                    markedAsInput: true,
+                    markedAsOutput: true,
+                });
+            });
+        });
+
+        describe('When there is default value', () => {
+            it('Should convert', () => {
+                const variable = new WorkflowVariable({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'string',
+                    defaultValue: {
+                        type: 'string',
+                        string: 'abc',
+                    },
+                    markedAsInput: true,
+                    markedAsOutput: true,
+                });
+
+                const output = fromWorkflowVariable(variable);
+
+                expect(output).toEqual({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'string',
+                    defaultValue: {
+                        type: 'string',
+                        string: 'abc',
+                    },
+                    markedAsInput: true,
+                    markedAsOutput: true,
                 });
             });
         });

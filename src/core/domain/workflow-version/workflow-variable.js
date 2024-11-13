@@ -95,10 +95,6 @@ export default class WorkflowVariable {
         return this.description;
     }
 
-    getHasDefaultValue() {
-        return this.hasDefaultValue;
-    }
-
     getDefaultValue() {
         return this.defaultValue;
     }

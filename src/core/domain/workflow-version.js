@@ -218,21 +218,23 @@ export class WorkflowVersion {
         });
 
         const getValue = (variable) => {
-            if (!variable.getMarkedAsInput()) {
-                return variable.getDefaultValue();
-            }
+            const defaultValue = variable.getDefaultValue();
 
-            const input = inputs.find(input => input.variableId === variable.getId());
+            if (variable.getMarkedAsInput()) {
+                const input = inputs.find(input => input.variableId === variable.getId());
                 
-            if (input) {
-                return input.value;
-            } 
+                if (input != null) {
+                    return input.value;
+                }
 
-            if (!variable.getHasDefaultValue()) {
-                throw new Error(`Variable '${variable.name}' does not have a default value and an input was not provided.`);
+                if (defaultValue != null) {
+                    return defaultValue;
+                }
+
+                throw new Error(`Input value for variable '${variable.getName()}' is required.`);
+            } else {
+                return defaultValue;
             }
-
-            return variable.getDefaultValue();
         }
 
         return this.variables.map(variable => {

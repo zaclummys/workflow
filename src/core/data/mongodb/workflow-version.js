@@ -109,7 +109,6 @@ export function fromWorkflowVariable (workflowVariable) {
         id: workflowVariable.getId(),
         name: workflowVariable.getName(),
         description: workflowVariable.getDescription(),
-        hasDefaultValue: workflowVariable.getHasDefaultValue(),
         defaultValue: fromValue(workflowVariable.getDefaultValue()),
         type: workflowVariable.getType(),
         markedAsInput: workflowVariable.getMarkedAsInput(),
