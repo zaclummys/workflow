@@ -21,6 +21,7 @@ import {
     coerceValue,
     decoerceValue,
 } from '../value';
+import ValueFacade from '~/components/value';
 
 export default function VariableForm ({
     formId,
@@ -197,9 +198,8 @@ export default function VariableForm ({
                 </div>
 
                 {values.defaultValue != null && (
-                    <DefaultValueFacade
+                    <ValueFacade
                         id={defaultValueId}
-                        type={values.type}
                         value={values.defaultValue}
                         onChange={handleDefaultValueChange}
                     />
@@ -239,97 +239,6 @@ export default function VariableForm ({
             )}
         </Form>
     );
-}
-
-function DefaultValueString ({
-    id,
-    value,
-    disabled,
-    onChange,
-}) {
-    return (
-        <Input
-            id={id}
-            value={value}
-            disabled={disabled}
-            onChange={onChange}
-            type="text"
-        />
-    );
-}
-
-function DefaultValueNumber({
-    id,
-    value,
-    disabled,
-    onChange,
-}) {
-    return (
-        <Input
-            id={id}
-            value={value}
-            disabled={disabled}
-            onChange={onChange}
-            type="number"
-            step="1"
-        />
-    );
-}
-
-function DefaultValueBoolean({
-    boolean,
-    onChange,
-}) {
-    return (
-        <Select
-            value={boolean}
-            onChange={onChange}
-        >
-            <Option value="true">True</Option>
-            <Option value="false">False</Option>
-        </Select>
-    );
-}
-
-function DefaultValueFacade ({
-    id,
-    value,
-    disabled,
-    onChange,
-}) {
-    switch (value.type) {
-        case 'string':
-            return (
-                <DefaultValueString
-                    id={id}
-                    value={value.string}
-                    disabled={disabled}
-                    onChange={onChange}
-                />
-            );
-
-        case 'number':
-            return (
-                <DefaultValueNumber
-                    id={id}
-                    value={value.number}
-                    disabled={disabled}
-                    onChange={onChange}
-                />
-            );
-
-        case 'boolean':
-            return (
-                <DefaultValueBoolean
-                    value={value.boolean}
-                    disabled={disabled}
-                    onChange={onChange}
-                />
-            );
-
-        default:
-            return null;
-    }
 }
 
 function ToggleDefaultValue ({
