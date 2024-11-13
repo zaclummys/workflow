@@ -12,15 +12,6 @@ describe('If Element Reducer', () => {
         };
     }
 
-    const ifElement = {
-        name: 'Initial name',
-        description: 'Initial description',
-        strategy: 'all',
-        conditions: [],
-    };
-
-    
-
     it('Should return the initial state', () => {
         const ifElement = createIfElement();
 
@@ -206,6 +197,44 @@ describe('If Element Reducer', () => {
     });
 
     describe('When variable type is string', () => {
+        it('Should change a condition operand type to variable', () => {
+            const ifElementWithCondition = createIfElement({
+                conditions: [
+                    {
+                        id: 'condition-1',
+                        variableId: 'variable-1',
+                        variableType: 'string',
+                        operand: {
+                            type: 'value',
+                            value: {
+                                type: 'string',
+                                string: 'Initial value',
+                            },
+                        },
+                    },
+                ],
+            });
+    
+            const output = ifElementReducer(
+                ifElementWithCondition,
+                {
+                    type: 'condition-operand-type-changed',
+                    conditionId: 'condition-1',
+                    operandType: 'variable',
+                }
+            );
+    
+            expect(output.conditions).toEqual([
+                expect.objectContaining({
+                    id: 'condition-1',
+                    operand: {
+                        type: 'variable',
+                        variableId: '',
+                    },
+                })
+            ]);
+        });
+
         it('Should change a condition operand type to value', () => {
             const ifElementWithCondition = createIfElement({
                 conditions: [
