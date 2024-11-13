@@ -1,10 +1,11 @@
 import { Input, Select, Option } from '~/components/form';
 
-export default function ValueFacade ({ value, onChange }) {
+export default function ValueFacade ({ id, value, onChange }) {
     switch (value.type) {
         case 'string':
             return (
                 <StringValue
+                    id={id}
                     string={value.string}
                     onChange={onChange}
                 />
@@ -13,6 +14,7 @@ export default function ValueFacade ({ value, onChange }) {
         case 'number':
             return (
                 <NumberValue
+                    id={id}
                     number={value.number}
                     onChange={onChange}
                 />
@@ -21,6 +23,7 @@ export default function ValueFacade ({ value, onChange }) {
         case 'boolean':
             return (
                 <BooleanValue
+                    id={id}
                     boolean={value.boolean}
                     onChange={onChange}
                 />
