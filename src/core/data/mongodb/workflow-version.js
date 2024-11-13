@@ -178,6 +178,7 @@ export function fromWorkflowCondition (workflowCondition) {
     return {
         id: workflowCondition.getId(),
         variableId: workflowCondition.getVariableId(),
+        variableType: workflowCondition.getVariableType(),
         operator: workflowCondition.getOperator(),
         operand: workflowCondition.getOperand(),
     };

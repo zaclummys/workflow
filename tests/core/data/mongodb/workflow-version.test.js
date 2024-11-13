@@ -172,6 +172,7 @@ describe('Workflow Version', () => {
                         {
                             id: '2',
                             variableId: '3',
+                            variableType: 'number',
                             operator: 'equal',
                             operand: {
                                 type: 'value',
@@ -197,6 +198,7 @@ describe('Workflow Version', () => {
                         {
                             id: '2',
                             variableId: '3',
+                            variableType: 'number',
                             operator: 'equal',
                             operand: {
                                 type: 'value',

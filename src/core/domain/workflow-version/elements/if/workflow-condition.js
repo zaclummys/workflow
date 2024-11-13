@@ -2,6 +2,7 @@ export default class WorkflowCondition {
     constructor ({
         id,
         variableId,
+        variableType,
         operator,
         operand,
     }) {
@@ -11,6 +12,10 @@ export default class WorkflowCondition {
 
         if (!variableId) {
             throw new Error('Variable ID is required.');
+        }
+
+        if (!variableType) {
+            throw new Error('Variable Type is required.');
         }
 
         if (!operator) {
@@ -23,6 +28,7 @@ export default class WorkflowCondition {
 
         this.id = id;
         this.variableId = variableId;
+        this.variableType = variableType;
         this.operator = operator;
         this.operand = operand;
     }
@@ -33,6 +39,10 @@ export default class WorkflowCondition {
 
     getVariableId () {
         return this.variableId;
+    }
+
+    getVariableType () {
+        return this.variableType;
     }
 
     getOperator () {

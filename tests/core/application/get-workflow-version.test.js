@@ -14,6 +14,7 @@ describe('Get Workflow Version', () => {
             const workflowCondition = new WorkflowCondition({
                 id: '1',
                 variableId: 'variable-2',
+                variableType: 'string',
                 operator: 'equal',
                 operand: {
                     type: 'value',
@@ -29,6 +30,7 @@ describe('Get Workflow Version', () => {
             expect(output).toStrictEqual({
                 id: '1',
                 variableId: 'variable-2',
+                variableType: 'string',
                 operator: 'equal',
                 operand: {
                     type: 'value',
