@@ -35,14 +35,6 @@ export default function IfSidebar ({
 
     const formId = useId();
 
-    // const [localIfElement, setLocalIfElement] = useState({
-    //     id: ifElement.id,
-    //     name: ifElement.name,
-    //     description: ifElement.description,
-    //     strategy: ifElement.strategy,
-    //     conditions: ifElement.conditions,
-    // });
-
     const [localIfElement, dispatchIfElement] = useReducer(ifElementReducer, ifElement);
 
     const handleNameChange = event => {
