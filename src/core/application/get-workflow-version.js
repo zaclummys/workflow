@@ -171,11 +171,15 @@ export function fromWorkflowIfElement (element) {
         nextElementIdIfFalse: element.getNextElementIdIfFalse(),
         strategy: element.getStrategy(),
         conditions: element.getConditions()
-            .map(condition => ({
-                id: condition.getId(),
-                variableId: condition.getVariableId(),
-                type: condition.getType(),
-                value: condition.getValue(),
-            }))
+            .map(fromWorkflowCondition),
+    };
+}
+
+export function fromWorkflowCondition (condition) {
+    return {
+        id: condition.getId(),
+        variableId: condition.getVariableId(),
+        operator: condition.getOperator(),
+        operand: condition.getOperand(),
     };
 }

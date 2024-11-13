@@ -1,12 +1,46 @@
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
+import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
 
 import {
+    fromWorkflowCondition,
     fromWorkflowVariable,
     fromWorkflowIfElement,
 } from '~/core/application/get-workflow-version';
 
 describe('Get Workflow Version', () => {
+    describe('Given a Workflow Condition', () => {
+        it('Should convert', () => {
+            const workflowCondition = new WorkflowCondition({
+                id: '1',
+                variableId: 'variable-2',
+                operator: 'equal',
+                operand: {
+                    type: 'value',
+                    value: {
+                        type: 'string',
+                        string: 'abc',
+                    },
+                }
+            });
+
+            const output = fromWorkflowCondition(workflowCondition);
+
+            expect(output).toStrictEqual({
+                id: '1',
+                variableId: 'variable-2',
+                operator: 'equal',
+                operand: {
+                    type: 'value',
+                    value: {
+                        type: 'string',
+                        string: 'abc',
+                    },
+                }
+            });
+        });
+    });
+
     describe('Given a Workflow If Element', () => {
         it('Should convert', () => {
             const workflowIfElement = new WorkflowIfElement({
