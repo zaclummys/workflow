@@ -1,6 +1,10 @@
 import { Input, Select, Option } from '~/components/form';
 
-export default function ValueFacade ({ id, value, onChange }) {
+export default function ValueFacade ({
+    id,
+    value,
+    onChange,
+}) {
     switch (value.type) {
         case 'string':
             return (
@@ -30,22 +34,24 @@ export default function ValueFacade ({ id, value, onChange }) {
             );
 
         default:
-            throw new Error(`Unsupported value type: ${value.type}`);
+            return null;
     }
 }
 
-function StringValue ({ string, onChange }) {
+function StringValue ({ id, string, onChange }) {
     return (
         <Input
+            id={id}
             value={string}
             onChange={onChange}
         />
     );
 }
 
-function NumberValue ({ number, onChange }) {
+function NumberValue ({ id, number, onChange }) {
     return (
         <Input
+            id={id}
             type="number"
             value={number}
             onChange={onChange}
@@ -53,9 +59,11 @@ function NumberValue ({ number, onChange }) {
     );
 }
 
-function BooleanValue ({ boolean, onChange }) {
+function BooleanValue ({ id, boolean, onChange }) {
     return (
         <Select
+            id={id}
+            required
             value={boolean}
             onChange={onChange}
         >

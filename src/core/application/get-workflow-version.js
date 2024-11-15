@@ -181,6 +181,50 @@ export function fromWorkflowCondition (condition) {
         variableId: condition.getVariableId(),
         variableType: condition.getVariableType(),
         operator: condition.getOperator(),
-        operand: condition.getOperand(),
+        operand: fromWorkflowOperand(condition.getOperand()),
     };
+}
+
+export function fromWorkflowOperand (operand) {
+    switch (operand.getType()) {
+        case 'variable':
+            return {
+                type: operand.getType(),
+                variableId: operand.getVariableId(),
+            };
+
+        case 'value':
+            return {
+                type: operand.getType(),
+                value: fromValue(operand.getValue()),
+            };
+
+        default:
+            return null;
+    }
+}
+
+export function fromValue (value) {
+    switch (value.getType()) {
+        case 'number':
+            return {
+                type: value.getType(),
+                number: value.getNumber(),
+            };
+
+        case 'string':
+            return {
+                type: value.getType(),
+                string: value.getString(),
+            };
+
+        case 'boolean':
+            return {
+                type: value.getType(),
+                boolean: value.getBoolean(),
+            };
+
+        default:
+            return null;
+    }
 }

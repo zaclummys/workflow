@@ -1,4 +1,20 @@
+import WorkflowValueOperand from '~/core/domain/workflow-version/operands/workflow-value-operand';
+import WorkflowVariableOperand from '~/core/domain/workflow-version/operands/workflow-variable-operand';
+
 export default class WorkflowCondition {
+    static createOperand (operand) {
+        switch (operand.type) {
+            case 'value':
+                return new WorkflowValueOperand(operand.value);
+
+            case 'variable':
+                return new WorkflowVariableOperand(operand.variableId);
+
+            default:
+                throw new Error(`Unknown operand type: ${operand.type}.`);
+        }
+    }
+
     constructor ({
         id,
         variableId,
@@ -30,7 +46,7 @@ export default class WorkflowCondition {
         this.variableId = variableId;
         this.variableType = variableType;
         this.operator = operator;
-        this.operand = operand;
+        this.operand =  WorkflowCondition.createOperand(operand);
     }
 
     getId() {

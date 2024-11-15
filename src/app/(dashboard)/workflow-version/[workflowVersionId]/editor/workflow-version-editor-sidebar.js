@@ -3,7 +3,7 @@ import AddVariableSidebar from './sidebars/variable-sidebars/add-variable-sideba
 import EditVariableSidebar from './sidebars/variable-sidebars/edit-variable-sidebar';
 import RemoveVariableSidebar from './sidebars/variable-sidebars/remove-variable-sidebar';
 
-import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar';
+import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar/if-element-sidebar';
 import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar';
 
 export default function WorkflowVersionEditorSidebar ({
@@ -20,7 +20,7 @@ export default function WorkflowVersionEditorSidebar ({
     onCancelEditVariableButtonClick,
     onCancelRemoveVariableButtonClick,
 
-    onIfElementedEdited,
+    onIfElementEdited,
     onAssignElementEdited,
 
     onCloseButtonClick,
@@ -92,7 +92,7 @@ export default function WorkflowVersionEditorSidebar ({
 
                     ifElementId={sidebar.elementId}
                     onCloseButtonClick={onCloseButtonClick}
-                    onIfElementedEdited={onIfElementedEdited}
+                    onIfElementEdited={onIfElementEdited}
 
                     workflowVersion={workflowVersion}
                     dispatchWorkflowVersion={dispatchWorkflowVersion}

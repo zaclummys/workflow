@@ -14,8 +14,8 @@ describe('User', () => {
             const password = await UserPassword.create('12345678');
 
             expect(password.toString()).not.toBe('12345678');
-            expect(password.verify('12345678')).resolves.toBeTruthy()
-            expect(password.verify('87654321')).resolves.toBeFalsy();
+            await expect(password.verify('12345678')).resolves.toBeTruthy()
+            await expect(password.verify('87654321')).resolves.toBeFalsy();
         });
     });
 

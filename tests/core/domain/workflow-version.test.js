@@ -505,12 +505,12 @@ describe('Workflow Version', () => {
 
     describe('Execute Workflow Version', () => {
         describe('When workflow version is draft', () => {
-            it('Should throw an error', () => {
+            it('Should throw an error', async () => {
                 const workflowVersion = createWorkflowVersion({
                     status: 'draft',
                 });
 
-                expect(() => {
+                await expect(() => {
                     return workflowVersion.execute({
                         inputs: [],
                     });
@@ -519,12 +519,12 @@ describe('Workflow Version', () => {
         });
 
         describe('When workflow version is inactive', () => {
-            it('Should throw an error', () => {
+            it('Should throw an error', async () => {
                 const workflowVersion = createWorkflowVersion({
                     status: 'inactive',
                 });
 
-                expect(() => {
+                await expect(() => {
                     return workflowVersion.execute({
                         inputs: [],
                     });

@@ -1,4 +1,4 @@
-import ifElementReducer from './if-element-reducer';
+import ifElementReducer from './if-element-sidebar-reducer';
 
 describe('If Element Reducer', () => {
     const createIfElement = ({
@@ -77,11 +77,8 @@ describe('If Element Reducer', () => {
                 variableType: 'string',
                 operator: 'equal',
                 operand: {
-                    type: 'value',
-                    value: {
-                        type: 'string',
-                        value: '',
-                    },
+                    type: 'variable',
+                    variableId: 'variable-1',
                 },
             })
         ]);
@@ -99,8 +96,8 @@ describe('If Element Reducer', () => {
                         type: 'value',
                         value: {
                             type: 'string',
-                            value: 'xyz',
-                        },
+                            value: 'abc',
+                        }
                     },
                 },
             ],
@@ -123,11 +120,8 @@ describe('If Element Reducer', () => {
                 variableType: 'number',
                 operator: 'equal',
                 operand: {
-                    type: 'value',
-                    value: {
-                        type: 'number',
-                        value: '',
-                    },
+                    type: 'variable',
+                    variableId: 'variable-2',
                 }
             })
         ]);
@@ -165,11 +159,12 @@ describe('If Element Reducer', () => {
             conditions: [
                 {
                     id: 'condition-1',
+                    variableId: 'variable-1',
                     operand: {
                         type: 'value',
                         value: {
                             type: 'string',
-                            string: 'Initial value',
+                            value: 'abc',
                         },
                     },
                 },
@@ -190,7 +185,7 @@ describe('If Element Reducer', () => {
                 id: 'condition-1',
                 operand: {
                     type: 'variable',
-                    variableId: '',
+                    variableId: 'variable-1',
                 },
             })
         ]);
@@ -208,7 +203,7 @@ describe('If Element Reducer', () => {
                             type: 'value',
                             value: {
                                 type: 'string',
-                                string: 'Initial value',
+                                value: 'abc',
                             },
                         },
                     },
@@ -229,7 +224,7 @@ describe('If Element Reducer', () => {
                     id: 'condition-1',
                     operand: {
                         type: 'variable',
-                        variableId: '',
+                        variableId: 'variable-1',
                     },
                 })
             ]);
@@ -266,8 +261,8 @@ describe('If Element Reducer', () => {
                         type: 'value',
                         value: {
                             type: 'string',
-                            value: '',
-                        },
+                            string: '',
+                        }
                     },
                 })
             ]);
@@ -284,8 +279,8 @@ describe('If Element Reducer', () => {
                             type: 'value',
                             value: {
                                 type: 'string',
-                                string: 'Initial value',
-                            },
+                                value: 'abc',
+                            }
                         },
                     },
                 ],
@@ -296,7 +291,7 @@ describe('If Element Reducer', () => {
                 {
                     type: 'condition-operand-value-changed',
                     conditionId: 'condition-1',
-                    value: 'New value',
+                    value: 'xyz',
                 }
             );
     
@@ -307,8 +302,8 @@ describe('If Element Reducer', () => {
                         type: 'value',
                         value: {
                             type: 'string',
-                            string: 'New value',
-                        },
+                            string: 'xyz',
+                        }
                     },
                 })
             ]);
@@ -347,8 +342,8 @@ describe('If Element Reducer', () => {
                         type: 'value',
                         value: {
                             type: 'number',
-                            value: '',
-                        },
+                            number: '0',
+                        }
                     },
                 })
             ]);
@@ -365,8 +360,8 @@ describe('If Element Reducer', () => {
                             type: 'value',
                             value: {
                                 type: 'number',
-                                number: 'Initial value',
-                            },
+                                value: '123',
+                            }
                         },
                     },
                 ],
@@ -377,10 +372,10 @@ describe('If Element Reducer', () => {
                 {
                     type: 'condition-operand-value-changed',
                     conditionId: 'condition-1',
-                    value: 'New value',
+                    value: '456',
                 }
             );
-    
+
             expect(output.conditions).toEqual([
                 expect.objectContaining({
                     id: 'condition-1',
@@ -388,8 +383,8 @@ describe('If Element Reducer', () => {
                         type: 'value',
                         value: {
                             type: 'number',
-                            number: 'New value',
-                        },
+                            number: '456',
+                        }
                     },
                 })
             ]);
@@ -414,7 +409,7 @@ describe('If Element Reducer', () => {
             {
                 type: 'condition-operand-variable-changed',
                 conditionId: 'condition-1',
-                variableId: 'variable-2',
+                operandVariableId: 'variable-2',
             }
         );
 

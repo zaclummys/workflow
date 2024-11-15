@@ -1,3 +1,8 @@
+import {
+    createValue,
+    updateValue,
+} from '~/value';
+
 export default function ifElementReducer (ifElement, action) {
     switch (action.type) {
         case 'name-changed':
@@ -44,12 +49,9 @@ function conditionsReducer (conditions, action) {
                 variableType: action.variableType,
                 operator: 'equal',
                 operand: {
-                    type: 'value',
-                    value: {
-                        type: action.variableType,
-                        value: '',
-                    },
-                }
+                    type: 'variable',
+                    variableId: action.variableId,
+                },
             });
 
         case 'condition-variable-changed':
@@ -61,11 +63,8 @@ function conditionsReducer (conditions, action) {
                         variableType: action.variableType,
                         operator: 'equal',
                         operand: {
-                            type: 'value',
-                            value: {
-                                type: action.variableType,
-                                value: '',
-                            },
+                            type: 'variable',
+                            variableId: action.variableId,
                         },
                     };
                 } else {
@@ -94,7 +93,7 @@ function conditionsReducer (conditions, action) {
                                 ...condition,
                                 operand: {
                                     type: 'variable',
-                                    variableId: '',
+                                    variableId: condition.variableId,
                                 }
                             };
 
@@ -103,10 +102,7 @@ function conditionsReducer (conditions, action) {
                                 ...condition,
                                 operand: {
                                     type: 'value',
-                                    value: {
-                                        type: condition.variableType,
-                                        value: '',
-                                    }
+                                    value: createValue(condition.variableType),
                                 }
                             };
 
@@ -125,7 +121,7 @@ function conditionsReducer (conditions, action) {
                         ...condition,
                         operand: {
                             ...condition.operand,
-                            variableId: action.variableId,
+                            variableId: action.operandVariableId,
                         },
                     }
                 } else {
@@ -136,43 +132,16 @@ function conditionsReducer (conditions, action) {
         case 'condition-operand-value-changed':
             return conditions.map(condition => {
                 if (condition.id === action.conditionId) {
-                    switch (condition.operand.value.type) {
-                        case 'string':
-                            return {
-                                ...condition,
-                                operand: {
-                                    ...condition.operand,
-                                    value: {
-                                        type: 'string',
-                                        string: action.value,
-                                    },
-                                },
-                            };
-                        
-                        case 'number':
-                            return {
-                                ...condition,
-                                operand: {
-                                    ...condition.operand,
-                                    value: {
-                                        type: 'number',
-                                        number: action.value,
-                                    },
-                                },
-                            };
-
-                        case 'boolean':
-                            return {
-                                ...condition,
-                                operand: {
-                                    ...condition.operand,
-                                    value: {
-                                        type: 'boolean',
-                                        boolean: action.value,
-                                    },
-                                },
-                            };
-                    }
+                    return {
+                        ...condition,
+                        operand: {
+                            ...condition.operand,
+                            value: updateValue(
+                                condition.operand.value.type,
+                                action.value,
+                            ),
+                        },
+                    };
                 } else {
                     return condition;
                 }

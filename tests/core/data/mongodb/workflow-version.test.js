@@ -1,16 +1,21 @@
 import {
     fromValue,
+    fromWorkflowOperand,
     fromWorkflowVariable,
     fromWorkflowIfElement,
+    fromWorkflowCondition,
     fromWorkflowAssignment,
 } from '~/core/data/mongodb/workflow-version';
 
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
+import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
 import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
 import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
 import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
 import WorkflowBooleanValue from '~/core/domain/workflow-version/values/workflow-boolean-value';
+import WorkflowVariableOperand from '~/core/domain/workflow-version/operands/workflow-variable-operand';
+import WorkflowValueOperand from '~/core/domain/workflow-version/operands/workflow-value-operand';
 
 describe('Workflow Version', () => {
     describe('Given a Workflow Number Value', () => {
@@ -42,6 +47,78 @@ describe('Workflow Version', () => {
             expect(output).toEqual({
                 type: 'boolean',
                 boolean: true,
+            });
+        });
+    });
+
+    describe('Given a Workflow Variable Operand', () => {
+        it('Should convert', () => {
+            const operand = new WorkflowVariableOperand('1');
+
+            const output = fromWorkflowOperand(operand);
+
+            expect(output).toEqual({
+                type: 'variable',
+                variableId: '1',
+            });
+        });
+    });
+
+    describe('Given a Workflow Value Operand', () => {
+        describe('When value is a number', () => {
+            it('Should convert', () => {
+                const operand = new WorkflowValueOperand({
+                    type: 'number',
+                    number: 123,
+                });
+
+                const output = fromWorkflowOperand(operand);
+
+                expect(output).toEqual({
+                    type: 'value',
+                    value: {
+                        type: 'number',
+                        number: 123,
+                    }
+                });
+            });
+        });
+
+        describe('When value is a string', () => {
+            it('Should convert', () => {
+                const operand = new WorkflowValueOperand({
+                    type: 'string',
+                    string: 'abc',
+                });
+
+                const output = fromWorkflowOperand(operand);
+
+                expect(output).toEqual({
+                    type: 'value',
+                    value: {
+                        type: 'string',
+                        string: 'abc',
+                    }
+                });
+            });
+        });
+
+        describe('When value is a boolean', () => {
+            it('Should convert', () => {
+                const operand = new WorkflowValueOperand({
+                    type: 'boolean',
+                    boolean: true,
+                });
+
+                const output = fromWorkflowOperand(operand);
+
+                expect(output).toEqual({
+                    type: 'value',
+                    value: {
+                        type: 'boolean',
+                        boolean: true,
+                    }
+                });
             });
         });
     });
@@ -96,6 +173,36 @@ describe('Workflow Version', () => {
                             type: 'number',
                             number: 123,
                         }
+                    }
+                });
+            });
+        });
+    });
+
+    describe('Given a Workflow Condition', () => {
+        describe('When operand is a variable', () => {
+            it('Should convert', () => {
+                const condition = new WorkflowCondition({
+                    id: '1',
+                    variableId: '2',
+                    variableType: 'number',
+                    operator: 'equal',
+                    operand: {
+                        type: 'variable',
+                        variableId: '3',
+                    }
+                });
+
+                const output = fromWorkflowCondition(condition);
+    
+                expect(output).toEqual({
+                    id: '1',
+                    variableId: '2',
+                    variableType: 'number',
+                    operator: 'equal',
+                    operand: {
+                        type: 'variable',
+                        variableId: '3',
                     }
                 });
             });

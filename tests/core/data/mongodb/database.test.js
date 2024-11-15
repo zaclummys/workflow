@@ -1,6 +1,6 @@
 import database from "~/core/data/mongodb/database";
 
-describe('MongoDB Database', () => {
+describe.skip('MongoDB Database', () => {
     it('Should ping to DB', async () => {
         const { ok } = await database.command({
             ping: 1

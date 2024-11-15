@@ -180,8 +180,27 @@ export function fromWorkflowCondition (workflowCondition) {
         variableId: workflowCondition.getVariableId(),
         variableType: workflowCondition.getVariableType(),
         operator: workflowCondition.getOperator(),
-        operand: workflowCondition.getOperand(),
+        operand: fromWorkflowOperand(workflowCondition.getOperand()),
     };
+}
+
+export function fromWorkflowOperand (workflowOperand) {
+    switch (workflowOperand.getType()) {
+        case 'variable':
+            return {
+                type: workflowOperand.getType(),
+                variableId: workflowOperand.getVariableId(),
+            };
+
+        case 'value':
+            return {
+                type: workflowOperand.getType(),
+                value: fromValue(workflowOperand.getValue()),
+            };
+
+        default:
+            throw new Error(`Unknown operand type: ${workflowOperand.getType()}`);
+    }
 }
 
 export function fromWorkflowAssignment (workflowAssignment) {

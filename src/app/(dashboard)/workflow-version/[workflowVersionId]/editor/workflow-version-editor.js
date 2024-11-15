@@ -121,7 +121,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
                     onCancelEditVariableButtonClick={handleCancelEditVariableButtonClick}
                     onCancelRemoveVariableButtonClick={handleCancelRemoveVariableButtonClick}
 
-                    onIfElementedEdited={handleIfElementEdited}
+                    onIfElementEdited={handleIfElementEdited}
                     onAssignElementEdited={handleAssignElementEdited}
 
                     onCloseButtonClick={handleCloseButtonClick}

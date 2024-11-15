@@ -20,8 +20,9 @@ import {
     createValue,
     coerceValue,
     decoerceValue,
-} from '../value';
-import ValueFacade from '~/components/value';
+} from '../../../../../../../value';
+
+import ValueFacade from '~/components/value-facade';
 
 export default function VariableForm ({
     formId,
