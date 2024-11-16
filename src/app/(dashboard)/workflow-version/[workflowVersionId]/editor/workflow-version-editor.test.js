@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/vitest';
+
 import { render, screen, act, fireEvent } from '@testing-library/react';
 
 import WorkflowVersionEditor from './workflow-version-editor';
@@ -11,7 +13,7 @@ describe('Workflow Version Editor Sidebar', () => {
         }));
     });
 
-    it('Should render', () => {
+    it('Should render with details', () => {
         const workflowVersion = {
             id: 'workflow-version-1',
             name: 'Workflow Version 1',
@@ -23,32 +25,6 @@ describe('Workflow Version Editor Sidebar', () => {
                 id: 'workflow-1',
                 name: 'Workflow 1',
                 description: 'This is the first workflow.',
-            },
-        };
-
-        render(
-            <WorkflowVersionEditor
-                workflowVersion={workflowVersion}
-            />
-        );
-
-        screen.getByText('Version 1');
-        screen.getByText('Workflow 1');
-
-
-    });
-
-    it('Should display workflow version details', () => {
-        const workflowVersion = {
-            id: 'workflow-version-1',
-            name: 'Workflow Version 1',
-            number: 1,
-            description: 'This is the first workflow version.',
-            elements: [],
-            variables: [],
-            workflow: {
-                id: 'workflow-1',
-                name: 'Workflow 1',
             },
         };
 
@@ -320,7 +296,10 @@ describe('Workflow Version Editor Sidebar', () => {
                     name: 'Variable ABC',
                     description: 'This is a variable.',
                     type: 'string',
-                    defaultValue: 'ABC',
+                    defaultValue: {
+                        type: 'string',
+                        string: 'ABC',
+                    },
                 },
             ],
             workflow: {
@@ -366,7 +345,10 @@ describe('Workflow Version Editor Sidebar', () => {
                     id: 'variable-1',
                     name: 'Variable ABC',
                     type: 'string',
-                    defaultValue: 'ABC',
+                    defaultValue: {
+                        type: 'string',
+                        string: 'ABC',
+                    },
                 },
             ],
             workflow: {
@@ -667,5 +649,50 @@ describe('Workflow Version Editor Sidebar', () => {
         });
 
         expect(screen.queryByText('Edit If')).toBeNull();
+    });
+
+    it('Should allow user to confirm edit assign element', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is the first workflow version.',
+            elements: [
+                {
+                    id: 'element-1',
+                    type: 'assign',
+                    name: 'Assign Element',
+                    description: 'This is an assign element.',
+                    assignments: [],
+                },
+            ],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+        
+        const assignElementNode = screen.getByText('Assign Element');
+
+        act(() => {
+            fireEvent.dblClick(assignElementNode);
+        });
+
+        const editAssignTitle = screen.getByText('Edit Assign');
+
+        const confirmButton = screen.getByText('Confirm');
+
+        act(() => {
+            fireEvent.click(confirmButton);
+        });
+
+        expect(editAssignTitle).not.toBeInTheDocument();
     });
 });

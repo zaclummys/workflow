@@ -10,8 +10,8 @@ import workflowVersionEditorReducer from './workflow-version-editor-reducer';
 
 export default function WorkflowVersionEditor ({ workflowVersion }) {
     const initialWorkflowVersionEditor = {
-        sidebar: null,
         workflowVersion,
+        workflowVersionSidebar: null,
     };
 
     const [workflowVersionEditor, dispatchWorflowVersionEditor] = useReducer(
@@ -19,14 +19,17 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         initialWorkflowVersionEditor,
     );
 
-    const localWorkflowVersion = workflowVersionEditor.workflowVersion;
-
     // useEffect(() => {
     //     dispatchLocalWorkflowVersion({ type: 'reset', workflowVersion });
     // }, [workflowVersion]);
 
+    const findElementById = elementId => {
+        return workflowVersionEditor.workflowVersion
+            .elements.find(element => element.id === elementId);
+    }
+
     const handleCanvasNodeDoubleClick = (event, node) => {
-        const element = localWorkflowVersion.elements.find(element => element.id === node.id);
+        const element = findElementById(node.id);
 
         if (element != null) {
             dispatchWorflowVersionEditor({ type: 'element-selected', element });
@@ -100,14 +103,14 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         dispatchWorflowVersionEditor({ type: 'edit-element-canceled' });
     }
 
-    const localWorkflowVersionIsSame = localWorkflowVersion === workflowVersion;
+    const localWorkflowVersionIsSame = workflowVersion === workflowVersionEditor.WorkflowVersion;
 
     return (
         <div className="flex flex-col h-screen">
             <WorkflowVersionEditorHeader
                 disableSaveButton={localWorkflowVersionIsSame}
                 disableToggleButton={!localWorkflowVersionIsSame}
-                workflowVersion={localWorkflowVersion}
+                workflowVersion={workflowVersionEditor.workflowVersion}
                 onVariablesButtonClick={handleVariablesButtonClick}
                 dispatchWorkflowVersion={dispatchWorflowVersionEditor}
             />
@@ -115,8 +118,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             <div className="w-full h-full relative">
                 <WorkflowVersionEditorCanvas
                     onNodeDoubleClick={handleCanvasNodeDoubleClick}
-
-                    workflowVersion={localWorkflowVersion}
+                    workflowVersion={workflowVersionEditor.workflowVersion}
                     dispatchWorkflowVersion={dispatchWorflowVersionEditor}
                 />
 

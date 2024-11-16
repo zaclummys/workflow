@@ -13,7 +13,7 @@ import {
 import { OutlineButton, PrimaryButton } from '~/components/button';
 import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/components/form';
 
-import IfElementCondition from './if-element-condition';
+import Condition from './condition';
 
 import { coerceIfElement } from '~/value';
 import ifElementReducer from '~/reducers/if-element-sidebar-reducer';
@@ -148,7 +148,7 @@ export default function IfElementSidebar ({
                         </Field>
 
                         {localIfElement.conditions.map(condition => (
-                            <IfElementCondition
+                            <Condition
                                 key={condition.id}
                                 condition={condition}
                                 variables={variables}

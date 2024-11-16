@@ -27,7 +27,7 @@ export default function ShowVariablesSidebar ({
 
                     <OutlineButton
                         onClick={onAddVariableButtonClick}>
-                            Add
+                        Add
                     </OutlineButton>
                 </SidebarHeader>
 
@@ -62,7 +62,13 @@ function Variable ({
 }) {
     return (
         <div className="flex flex-row justify-between items-center">
-            <span>{variable.name}</span>
+            <div className="flex flex-row gap-2">
+                <span>{variable.name}</span>
+
+                <span className="text-on-surface-variant">
+                    {variable.type}
+                </span>
+            </div>
 
             <ButtonGroup>
                 <OutlineButton

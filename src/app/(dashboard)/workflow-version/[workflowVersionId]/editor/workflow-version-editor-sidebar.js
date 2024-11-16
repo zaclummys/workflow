@@ -1,5 +1,5 @@
 import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar/if-element-sidebar';
-import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar';
+import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar/assign-element-sidebar';
 
 import ShowVariablesSidebar from './sidebars/variable-sidebars/show-variables-sidebar';
 import AddVariableSidebar from './sidebars/variable-sidebars/add-variable-sidebar';
@@ -89,12 +89,11 @@ export default function WorkflowVersionEditorSidebar ({
                         <AssignElementSidebar
                             key={sidebar.elementId}
 
-                            assignElementId={sidebar.elementId}
-                            onCloseButtonClick={onCloseButtonClick}
-                            onAssignElementEdited={onAssignElementEdited}
-
-                            workflowVersion={workflowVersion}
-                            dispatchWorkflowVersion={dispatchWorkflowVersion}
+                            assignElement={sidebar.element}
+                            variables={variables}
+                            
+                            onConfirm={onEditElementConfirm}
+                            onCancel={onEditElementCancel}
                         />
                     );
 

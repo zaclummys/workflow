@@ -107,13 +107,16 @@ describe('Variable Form', () => {
                     description: 'This is the first variable.',
                     type: 'string',
                     defaultValue: null,
-                    markedAsInput: true,
-                    markedAsOutput: true,
+                    markedAsInput: false,
+                    markedAsOutput: false,
                 };
+
+                const onConfirm = vi.fn();
 
                 render(
                     <VariableForm
                         variable={initialVariable}
+                        onConfirm={onConfirm}
                     />
                 );
 
@@ -132,8 +135,55 @@ describe('Variable Form', () => {
                 expect(nameInput.value).toBe('Variable 2');
                 expect(descriptionInput.value).toBe('This is the second variable.');
                 expect(typeSelect.value).toBe('number');
-                expect(markedAsInputCheckbox.checked).toBe(false);
-                expect(markedAsOutputCheckbox.checked).toBe(false);
+                expect(markedAsInputCheckbox.checked).toBe(true);
+                expect(markedAsOutputCheckbox.checked).toBe(true);
+            });
+
+            it('Should allow to confirm after change the values', () => {
+                const initialVariable = {
+                    name: 'Variable 1',
+                    description: 'This is the first variable.',
+                    type: 'string',
+                    defaultValue: null,
+                    markedAsInput: false,
+                    markedAsOutput: false,
+                };
+
+                const onConfirm = vi.fn();
+
+                render(
+                    <VariableForm
+                        variable={initialVariable}
+                        onConfirm={onConfirm}
+                    />
+                );
+
+                const nameInput = screen.getByLabelText('Name');
+                const descriptionInput = screen.getByLabelText('Description');
+                const typeSelect = screen.getByLabelText('Type');
+                const markedAsInputCheckbox = screen.getByLabelText('Allow this variable to be available as input.');
+                const markedAsOutputCheckbox = screen.getByLabelText('Allow this variable to be available as output.');
+
+                fireEvent.change(nameInput, { target: { value: 'Variable 2' } });
+                fireEvent.change(descriptionInput, { target: { value: 'This is the second variable.' } });
+                fireEvent.change(typeSelect, { target: { value: 'number' } });
+                fireEvent.click(markedAsInputCheckbox);
+                fireEvent.click(markedAsOutputCheckbox);
+
+                const confirmButton = screen.getByText('Confirm');
+
+                act(() => {
+                    fireEvent.click(confirmButton);
+                });
+
+                expect(onConfirm).toHaveBeenCalledWith({
+                    name: 'Variable 2',
+                    description: 'This is the second variable.',
+                    type: 'number',
+                    defaultValue: null,
+                    markedAsInput: true,
+                    markedAsOutput: true,
+                });
             });
 
             describe('String', () => {
@@ -158,6 +208,8 @@ describe('Variable Form', () => {
                     fireEvent.click(addDefaultValue);
 
                     const defaultValueInput = screen.getByLabelText('Default Value');
+
+                    expect(defaultValueInput.value).toBe('');
                 });
             });
 

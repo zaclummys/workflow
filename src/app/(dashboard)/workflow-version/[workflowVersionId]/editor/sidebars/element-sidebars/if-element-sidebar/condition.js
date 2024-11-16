@@ -4,7 +4,7 @@ import { Field, Label, Select, Option, Row } from '~/components/form';
 
 import ValueFacade from '~/components/value-facade';
 
-export default function IfElementCondition ({
+export default function Condition ({
     condition,
     variables,
     dispatchIfElement,
@@ -89,6 +89,7 @@ export default function IfElementCondition ({
                 </Label>
 
                 <Select
+                    required
                     id={variableId}
                     value={condition.variableId}
                     onChange={handleConditionVariableChange}
@@ -111,6 +112,7 @@ export default function IfElementCondition ({
                 </Label>
 
                 <Select
+                    required
                     id={operatorId}
                     value={condition.operator}
                     onChange={handleConditionOperatorChange}
@@ -142,6 +144,7 @@ export default function IfElementCondition ({
                 </Label>
 
                 <Select
+                    required
                     id={operandTypeId}
                     value={condition.operand.type}
                     onChange={handleConditionOperandTypeChange}>
@@ -158,6 +161,7 @@ export default function IfElementCondition ({
                     </Label>
         
                     <Select
+                        required
                         id={operandVariableId}
                         value={condition.operand.variableId}
                         onChange={handleConditionOperandVariableChange}>

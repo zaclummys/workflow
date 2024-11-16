@@ -34,6 +34,7 @@ export default function ValueFacade ({
             );
 
         default:
+            throw new Error(`Unknown value type: ${value.type}`);
             return null;
     }
 }
