@@ -41,12 +41,12 @@ export default function VariableForm ({
 
     const variableHasNotInitialValue = values.defaultValue == null && !values.markedAsInput;
 
-    const handleFormSubmit = event => {
+    const handleSubmit = event => {
         event.preventDefault();
 
-        // if (variableHasNotInitialValue) {
-        //     return;
-        // }
+        if (variableHasNotInitialValue) {
+            return;
+        }
 
         onConfirm(values);
     }
@@ -180,7 +180,8 @@ export default function VariableForm ({
     const markedAsOutputId = useId();
 
     return (
-        <Form onSubmit={handleFormSubmit}>
+        <Form
+            onSubmit={handleSubmit}>
             <Field>
                 <Label
                     htmlFor={nameId}>
@@ -246,10 +247,7 @@ export default function VariableForm ({
                 {values.defaultValue != null && (
                     <ValueFacade
                         id={defaultValueId}
-                        value={{
-                            type: values.type,
-                            value: values.defaultValue,
-                        }}
+                        value={values.defaultValue}
                         onChange={handleDefaultValueChange}
                     />
                 )}
@@ -292,8 +290,7 @@ export default function VariableForm ({
                 Cancel
             </OutlineButton>
 
-            <PrimaryButton
-                type="submit">
+            <PrimaryButton type="submit">
                 Confirm
             </PrimaryButton>
         </Form>
