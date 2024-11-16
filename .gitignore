@@ -11,3 +11,5 @@ certificates
 .env
 .env.*
 .vercel
+
+coverage
