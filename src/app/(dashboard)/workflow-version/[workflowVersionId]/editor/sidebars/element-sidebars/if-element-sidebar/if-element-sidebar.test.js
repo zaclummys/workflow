@@ -107,13 +107,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -123,11 +123,11 @@ describe('If Element Sidebar', () => {
             addConditionButton.click();
         });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -156,21 +156,21 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith({
+        expect(onConfirm).toHaveBeenCalledWith({
             id: 'if-1',
             type: 'if',
             name: 'If',
@@ -198,21 +198,21 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith({
+        expect(onConfirm).toHaveBeenCalledWith({
             id: 'if-1',
             type: 'if',
             name: 'If',
@@ -233,13 +233,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -251,11 +251,11 @@ describe('If Element Sidebar', () => {
         fireEvent.change(descriptionInput, { target: { value: 'This is a changed description.' } });
         fireEvent.change(strategyInput, { target: { value: 'any' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 name: 'Changed If',
                 description: 'This is a changed description.',
@@ -299,13 +299,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -313,11 +313,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionVariableSelect, { target: { value: 'variable-2' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -364,13 +364,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -378,11 +378,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperatorSelect, { target: { value: 'greater-than' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -429,13 +429,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -443,11 +443,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperandType, { target: { value: 'value' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -496,13 +496,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -514,11 +514,11 @@ describe('If Element Sidebar', () => {
 
         expect(conditionOperandVariableSelect.value).toBe('variable-1');
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -567,13 +567,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -581,11 +581,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperandVariableSelect, { target: { value: 'variable-2' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -631,13 +631,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -645,11 +645,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperandValue, { target: { value: '1' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -698,13 +698,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -712,11 +712,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperandValue, { target: { value: 'xyz' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -765,13 +765,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -779,11 +779,11 @@ describe('If Element Sidebar', () => {
 
         fireEvent.change(conditionOperandValue, { target: { value: 'true' } });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -829,13 +829,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onEdit = vi.fn();
+        const onConfirm = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onEdit={onEdit}
+                onConfirm={onConfirm}
             />
         );
 
@@ -845,11 +845,11 @@ describe('If Element Sidebar', () => {
             removeConditionButton.click();
         });
 
-        const applyButton = screen.getByText('Apply');
+        const confirmButton = screen.getByText('Confirm');
 
-        applyButton.click();
+        confirmButton.click();
 
-        expect(onEdit).toHaveBeenCalledWith(
+        expect(onConfirm).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [],
             })

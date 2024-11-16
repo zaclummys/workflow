@@ -29,7 +29,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         const element = localWorkflowVersion.elements.find(element => element.id === node.id);
 
         if (element != null) {
-            dispatchWorflowVersionEditor({ type: 'edit-element', element });
+            dispatchWorflowVersionEditor({ type: 'element-selected', element });
         }
     };
 
@@ -71,6 +71,10 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         });
     }
 
+    const handleAddVariableCancel = () => {
+        dispatchWorflowVersionEditor({ type: 'add-variable-canceled' });
+    }
+
     const handleEditVariableConfirm = (editedVariable) => {
         dispatchWorflowVersionEditor({
             type: 'edit-variable-confirmed',
@@ -83,6 +87,17 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             type: 'remove-variable-confirmed',
             removedVariable,
         });
+    }
+
+    const handleEditElementConfirm = (editedElement) => {
+        dispatchWorflowVersionEditor({
+            type: 'edit-element-confirmed',
+            editedElement,
+        });
+    }
+
+    const handleEditElementCancel = () => {
+        dispatchWorflowVersionEditor({ type: 'edit-element-canceled' });
     }
 
     const localWorkflowVersionIsSame = localWorkflowVersion === workflowVersion;
@@ -98,12 +113,12 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             />
 
             <div className="w-full h-full relative">
-                {/* <WorkflowVersionEditorCanvas
+                <WorkflowVersionEditorCanvas
                     onNodeDoubleClick={handleCanvasNodeDoubleClick}
 
                     workflowVersion={localWorkflowVersion}
                     dispatchWorkflowVersion={dispatchWorflowVersionEditor}
-                /> */}
+                />
 
                 {workflowVersionEditor.workflowVersionSidebar && (
                     <WorkflowVersionEditorSidebar
@@ -115,12 +130,16 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
                         onRemoveVariableButtonClick={handleRemoveVariableButtonClick}
 
                         onAddVariableConfirm={handleAddVariableConfirm}
+                        onAddVariableCancel={handleAddVariableCancel}
 
                         onEditVariableConfirm={handleEditVariableConfirm}
                         onEditVariableCancel={handleEditVariableCancel}
 
                         onRemoveVariableConfirm={handleRemoveVariableConfirm}
                         onRemoveVariableCancel={handleRemoveVariableCancel}
+
+                        onEditElementConfirm={handleEditElementConfirm}
+                        onEditElementCancel={handleEditElementCancel}
 
                         onShowVariablesCloseButtonClick={handleShowVariablesCloseButtonClick}
                     />

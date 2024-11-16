@@ -46,14 +46,14 @@ function workflowVersionReducer (workflowVersion, action) {
                 elements: workflowVersion.elements.concat(action.element),
             };
 
-        case 'element-edited':
+        case 'edit-element-confirmed':
             return {
                 ...workflowVersion,
                 elements: workflowVersion.elements.map(element => {
-                    if (element.id === action.element.id) {
+                    if (element.id === action.editedElement.id) {
                         return {
                             ...element,
-                            ...action.element,
+                            ...action.editedElement,
                         }
                     } else {
                         return element;
@@ -113,7 +113,7 @@ function workflowVersionSidebarReducer (workflowVersionSidebar, action) {
                 element: action.element,
             };
 
-        case 'element-edited':
+        case 'edit-element-confirmed':
         case 'edit-element-canceled':
             return null;
 

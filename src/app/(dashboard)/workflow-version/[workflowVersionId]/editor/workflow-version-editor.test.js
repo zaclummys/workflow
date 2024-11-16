@@ -224,6 +224,49 @@ describe('Workflow Version Editor Sidebar', () => {
         screen.getByText('Variable 1');
     });
 
+    it('Should allow user to cancel add variable', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is the first workflow version.',
+            elements: [],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+        
+        const variablesButton = screen.getByText('Variables');
+
+        act(() => {
+            fireEvent.click(variablesButton);
+        });
+
+        const addVariableButton = screen.getByText('Add');
+
+        act(() => {
+            fireEvent.click(addVariableButton);
+        });
+
+        expect(screen.queryByText('Add Variable')).not.toBeNull();
+
+        const cancelButton = screen.getByText('Cancel');
+
+        act(() => {
+            fireEvent.click(cancelButton);
+        });
+
+        expect(screen.queryByText('Add Variable')).toBeNull();
+    });
+
     it('Should allow user to open edit variable sidebar', () => {
         const workflowVersion = {
             id: 'workflow-version-1',
@@ -499,7 +542,7 @@ describe('Workflow Version Editor Sidebar', () => {
         });
     });
 
-    it.skip('Should allow user to open if element sidebar', () => {
+    it('Should allow user to open edit if element sidebar', () => {
         const workflowVersion = {
             id: 'workflow-version-1',
             name: 'Workflow Version 1',
@@ -532,5 +575,97 @@ describe('Workflow Version Editor Sidebar', () => {
         act(() => {
             fireEvent.dblClick(element);
         });
+
+        screen.getByText('Edit If');
+    });
+
+    it('Should allow user to cancel edit if element', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is the first workflow version.',
+            elements: [
+                {
+                    id: 'element-1',
+                    type: 'if',
+                    name: 'If Element',
+                    description: 'This is an if element.',
+                    conditions: [],
+                },
+            ],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+        
+        const ifElementNode = screen.getByText('If Element');
+
+        act(() => {
+            fireEvent.dblClick(ifElementNode);
+        });
+
+        expect(screen.queryByText('Edit If')).not.toBeNull();
+
+        const cancelButton = screen.getByText('Cancel');
+
+        act(() => {
+            fireEvent.click(cancelButton);
+        });
+
+        expect(screen.queryByText('Edit If')).toBeNull();
+    });
+
+    it('Should allow user to confirm edit if element', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is the first workflow version.',
+            elements: [
+                {
+                    id: 'element-1',
+                    type: 'if',
+                    name: 'If Element',
+                    description: 'This is an if element.',
+                    conditions: [],
+                },
+            ],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+        
+        const ifElementNode = screen.getByText('If Element');
+
+        act(() => {
+            fireEvent.dblClick(ifElementNode);
+        });
+
+        expect(screen.queryByText('Edit If')).not.toBeNull();
+
+        const confirmButton = screen.getByText('Confirm');
+
+        act(() => {
+            fireEvent.click(confirmButton);
+        });
+
+        expect(screen.queryByText('Edit If')).toBeNull();
     });
 });

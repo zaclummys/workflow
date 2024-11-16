@@ -285,14 +285,16 @@ export default function VariableForm ({
                 </span>
             )}
 
-            <OutlineButton
-                onClick={handleCancelButtonClick}>
-                Cancel
-            </OutlineButton>
+            <div className="flex flex-row justify-between">
+                <OutlineButton
+                    onClick={handleCancelButtonClick}>
+                    Cancel
+                </OutlineButton>
 
-            <PrimaryButton type="submit">
-                Confirm
-            </PrimaryButton>
+                <PrimaryButton type="submit">
+                    Confirm
+                </PrimaryButton>
+            </div>
         </Form>
     );
 }
@@ -309,7 +311,7 @@ function ToggleDefaultValue ({
                 className="font-medium text-sm text-primary"
                 onClick={onRemoveButtonClick}
             >
-                Remove default value
+                Remove
             </button>
         ) : (
             <button
@@ -317,7 +319,7 @@ function ToggleDefaultValue ({
                 className="font-medium text-sm text-primary"
                 onClick={onAddButtonClick}
             >
-                Add default value
+                Add
             </button>
         )
     )

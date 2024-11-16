@@ -24,10 +24,10 @@ export default function WorkflowVersionEditorSidebar ({
     onRemoveVariableConfirm,
     onRemoveVariableCancel,
 
-    onElementEdit,
-    onElementCancel,
+    onEditElementConfirm,
+    onEditElementCancel,
 
-    dispatchWorkflowVersionEditor,
+    dispatchWorflowVersionEditor,
 }) {
     switch (sidebar.type) {
         case 'show-variables':
@@ -77,10 +77,10 @@ export default function WorkflowVersionEditorSidebar ({
                             key={sidebar.element.id}
 
                             ifElement={sidebar.element}
-                            variables={sidebar.variables}
+                            variables={variables}
 
-                            onEdit={onElementEdit}
-                            onCancel={onElementCancel}
+                            onConfirm={onEditElementConfirm}
+                            onCancel={onEditElementCancel}
                         />
                     );
 

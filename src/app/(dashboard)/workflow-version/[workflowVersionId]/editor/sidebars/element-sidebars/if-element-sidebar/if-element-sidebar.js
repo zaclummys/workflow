@@ -22,7 +22,7 @@ export default function IfElementSidebar ({
     ifElement,
     variables,
 
-    onEdit,
+    onConfirm,
     onCancel,
 }) {
     const formId = useId();
@@ -68,7 +68,7 @@ export default function IfElementSidebar ({
 
         const coercedIfElement = coerceIfElement(localIfElement);
 
-        onEdit(coercedIfElement);
+        onConfirm(coercedIfElement);
     };
 
     const handleCancelButtonClick = event => {
@@ -174,7 +174,7 @@ export default function IfElementSidebar ({
                     <PrimaryButton
                         type="submit"
                         form={formId}>
-                        Apply
+                        Confirm
                     </PrimaryButton>
                 </SidebarFooter>
             </Sidebar>

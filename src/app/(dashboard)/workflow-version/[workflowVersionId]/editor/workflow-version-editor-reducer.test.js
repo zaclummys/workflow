@@ -237,4 +237,42 @@ describe('Workflow Version Editor Reducer', () => {
             }),
         )
     });
+
+    it('Should edit if element', () => {
+        const workflowVersionEditor = {
+            workflowVersion: {
+                elements: [
+                    {
+                        id: 'if-1',
+                        type: 'if',
+                        name: 'If A',
+                    },
+                ],
+            },
+        };
+
+        const output = workflowVersionEditorReducer(workflowVersionEditor, {
+            type: 'edit-element-confirmed',
+            editedElement: {
+                id: 'if-1',
+                type: 'if',
+                name: 'If B',
+            },
+        });
+
+        expect(output).toStrictEqual(
+            expect.objectContaining({
+                workflowVersion: expect.objectContaining({
+                    elements: [
+                        {
+                            id: 'if-1',
+                            type: 'if',
+                            name: 'If B',
+                        },
+                    ],
+                }),
+                workflowVersionSidebar: null,
+            }),
+        )
+    });
 });

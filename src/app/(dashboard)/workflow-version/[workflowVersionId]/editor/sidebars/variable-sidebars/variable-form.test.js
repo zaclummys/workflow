@@ -28,7 +28,7 @@ describe('Variable Form', () => {
             expect(markedAsInputCheckbox.checked).toBe(true);
             expect(markedAsOutputCheckbox.checked).toBe(true);
 
-            screen.getByText('Add default value');
+            screen.getByText('Add');
         });
 
         it('Should allow to cancel', () => {
@@ -153,7 +153,7 @@ describe('Variable Form', () => {
                         />
                     );
 
-                    const addDefaultValue = screen.getByText('Add default value');
+                    const addDefaultValue = screen.getByText('Add');
 
                     fireEvent.click(addDefaultValue);
 
@@ -178,7 +178,7 @@ describe('Variable Form', () => {
                         />
                     );
 
-                    const addDefaultValue = screen.getByText('Add default value');
+                    const addDefaultValue = screen.getByText('Add');
 
                     fireEvent.click(addDefaultValue);
 
@@ -205,7 +205,7 @@ describe('Variable Form', () => {
                         />
                     );
 
-                    const addDefaultValue = screen.getByText('Add default value');
+                    const addDefaultValue = screen.getByText('Add');
 
                     fireEvent.click(addDefaultValue);
 
@@ -255,7 +255,7 @@ describe('Variable Form', () => {
                         />
                     );
 
-                    const removeDefaultValue = screen.getByText('Remove default value');
+                    const removeDefaultValue = screen.getByText('Remove');
 
                     fireEvent.click(removeDefaultValue);
 
