@@ -107,13 +107,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -127,7 +127,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -156,13 +156,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -170,7 +170,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith({
+        expect(onEdit).toHaveBeenCalledWith({
             id: 'if-1',
             type: 'if',
             name: 'If',
@@ -198,13 +198,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -212,7 +212,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith({
+        expect(onEdit).toHaveBeenCalledWith({
             id: 'if-1',
             type: 'if',
             name: 'If',
@@ -233,13 +233,13 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -255,7 +255,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 name: 'Changed If',
                 description: 'This is a changed description.',
@@ -299,13 +299,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -317,7 +317,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -364,13 +364,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -382,7 +382,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     {
@@ -429,13 +429,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -447,7 +447,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -496,13 +496,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -518,7 +518,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -564,13 +564,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -582,7 +582,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -631,13 +631,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -649,7 +649,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -698,13 +698,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -716,7 +716,7 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [
                     expect.objectContaining({
@@ -762,13 +762,13 @@ describe('If Element Sidebar', () => {
             ],
         };
 
-        const onIfElementEdited = vi.fn();
+        const onEdit = vi.fn();
 
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onIfElementEdited={onIfElementEdited}
+                onEdit={onEdit}
             />
         );
 
@@ -782,10 +782,38 @@ describe('If Element Sidebar', () => {
 
         applyButton.click();
 
-        expect(onIfElementEdited).toHaveBeenCalledWith(
+        expect(onEdit).toHaveBeenCalledWith(
             expect.objectContaining({
                 conditions: [],
             })
         );
+    });
+
+    it('Should allow user to cancel', () => {
+        const variables = [];
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [],
+        };
+
+        const onCancel = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onCancel={onCancel}
+            />
+        );
+
+        const cancelButton = screen.getByText('Cancel');
+
+        cancelButton.click();
+
+        expect(onCancel).toHaveBeenCalled();
     });
 });

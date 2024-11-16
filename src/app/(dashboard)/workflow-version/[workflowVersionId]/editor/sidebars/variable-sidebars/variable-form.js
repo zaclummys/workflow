@@ -17,48 +17,38 @@ import {
 } from '~/components/form';
 
 import {
-    createValue,
-    coerceValue,
-    decoerceValue,
-} from '../../../../../../../value';
+    PrimaryButton,
+    OutlineButton,
+} from '~/components/button';
 
 import ValueFacade from '~/components/value-facade';
 
-export default function VariableForm ({
-    formId,
-    initialValues,
-    onFormSubmit,
-}) {
-    const defaultValues = {
-        name: '',
-        description: '',
-        type: 'string',
-        defaultValue: null,
-        markedAsInput: true,
-        markedAsOutput: true,
-    };
+const defaultVariable = {
+    name: '',
+    description: '',
+    type: 'string',
+    defaultValue: null,
+    markedAsInput: true,
+    markedAsOutput: true,
+};
 
-    const [values, setValues] = useState({
-        ...defaultValues,
-        ...initialValues,
-        defaultValue: decoerceValue(initialValues?.defaultValue),
-    });
+export default function VariableForm ({
+    variable = defaultVariable,
+    onConfirm,
+    onCancel,
+}) {
+    const [values, setValues] = useState(variable);
 
     const variableHasNotInitialValue = values.defaultValue == null && !values.markedAsInput;
 
     const handleFormSubmit = event => {
         event.preventDefault();
 
-        if (variableHasNotInitialValue) {
-            return;
-        }
-        
-        const submitValues = {
-            ...values,
-            defaultValue: coerceValue(values.defaultValue),
-        };
+        // if (variableHasNotInitialValue) {
+        //     return;
+        // }
 
-        onFormSubmit(event, submitValues);
+        onConfirm(values);
     }
 
     const handleNameChange = event => {
@@ -81,7 +71,7 @@ export default function VariableForm ({
         setValues(values => ({
             ...values,
             type,
-            defaultValue: values.defaultValue === null ? null : createValue({ type }),
+            defaultValue: null,
         }));
     }
 
@@ -93,22 +83,75 @@ export default function VariableForm ({
     };
 
     const handleAddDefaultValueButtonClick = () => {
-        setValues(values => ({
-            ...values,
-            defaultValue: createValue({
-                type: values.type
-            }),
-        }));
+        setValues(values => {
+            switch (values.type) {
+                case 'string':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'string',
+                            string: '',
+                        }
+                    };
+
+                case 'number':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'number',
+                            number: 0,
+                        }
+                    };
+
+                case 'boolean':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'boolean',
+                            boolean: false,
+                        }
+                    };
+
+                default:
+                    return values;
+            }
+        });
     };
 
     const handleDefaultValueChange = (event) => {
-        setValues(values => ({
-            ...values,
-            defaultValue: createValue({
-                type: values.type,
-                value: event.target.value,
-            }),
-        }));
+        setValues(values => {
+            switch (values.type) {
+                case 'string':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'string',
+                            string: event.target.value,
+                        }
+                    };
+
+                case 'number':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'number',
+                            number: event.target.value,
+                        }
+                    };
+
+                case 'boolean':
+                    return {
+                        ...values,
+                        defaultValue: {
+                            type: 'boolean',
+                            boolean: event.target.value,
+                        }
+                    };
+
+                default:
+                    return values;
+            }
+        });
     }
 
     const handleMarkedAsInputChange = event => {
@@ -125,6 +168,10 @@ export default function VariableForm ({
         }));
     };
 
+    const handleCancelButtonClick = () => {
+        onCancel();
+    };
+
     const nameId = useId();
     const typeId = useId();
     const descriptionId = useId();
@@ -133,9 +180,7 @@ export default function VariableForm ({
     const markedAsOutputId = useId();
 
     return (
-        <Form
-            id={formId}
-            onSubmit={handleFormSubmit}>
+        <Form onSubmit={handleFormSubmit}>
             <Field>
                 <Label
                     htmlFor={nameId}>
@@ -201,7 +246,10 @@ export default function VariableForm ({
                 {values.defaultValue != null && (
                     <ValueFacade
                         id={defaultValueId}
-                        value={values.defaultValue}
+                        value={{
+                            type: values.type,
+                            value: values.defaultValue,
+                        }}
                         onChange={handleDefaultValueChange}
                     />
                 )}
@@ -238,6 +286,16 @@ export default function VariableForm ({
                     This variable must be marked as input or have a default value.
                 </span>
             )}
+
+            <OutlineButton
+                onClick={handleCancelButtonClick}>
+                Cancel
+            </OutlineButton>
+
+            <PrimaryButton
+                type="submit">
+                Confirm
+            </PrimaryButton>
         </Form>
     );
 }
@@ -254,7 +312,7 @@ function ToggleDefaultValue ({
                 className="font-medium text-sm text-primary"
                 onClick={onRemoveButtonClick}
             >
-                Remove
+                Remove default value
             </button>
         ) : (
             <button
@@ -262,7 +320,7 @@ function ToggleDefaultValue ({
                 className="font-medium text-sm text-primary"
                 onClick={onAddButtonClick}
             >
-                Add
+                Add default value
             </button>
         )
     )

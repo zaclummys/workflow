@@ -1,9 +1,4 @@
 import {
-    useId,
-    useState,
-} from 'react';
-
-import {
     Sidebar,
     SidebarTitle,
     SidebarContent,
@@ -13,40 +8,33 @@ import {
 import { DestructiveButton, OutlineButton } from '~/components/button';
 
 export default function RemoveVariableSidebar ({
-    variableId,
-
-    onVariableRemoved,
-    onCancelButtonClick,
-
-    workflowVersion,
-    dispatchWorkflowVersion,
+    variable,
+    onConfirm,
+    onCancel,
 }) {
-    const variable = workflowVersion.variables.find(variable => variable.id === variableId);
-
     const handleConfirmButtonClick = () => {
-        dispatchWorkflowVersion({
-            type: 'variable-removed',
-            variableId: variableId,
-        });
+        onConfirm(variable);
+    }
 
-        onVariableRemoved();
+    const handleCancelButtonClick = () => {
+        onCancel();
     }
 
     return (
         <Sidebar>
             <SidebarTitle>
-                Delete Variable
+                Remove Variable
             </SidebarTitle>
 
             <SidebarContent>
                 <span>
-                    Are you sure you want to delete <span className="font-semibold">{variable.name}</span>?
+                    Are you sure you want to remove <span className="font-semibold">{variable.name}</span>?
                 </span>
             </SidebarContent>
 
             <SidebarFooter>
                 <OutlineButton
-                    onClick={onCancelButtonClick}>
+                    onClick={handleCancelButtonClick}>
                     Cancel
                 </OutlineButton>
 

@@ -6,85 +6,84 @@ import WorkflowVersionEditorHeader from './workflow-version-editor-header';
 import WorkflowVersionEditorCanvas from './workflow-version-editor-canvas';
 import WorkflowVersionEditorSidebar from './workflow-version-editor-sidebar';
 
-import workflowVersionReducer from './workflow-version-reducer';
+import workflowVersionEditorReducer from './workflow-version-editor-reducer';
 
 export default function WorkflowVersionEditor ({ workflowVersion }) {
-    const [localWorkflowVersion, dispatchLocalWorkflowVersion] = useReducer(
-        workflowVersionReducer,
+    const initialWorkflowVersionEditor = {
+        sidebar: null,
         workflowVersion,
+    };
+
+    const [workflowVersionEditor, dispatchWorflowVersionEditor] = useReducer(
+        workflowVersionEditorReducer,
+        initialWorkflowVersionEditor,
     );
 
-    useEffect(() => {
-        dispatchLocalWorkflowVersion({ type: 'reset', workflowVersion });
-    }, [workflowVersion]);
+    const localWorkflowVersion = workflowVersionEditor.workflowVersion;
 
-    const [sidebar, setSidebar] = useState(null);
-
-    const handleCloseButtonClick = () => {
-        setSidebar(null);
-    };
-
-    const handleVariablesButtonClick = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleAddVariableButtonClick = () => {
-        setSidebar({ type: 'add-variable' });
-    };
-
-    const handleRemoveVariableButtonClick = (event, variableId) => {
-        setSidebar({ type: 'remove-variable', variableId });
-    };
-
-    const handleEditVariableButtonClick = (event, variableId) => {
-        setSidebar({ type: 'edit-variable', variableId });
-    };
-    
-    const handleCancelAddVariableButtonClick = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleCancelEditVariableButtonClick = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleCancelRemoveVariableButtonClick = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleVariableAdded = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleVariableEdited = () => {
-        setSidebar({ type: 'all-variables' });
-    };
-
-    const handleVariableRemoved = () => {
-        setSidebar({ type: 'all-variables' });
-    };
+    // useEffect(() => {
+    //     dispatchLocalWorkflowVersion({ type: 'reset', workflowVersion });
+    // }, [workflowVersion]);
 
     const handleCanvasNodeDoubleClick = (event, node) => {
-        switch (node.type) {
-            case 'if': {
-                setSidebar({ type: 'if-element', elementId: node.id });
-            }
-            break;
+        const element = localWorkflowVersion.elements.find(element => element.id === node.id);
 
-            case 'assign': {
-                setSidebar({ type: 'assign-element', elementId: node.id });
-            }
-            break;
+        if (element != null) {
+            dispatchWorflowVersionEditor({ type: 'edit-element', element });
         }
     };
 
-    const handleIfElementEdited = () => {
-        setSidebar(null);
+    const handleVariablesButtonClick = () => {
+        dispatchWorflowVersionEditor({ type: 'show-variables-sidebar-opened' });
+    }
+
+    const handleShowVariablesCloseButtonClick = () => {
+        dispatchWorflowVersionEditor({ type: 'show-variables-sidebar-closed' });
+    }
+
+    const handleAddVariableButtonClick = () => {
+        dispatchWorflowVersionEditor({ type: 'add-variable-sidebar-opened' });
+    }
+
+    const handleEditVariableButtonClick = (event, variable) => {
+        dispatchWorflowVersionEditor({ type: 'edit-variable-sidebar-opened', variable });
+    }
+
+    const handleEditVariableCancel = () => {
+        dispatchWorflowVersionEditor({ type: 'edit-variable-canceled' });
+    }
+
+    const handleRemoveVariableButtonClick = (event, variable) => {
+        dispatchWorflowVersionEditor({ type: 'remove-variable-sidebar-opened', variable });
     };
 
-    const handleAssignElementEdited = () => {
-        setSidebar(null);
-    };
+    const handleRemoveVariableCancel = () => {
+        dispatchWorflowVersionEditor({ type: 'remove-variable-canceled' });
+    }
+    
+    const handleAddVariableConfirm = (addedVariable) => {
+        dispatchWorflowVersionEditor({
+            type: 'add-variable-confirmed',
+            addedVariable: {
+                ...addedVariable,
+                id: crypto.randomUUID(),
+            },
+        });
+    }
+
+    const handleEditVariableConfirm = (editedVariable) => {
+        dispatchWorflowVersionEditor({
+            type: 'edit-variable-confirmed',
+            editedVariable,
+        });
+    }
+
+    const handleRemoveVariableConfirm = (removedVariable) => {
+        dispatchWorflowVersionEditor({
+            type: 'remove-variable-confirmed',
+            removedVariable,
+        });
+    }
 
     const localWorkflowVersionIsSame = localWorkflowVersion === workflowVersion;
 
@@ -95,40 +94,37 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
                 disableToggleButton={!localWorkflowVersionIsSame}
                 workflowVersion={localWorkflowVersion}
                 onVariablesButtonClick={handleVariablesButtonClick}
-                dispatchWorkflowVersion={dispatchLocalWorkflowVersion}
+                dispatchWorkflowVersion={dispatchWorflowVersionEditor}
             />
 
             <div className="w-full h-full relative">
-                <WorkflowVersionEditorCanvas
+                {/* <WorkflowVersionEditorCanvas
                     onNodeDoubleClick={handleCanvasNodeDoubleClick}
 
                     workflowVersion={localWorkflowVersion}
-                    dispatchWorkflowVersion={dispatchLocalWorkflowVersion}
-                />
+                    dispatchWorkflowVersion={dispatchWorflowVersionEditor}
+                /> */}
 
-                <WorkflowVersionEditorSidebar
-                    sidebar={sidebar}
+                {workflowVersionEditor.workflowVersionSidebar && (
+                    <WorkflowVersionEditorSidebar
+                        sidebar={workflowVersionEditor.workflowVersionSidebar}
+                        variables={workflowVersionEditor.workflowVersion.variables}
 
-                    onVariableAdded={handleVariableAdded}
-                    onVariableEdited={handleVariableEdited}
-                    onVariableRemoved={handleVariableRemoved}
+                        onAddVariableButtonClick={handleAddVariableButtonClick}
+                        onEditVariableButtonClick={handleEditVariableButtonClick}
+                        onRemoveVariableButtonClick={handleRemoveVariableButtonClick}
 
-                    onAddVariableButtonClick={handleAddVariableButtonClick}
-                    onEditVariableButtonClick={handleEditVariableButtonClick}
-                    onRemoveVariableButtonClick={handleRemoveVariableButtonClick}
+                        onAddVariableConfirm={handleAddVariableConfirm}
 
-                    onCancelAddVariableButtonClick={handleCancelAddVariableButtonClick}
-                    onCancelEditVariableButtonClick={handleCancelEditVariableButtonClick}
-                    onCancelRemoveVariableButtonClick={handleCancelRemoveVariableButtonClick}
+                        onEditVariableConfirm={handleEditVariableConfirm}
+                        onEditVariableCancel={handleEditVariableCancel}
 
-                    onIfElementEdited={handleIfElementEdited}
-                    onAssignElementEdited={handleAssignElementEdited}
+                        onRemoveVariableConfirm={handleRemoveVariableConfirm}
+                        onRemoveVariableCancel={handleRemoveVariableCancel}
 
-                    onCloseButtonClick={handleCloseButtonClick}
-
-                    workflowVersion={localWorkflowVersion}
-                    dispatchWorkflowVersion={dispatchLocalWorkflowVersion}
-                />
+                        onShowVariablesCloseButtonClick={handleShowVariablesCloseButtonClick}
+                    />
+                )}
             </div>
         </div>
     );

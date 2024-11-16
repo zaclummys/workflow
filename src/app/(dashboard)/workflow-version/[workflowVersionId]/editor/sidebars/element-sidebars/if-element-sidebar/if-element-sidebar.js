@@ -18,12 +18,12 @@ import IfElementCondition from './if-element-condition';
 import { coerceIfElement } from '~/value';
 import ifElementReducer from '~/reducers/if-element-sidebar-reducer';
 
-export default function IfSidebar ({
+export default function IfElementSidebar ({
     ifElement,
     variables,
-    onIfElementEdited,
-    onCloseButtonClick,
-    dispatchWorkflowVersion,
+
+    onEdit,
+    onCancel,
 }) {
     const formId = useId();
 
@@ -68,7 +68,11 @@ export default function IfSidebar ({
 
         const coercedIfElement = coerceIfElement(localIfElement);
 
-        onIfElementEdited(coercedIfElement);
+        onEdit(coercedIfElement);
+    };
+
+    const handleCancelButtonClick = event => {
+        onCancel();
     };
 
     const nameId = useId();
@@ -163,8 +167,8 @@ export default function IfSidebar ({
 
                 <SidebarFooter>
                     <OutlineButton
-                        onClick={onCloseButtonClick}>
-                        Close
+                        onClick={handleCancelButtonClick}>
+                        Cancel
                     </OutlineButton>
 
                     <PrimaryButton

@@ -1,5 +1,3 @@
-'use client';
-
 import {
     Sidebar,
     SidebarHeader,
@@ -12,8 +10,8 @@ import { OutlineButton } from '~/components/button';
 
 import ButtonGroup from '~/components/button-group';
 
-export default function AllVariablesSidebar ({
-    workflowVersion,
+export default function ShowVariablesSidebar ({
+    variables,
     onAddVariableButtonClick,
     onEditVariableButtonClick,
     onRemoveVariableButtonClick,
@@ -35,25 +33,13 @@ export default function AllVariablesSidebar ({
 
                 <SidebarContent>
                     <div className="flex flex-col gap-2">
-                        {workflowVersion.variables.map((variable) => (
-                            <div
+                        {variables.map((variable) => (
+                           <Variable
                                 key={variable.id}
-                                className="flex flex-row justify-between items-center"
-                            >
-                                <span>{variable.name}</span>
-
-                                <ButtonGroup>
-                                    <OutlineButton
-                                        onClick={event => onEditVariableButtonClick(event, variable.id)}>
-                                        Edit
-                                    </OutlineButton>
-
-                                    <OutlineButton
-                                        onClick={event => onRemoveVariableButtonClick(event, variable.id)}>
-                                        Remove
-                                    </OutlineButton>
-                                </ButtonGroup>
-                            </div>
+                                variable={variable}
+                                onEditButtonClick={onEditVariableButtonClick}
+                                onRemoveButtonClick={onRemoveVariableButtonClick}
+                            />
                         ))}
                     </div>
                 </SidebarContent>
@@ -66,5 +52,29 @@ export default function AllVariablesSidebar ({
                 </SidebarFooter>
             </Sidebar>
         </>
+    );
+}
+
+function Variable ({
+    variable,
+    onEditButtonClick,
+    onRemoveButtonClick,
+}) {
+    return (
+        <div className="flex flex-row justify-between items-center">
+            <span>{variable.name}</span>
+
+            <ButtonGroup>
+                <OutlineButton
+                    onClick={event => onEditButtonClick(event, variable)}>
+                    Edit
+                </OutlineButton>
+
+                <OutlineButton
+                    onClick={event => onRemoveButtonClick(event, variable)}>
+                    Remove
+                </OutlineButton>
+            </ButtonGroup>
+        </div>
     );
 }

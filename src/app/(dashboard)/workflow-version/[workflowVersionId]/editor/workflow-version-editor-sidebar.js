@@ -1,116 +1,108 @@
-import AllVariablesSidebar from './sidebars/variable-sidebars/all-variables-sidebar';
+import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar/if-element-sidebar';
+import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar';
+
+import ShowVariablesSidebar from './sidebars/variable-sidebars/show-variables-sidebar';
 import AddVariableSidebar from './sidebars/variable-sidebars/add-variable-sidebar';
 import EditVariableSidebar from './sidebars/variable-sidebars/edit-variable-sidebar';
 import RemoveVariableSidebar from './sidebars/variable-sidebars/remove-variable-sidebar';
 
-import IfElementSidebar from './sidebars/element-sidebars/if-element-sidebar/if-element-sidebar';
-import AssignElementSidebar from './sidebars/element-sidebars/assign-element-sidebar';
-
 export default function WorkflowVersionEditorSidebar ({
     sidebar,
-    
-    workflowVersion,
-    dispatchWorkflowVersion,
+    variables,
 
     onAddVariableButtonClick,
     onEditVariableButtonClick,
     onRemoveVariableButtonClick,
+    onShowVariablesCloseButtonClick,
 
-    onCancelAddVariableButtonClick,
-    onCancelEditVariableButtonClick,
-    onCancelRemoveVariableButtonClick,
+    onAddVariableConfirm,
+    onAddVariableCancel,
 
-    onIfElementEdited,
-    onAssignElementEdited,
+    onEditVariableConfirm,
+    onEditVariableCancel,
 
-    onCloseButtonClick,
+    onRemoveVariableConfirm,
+    onRemoveVariableCancel,
 
-    onVariableAdded,
-    onVariableEdited,
-    onVariableRemoved,
+    onElementEdit,
+    onElementCancel,
+
+    dispatchWorkflowVersionEditor,
 }) {
-    if (sidebar == null) return null;
-
     switch (sidebar.type) {
-        case 'all-variables':
+        case 'show-variables':
             return (
-                <AllVariablesSidebar
+                <ShowVariablesSidebar
+                    variables={variables}
+
                     onAddVariableButtonClick={onAddVariableButtonClick}
                     onEditVariableButtonClick={onEditVariableButtonClick}
                     onRemoveVariableButtonClick={onRemoveVariableButtonClick}
-                    
-                    onCloseButtonClick={onCloseButtonClick}
-                    
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
+
+                    onCloseButtonClick={onShowVariablesCloseButtonClick}
                 />
             );
 
         case 'add-variable':
             return (
                 <AddVariableSidebar
-                    onVariableAdded={onVariableAdded}
-                    onCancelButtonClick={onCancelAddVariableButtonClick}
-
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
+                    onConfirm={onAddVariableConfirm}
+                    onCancel={onAddVariableCancel}
                 />
             );
 
         case 'edit-variable':
             return (
                 <EditVariableSidebar
-                    key={sidebar.variableId}
-                    
-                    variableId={sidebar.variableId}
-                    onVariableEdited={onVariableEdited}
-                    onCancelButtonClick={onCancelEditVariableButtonClick}
-
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
+                    variable={sidebar.variable}
+                    onConfirm={onEditVariableConfirm}
+                    onCancel={onEditVariableCancel}
                 />
             );
 
         case 'remove-variable':
             return (
                 <RemoveVariableSidebar
-                    key={sidebar.variableId}
-
-                    variableId={sidebar.variableId}
-                    onVariableRemoved={onVariableRemoved}
-                    onCancelButtonClick={onCancelRemoveVariableButtonClick}
-
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
+                    variable={sidebar.variable}
+                    onConfirm={onRemoveVariableConfirm}
+                    onCancel={onRemoveVariableCancel}
                 />
             );
 
-        case 'if-element':
-            return (
-                <IfElementSidebar
-                    key={sidebar.elementId}
+        case 'edit-element':
+            switch (sidebar.element.type) {
+                case 'if':
+                    return (
+                        <IfElementSidebar
+                            key={sidebar.element.id}
 
-                    ifElementId={sidebar.elementId}
-                    onCloseButtonClick={onCloseButtonClick}
-                    onIfElementEdited={onIfElementEdited}
+                            ifElement={sidebar.element}
+                            variables={sidebar.variables}
 
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            );
+                            onEdit={onElementEdit}
+                            onCancel={onElementCancel}
+                        />
+                    );
 
-        case 'assign-element':
-            return (
-                <AssignElementSidebar
-                    key={sidebar.elementId}
+                case 'assign':
+                    return (
+                        <AssignElementSidebar
+                            key={sidebar.elementId}
 
-                    assignElementId={sidebar.elementId}
-                    onCloseButtonClick={onCloseButtonClick}
-                    onAssignElementEdited={onAssignElementEdited}
+                            assignElementId={sidebar.elementId}
+                            onCloseButtonClick={onCloseButtonClick}
+                            onAssignElementEdited={onAssignElementEdited}
 
-                    workflowVersion={workflowVersion}
-                    dispatchWorkflowVersion={dispatchWorkflowVersion}
-                />
-            );
+                            workflowVersion={workflowVersion}
+                            dispatchWorkflowVersion={dispatchWorkflowVersion}
+                        />
+                    );
+
+                default:
+                    return null;
+            }
+        
+        default:
+            return null;
     }
 }
