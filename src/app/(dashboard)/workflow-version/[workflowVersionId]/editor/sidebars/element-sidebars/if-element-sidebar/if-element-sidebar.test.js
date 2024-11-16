@@ -532,6 +532,73 @@ describe('If Element Sidebar', () => {
         );
     });
 
+    it('Should allow user to change condition operand variable and submit', () => {
+        const variables = [
+            {
+                id: 'variable-1',
+                type: 'number',
+                name: 'Variable 1',
+            },
+
+            {
+                id: 'variable-2',
+                type: 'number',
+                name: 'Variable 2',
+            },
+        ];
+
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [
+                {
+                    id: 'condition-1',
+                    variableId: 'variable-1',
+                    variableType: 'number',
+                    operator: 'equal',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-1',
+                    },
+                },
+            ],
+        };
+
+        const onEdit = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onEdit={onEdit}
+            />
+        );
+
+        const conditionOperandVariableSelect = screen.getByLabelText('Operand Variable');
+
+        fireEvent.change(conditionOperandVariableSelect, { target: { value: 'variable-2' } });
+
+        const applyButton = screen.getByText('Apply');
+
+        applyButton.click();
+
+        expect(onEdit).toHaveBeenCalledWith(
+            expect.objectContaining({
+                conditions: [
+                    expect.objectContaining({
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-2',
+                        },
+                    }),
+                ],
+            })
+        );
+    });
+
     it('Should allow user to change condition operand number and submit', () => {
         const variables = [
             {
