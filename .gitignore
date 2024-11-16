@@ -13,3 +13,5 @@ certificates
 .vercel
 
 coverage
+
+.DS_Store
