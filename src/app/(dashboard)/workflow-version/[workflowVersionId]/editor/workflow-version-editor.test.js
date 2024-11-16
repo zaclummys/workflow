@@ -173,7 +173,7 @@ describe('Workflow Version Editor Sidebar', () => {
         screen.getByText('Add Variable');
     });
 
-    it('Should allow user to add variable', () => {
+    it('Should allow user to confirm add variable', () => {
         const workflowVersion = {
             id: 'workflow-version-1',
             name: 'Workflow Version 1',
