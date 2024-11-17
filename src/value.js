@@ -149,3 +149,10 @@ export function coerceIfElement (ifElement) {
         conditions: ifElement.conditions.map(coerceCondition),
     }
 }
+
+export function coerceVariable (variable) {
+    return {
+        ...variable,
+        defaultValue: coerceValue(variable.defaultValue),
+    };
+}

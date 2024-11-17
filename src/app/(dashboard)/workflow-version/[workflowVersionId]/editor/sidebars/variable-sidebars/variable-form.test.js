@@ -1,4 +1,3 @@
-import { vi } from 'vitest';
 import { screen, render, act, fireEvent } from '@testing-library/react';
 
 import VariableForm from './variable-form';
@@ -238,6 +237,79 @@ describe('Variable Form', () => {
 
                     expect(defaultValueInput.value).toBe('0');
                 });
+
+                it('Should allow to change the default value', () => {
+                    const initialVariable = {
+                        name: 'Variable 1',
+                        description: 'This is the first variable.',
+                        type: 'number',
+                        defaultValue: null,
+                        markedAsInput: true,
+                        markedAsOutput: true,
+                    };
+
+                    render(
+                        <VariableForm
+                            variable={initialVariable}
+                        />
+                    );
+
+                    const addDefaultValue = screen.getByText('Add');
+
+                    fireEvent.click(addDefaultValue);
+
+                    const defaultValueInput = screen.getByLabelText('Default Value');
+
+                    fireEvent.change(defaultValueInput, { target: { value: '42' } });
+
+                    expect(defaultValueInput.value).toBe('42');
+                });
+
+                it('Should allow to confirm after change the default value', () => {
+                    const initialVariable = {
+                        name: 'Variable 1',
+                        description: 'This is the first variable.',
+                        type: 'number',
+                        defaultValue: null,
+                        markedAsInput: true,
+                        markedAsOutput: true,
+                    };
+
+                    const onConfirm = vi.fn();
+
+                    render(
+                        <VariableForm
+                            variable={initialVariable}
+                            onConfirm={onConfirm}
+                        />
+                    );
+
+                    const addDefaultValue = screen.getByText('Add');
+
+                    fireEvent.click(addDefaultValue);
+
+                    const defaultValueInput = screen.getByLabelText('Default Value');
+
+                    fireEvent.change(defaultValueInput, { target: { value: '42' } });
+
+                    const confirmButton = screen.getByText('Confirm');
+
+                    act(() => {
+                        fireEvent.click(confirmButton);
+                    });
+
+                    expect(onConfirm).toHaveBeenCalledWith({
+                        name: 'Variable 1',
+                        description: 'This is the first variable.',
+                        type: 'number',
+                        defaultValue: {
+                            type: 'number',
+                            number: 42,
+                        },
+                        markedAsInput: true,
+                        markedAsOutput: true,
+                    });
+                });
             });
 
             describe('Boolean', () => {
@@ -430,6 +502,46 @@ describe('Variable Form', () => {
 
                         expect(defaultValueInput.value).toBe('false');
                     });
+
+                    it('Should allow to confirm after change the default value', () => {
+                        const initialVariable = {
+                            id: 'variable-1',
+                            name: 'Variable 1',
+                            description: 'This is the first variable.',
+                            type: 'boolean',
+                            defaultValue: {
+                                type: 'boolean',
+                                boolean: false,
+                            },
+                        };
+
+                        const onConfirm = vi.fn();
+
+                        render(
+                            <VariableForm
+                                variable={initialVariable}
+                                onConfirm={onConfirm}
+                            />
+                        );
+
+                        const defaultValueInput = screen.getByLabelText('Default Value');
+                        const confirmButton = screen.getByText('Confirm');
+
+                        fireEvent.change(defaultValueInput, { target: { value: 'true' } });
+
+                        act(() => {
+                            fireEvent.click(confirmButton);
+                        });
+
+                        expect(onConfirm).toHaveBeenCalledWith(
+                            expect.objectContaining({
+                                defaultValue: {
+                                    type: 'boolean',
+                                    boolean: true,
+                                },
+                            })
+                        );
+                    });
                 });
 
                 describe('False', () => {
@@ -475,6 +587,46 @@ describe('Variable Form', () => {
                         fireEvent.change(defaultValueInput, { target: { value: 'true' } });
 
                         expect(defaultValueInput.value).toBe('true');
+                    });
+
+                    it('Should allow to confirm after change the default value', () => {
+                        const initialVariable = {
+                            id: 'variable-1',
+                            name: 'Variable 1',
+                            description: 'This is the first variable.',
+                            type: 'boolean',
+                            defaultValue: {
+                                type: 'boolean',
+                                boolean: true,
+                            },
+                        };
+
+                        const onConfirm = vi.fn();
+
+                        render(
+                            <VariableForm
+                                variable={initialVariable}
+                                onConfirm={onConfirm}
+                            />
+                        );
+
+                        const defaultValueInput = screen.getByLabelText('Default Value');
+                        const confirmButton = screen.getByText('Confirm');
+
+                        fireEvent.change(defaultValueInput, { target: { value: 'false' } });
+
+                        act(() => {
+                            fireEvent.click(confirmButton);
+                        });
+
+                        expect(onConfirm).toHaveBeenCalledWith(
+                            expect.objectContaining({
+                                defaultValue: {
+                                    type: 'boolean',
+                                    boolean: false,
+                                },
+                            })
+                        );
                     });
                 });
             });

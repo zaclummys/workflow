@@ -70,6 +70,8 @@ export default class WorkflowVariable {
             throw new Error('Default value type must match the variable type.');
         }
 
+        console.log(defaultValue)
+
         this.id = id;
         this.name = name;
         this.type = type;

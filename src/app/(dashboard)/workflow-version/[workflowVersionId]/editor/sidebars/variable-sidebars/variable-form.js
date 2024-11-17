@@ -23,6 +23,8 @@ import {
 
 import ValueFacade from '~/components/value-facade';
 
+import { coerceVariable } from '~/value';
+
 const defaultVariable = {
     name: '',
     description: '',
@@ -48,7 +50,9 @@ export default function VariableForm ({
             return;
         }
 
-        onConfirm(values);
+        const coercedVariable = coerceVariable(values);
+
+        onConfirm(coercedVariable);
     }
 
     const handleNameChange = event => {
@@ -99,7 +103,7 @@ export default function VariableForm ({
                         ...values,
                         defaultValue: {
                             type: 'number',
-                            number: 0,
+                            number: '0',
                         }
                     };
 
@@ -108,7 +112,7 @@ export default function VariableForm ({
                         ...values,
                         defaultValue: {
                             type: 'boolean',
-                            boolean: false,
+                            boolean: 'false',
                         }
                     };
 

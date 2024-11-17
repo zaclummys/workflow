@@ -10,7 +10,6 @@ export default function SaveWorkflowVersionButton ({
     workflowVersion,
 }) {
     const [saving, setSaving] = useState(false);
-    const [saved, setSaved] = useState(false);
 
     const handleSaveButtonClick = async () => {
         setSaving(true);
@@ -23,8 +22,8 @@ export default function SaveWorkflowVersionButton ({
                     variables: workflowVersion.variables,
                 }
             });
-
-            setSaved(true);
+        } catch (error) {
+            console.error(error);
         } finally {
             setSaving(false);
         }
@@ -32,7 +31,7 @@ export default function SaveWorkflowVersionButton ({
 
     return (
         <OutlineButton
-            disabled={disabled || saving || saved}
+            disabled={disabled || saving}
             onClick={handleSaveButtonClick}
         >
             {saving ? 'Saving' : 'Save'}

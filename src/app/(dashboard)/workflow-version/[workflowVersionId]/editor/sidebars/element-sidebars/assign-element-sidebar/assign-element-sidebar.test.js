@@ -346,8 +346,6 @@ describe('Assign Element Sidebar', () => {
                 expect(operandVariableSelect).toHaveValue('variable-number-2');
             });
 
-            
-
             it('Should allow user to remove the assignment', () => {
                 const assignElement = {
                     id: 'assign-1',
