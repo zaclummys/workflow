@@ -8,7 +8,7 @@ export default function workflowVersionEditorReducer (workflowVersionEditor, act
 
 function workflowVersionReducer (workflowVersion, action) {
     switch (action.type) {
-        case 'reset':
+        case 'workflow-version-reseted':
             return action.workflowVersion;
             
         case 'add-variable-confirmed':
@@ -45,6 +45,68 @@ function workflowVersionReducer (workflowVersion, action) {
                 ...workflowVersion,
                 elements: workflowVersion.elements.concat(action.element),
             };
+
+        case 'element-moved':
+            return {
+                ...workflowVersion,
+                elements: workflowVersion.elements.map(element => {
+                    if (element.id === action.elementId) {
+                        return {
+                            ...element,
+                            positionX: action.positionX,
+                            positionY: action.positionY,
+                        }
+                    } else {
+                        return element;
+                    }
+                }),
+            };
+
+        case 'element-connected':
+            return {
+                ...workflowVersion,
+                elements: workflowVersion.elements.map(element => {
+                    if (element.id === action.sourceElementId) {
+                        switch (element.type) {
+                            case 'start':
+                                return {
+                                    ...element,
+                                    nextElementId: action.targetElementId,
+                                };
+                                
+                            case 'assign':
+                                return {
+                                    ...element,
+                                    nextElementId: action.targetElementId,
+                                };
+
+                            case 'if':
+                                switch (action.connectionType) {
+                                    case 'true':
+                                        return {
+                                            ...element,
+                                            nextElementIdIfTrue: action.targetElementId,
+                                        };
+
+                                    case 'false':
+                                        return {
+                                            ...element,
+                                            nextElementIdIfFalse: action.targetElementId,
+                                        };
+
+                                    default:
+                                        return element;
+                                }
+
+                            default:
+                                return element;
+                        }
+                    } else {
+                        return element;
+                    }
+                }),
+            };
+
 
         case 'edit-element-confirmed':
             return {

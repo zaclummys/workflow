@@ -38,6 +38,31 @@ describe('Workflow Version Editor Sidebar', () => {
         screen.getByText('Workflow 1');
     });
 
+    it('Should not allow user to save workflow version when there is no change', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is the first workflow version.',
+            elements: [],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+
+        const saveButton = screen.getByText('Save');
+
+        expect(saveButton).toBeDisabled();
+    });
+
     it('Should allow user to open variables sidebar', () => {
         const workflowVersion = {
             id: 'workflow-version-1',

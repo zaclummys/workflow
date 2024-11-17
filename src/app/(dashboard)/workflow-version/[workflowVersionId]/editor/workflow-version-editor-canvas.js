@@ -157,12 +157,10 @@ function WorkflowVersionReactFlow ({
             switch (change.type) {
                 case 'position':
                     dispatchWorkflowVersion({
-                        type: 'element-edited',
-                        element: {
-                            id: change.id,
-                            positionX: change.position.x,
-                            positionY: change.position.y,
-                        }
+                        type: 'element-moved',
+                        elementId: change.id,
+                        positionX: change.position.x,
+                        positionY: change.position.y,
                     });
                 break;
                 
@@ -223,32 +221,28 @@ function WorkflowVersionReactFlow ({
                     switch (change.item.sourceHandle) {
                         case 'next':
                             dispatchWorkflowVersion({
-                                type: 'element-edited',
-                                element: {
-                                    id: change.item.source,
-                                    nextElementId: change.item.target,
-                                },
+                                type: 'element-connected',
+                                sourceElementId: change.item.source,
+                                targetElementId: change.item.target,
                             });
                         break;
 
                         case 'true':
                             dispatchWorkflowVersion({
-                                type: 'element-edited',
-                                element: {
-                                    id: change.item.source,
-                                    nextElementIdIfTrue: change.item.target,
-                                },
-                            });
+                                type: 'element-connected',
+                                connectionType: 'true',
+                                sourceElementId: change.item.source,
+                                targetElementId: change.item.target,
+                            })
                         break;
 
                         case 'false':
                             dispatchWorkflowVersion({
-                                type: 'element-edited',
-                                element: {
-                                    id: change.item.source,
-                                    nextElementIdIfFalse: change.item.target,
-                                },
-                            });
+                                type: 'element-connected',
+                                connectionType: 'false',
+                                sourceElementId: change.item.source,
+                                targetElementId: change.item.target,
+                            })
                         break;
                     }
                 break;

@@ -9,10 +9,11 @@ export default function SaveWorkflowVersionButton ({
     disabled,
     workflowVersion,
 }) {
-    const [pending, setPending] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
 
     const handleSaveButtonClick = async () => {
-        setPending(true);
+        setSaving(true);
 
         try {
             await saveWorkflowVersionAction({
@@ -22,17 +23,19 @@ export default function SaveWorkflowVersionButton ({
                     variables: workflowVersion.variables,
                 }
             });
+
+            setSaved(true);
         } finally {
-            setPending(false);
+            setSaving(false);
         }
     };
 
     return (
         <OutlineButton
-            disabled={disabled || pending}
+            disabled={disabled || saving || saved}
             onClick={handleSaveButtonClick}
         >
-            {pending ? 'Saving' : 'Save'}
+            {saving ? 'Saving' : 'Save'}
         </OutlineButton>
     );
 }

@@ -19,9 +19,9 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         initialWorkflowVersionEditor,
     );
 
-    // useEffect(() => {
-    //     dispatchLocalWorkflowVersion({ type: 'reset', workflowVersion });
-    // }, [workflowVersion]);
+    useEffect(() => {
+        dispatchWorflowVersionEditor({ type: 'workflow-version-reseted', workflowVersion });
+    }, [workflowVersion]);
 
     const findElementById = elementId => {
         return workflowVersionEditor.workflowVersion
@@ -103,7 +103,7 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         dispatchWorflowVersionEditor({ type: 'edit-element-canceled' });
     }
 
-    const localWorkflowVersionIsSame = workflowVersion === workflowVersionEditor.WorkflowVersion;
+    const localWorkflowVersionIsSame = workflowVersion === workflowVersionEditor.workflowVersion;
 
     return (
         <div className="flex flex-col h-screen">
