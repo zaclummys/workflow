@@ -55,9 +55,8 @@ export default class WorkflowIfElement extends WorkflowElement {
         this.description = description;
         this.nextElementIdIfTrue = nextElementIdIfTrue;
         this.nextElementIdIfFalse = nextElementIdIfFalse;
+        this.strategy = strategy;
         this.conditions = conditions.map(conditionData =>  new WorkflowCondition(conditionData));
-
-        this.strategy = WorkflowIfElement.createStrategy(strategy);
     }
 
     getType() {
@@ -81,7 +80,7 @@ export default class WorkflowIfElement extends WorkflowElement {
     }
 
     getStrategy() {
-        return this.strategy.getType();
+        return this.strategy;
     }
 
     getNextElementIdIfTrue() {
@@ -104,8 +103,21 @@ export default class WorkflowIfElement extends WorkflowElement {
         this.nextElementIdIfTrue = defaultNextElementId;
     }
 
+    evaluateConditions (context) {
+        switch (this.strategy) {
+            case 'all':
+                return this.conditions.every(condition => condition.evaluate(context));
+
+            case 'any':
+                return this.conditions.some(condition => condition.evaluate(context));
+
+            default:
+                throw new Error(`Unexpected strategy: ${this.strategy}`);
+        }
+    }
+
     execute (context) {
-        const satisfied = this.strategy.evaluate(context);
+        const satisfied = this.evaluateConditions(context);
 
         if (satisfied) {
             return this.nextElementIdIfTrue;

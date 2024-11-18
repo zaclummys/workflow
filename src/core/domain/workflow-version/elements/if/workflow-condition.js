@@ -58,4 +58,24 @@ export default class WorkflowCondition {
     getOperand () {
         return this.operand;
     }
+
+    evaluate (context) {
+        const variable = context.findVariableById(this.variableId);
+
+        const operandValue = this.operand.evaluate(context);
+
+        switch (this.operator) {
+            case 'equal':
+                return variable.equalTo(operandValue);
+
+            case 'greater-than':
+                return variable.greaterThan(operandValue);
+
+            case 'less-than':
+                return variable.lessThan(operandValue);
+
+            default:
+                throw new Error(`Unknown operator: ${this.operator}.`);
+        }
+    }
 }

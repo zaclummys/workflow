@@ -6,6 +6,8 @@ import {
     WorkflowAssignElement,
     WorkflowExecution,
     WorkflowExecutionOutput,
+
+    WorkflowExecutionContext,
 } from './workflow-version';
 
 describe('Workflow Version', () => {
@@ -740,6 +742,65 @@ describe('Workflow Version', () => {
     });
 
     describe('Execution', () => {
+        describe('Context', () => {
+            it('Should find a variable by id when it exists', () => {
+                const workflowExecutionContext = new WorkflowExecutionContext({
+                    variables: [
+                        {
+                            id: 'variable-1',
+                            type: 'string',
+                            value: 'abc',
+                            markedAsOutput: false,
+                        },
+                    ],
+                });
+
+                const variable = workflowExecutionContext.findVariableById('variable-1');
+
+                expect(variable).toStrictEqual(
+                    expect.objectContaining({
+                        id: 'variable-1'
+                    }),
+                );
+            });
+
+            it.fails('Should throw an error when trying to find a variable by id and it does not exist', () => {
+                const workflowExecutionContext = new WorkflowExecutionContext({
+                    variables: [],
+                });
+
+                workflowExecutionContext.findVariableById('variable-does-not-exist');
+            });
+
+            it('Should get all variables marked as output', () => {
+                const workflowExecutionContext = new WorkflowExecutionContext({
+                    variables: [
+                        {
+                            id: 'variable-1',
+                            type: 'string',
+                            value: 'abc',
+                            markedAsOutput: true,
+                        },
+
+                        {
+                            id: 'variable-2',
+                            type: 'string',
+                            value: 'xyz',
+                            markedAsOutput: false,
+                        },
+                    ],
+                });
+
+                const variables = workflowExecutionContext.getOutputVariables();
+
+                expect(variables).toStrictEqual([
+                    expect.objectContaining({
+                        id: 'variable-1',
+                    }),
+                ]);
+            });
+        });
+
         it('Should execute when there is only the start element', () => {
             const workflowVersion = new WorkflowVersion({
                 id: 'workflow-version-1',
@@ -888,7 +949,7 @@ describe('Workflow Version', () => {
                 inputs: [],
                 outputs: [
                     {
-                        variableId: 'variable-string',
+                        id: 'variable-string',
                         value: {
                             type: 'string',
                             string: 'xyz',
@@ -896,7 +957,7 @@ describe('Workflow Version', () => {
                     },
 
                     {
-                        variableId: 'variable-number',
+                        id: 'variable-number',
                         value: {
                             type: 'number',
                             number: 456,
@@ -904,7 +965,7 @@ describe('Workflow Version', () => {
                     },
 
                     {
-                        variableId: 'variable-boolean',
+                        id: 'variable-boolean',
                         value: {
                             type: 'boolean',
                             boolean: false,
@@ -927,15 +988,15 @@ describe('Workflow Version', () => {
 
                 variables: [
                     {
-                        id: 'variable',
-                        name: 'Variable',
-                        type: 'string',
+                        id: 'variable-boolean',
+                        name: 'Variable Boolean',
+                        type: 'boolean',
                         defaultValue: {
-                            type: 'string',
-                            string: '',
+                            type: 'boolean',
+                            boolean: true,
                         },
                         markedAsInput: false,
-                        markedAsOutput: true,
+                        markedAsOutput: false,
                     }
                 ],
 
@@ -983,6 +1044,146 @@ describe('Workflow Version', () => {
                 id: expect.any(String),
                 inputs: [],
                 outputs: [],
+                workflowVersionId: workflowVersion.id,
+                executedById: 'user-1',
+            }));
+        });
+
+        it('Should execute with an if element with two branches', () => {
+            const workflowVersion = new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'active',
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+
+                variables: [
+                    {
+                        id: 'variable-boolean',
+                        name: 'Variable Boolean',
+                        type: 'boolean',
+                        defaultValue: {
+                            type: 'boolean',
+                            boolean: true,
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: false,
+                    },
+
+                    {
+                        id: 'variable-string',
+                        name: 'Variable String',
+                        type: 'string',
+                        defaultValue: {
+                            type: 'string',
+                            string: 'not assigned',
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: true,
+                    },
+                ],
+
+                elements: [
+                    {
+                        id: 'start',
+                        type: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'if-1',
+                    },
+
+                    {
+                        id: 'if-1',
+                        type: 'if',
+                        name: 'If 1',
+                        description: 'This is an if element.',
+                        strategy: 'all',
+                        conditions: [
+                            {
+                                id: 'condition-1',
+                                variableId: 'variable-boolean',
+                                operator: 'equal',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'boolean',
+                                        boolean: true,
+                                    }
+                                }
+                            }
+                        ],
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementIdIfTrue: 'assign-satisfied',
+                        nextElementIdIfFalse: 'assign-not-satisfied',
+                    },
+
+                    {
+                        id: 'assign-satisfied',
+                        type: 'assign',
+                        name: 'Assign Satisfied',
+                        description: 'This is an assign element.',
+                        assignments: [
+                            {
+                                id: 'assignment-1',
+                                variableId: 'variable-string',
+                                operator: 'set',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'string',
+                                        string: 'satisfied',
+                                    }
+                                }
+                            }
+                        ],
+                        positionX: 0,
+                        positionY: 0,
+                    },
+
+                    {
+                        id: 'assign-not-satisfied',
+                        type: 'assign',
+                        name: 'Assign Not Satisfied',
+                        description: 'This is an assign element.',
+                        assignments: [
+                            {
+                                id: 'assignment-1',
+                                variableId: 'variable-string',
+                                operator: 'set',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'string',
+                                        string: 'not-satisfied',
+                                    }
+                                }
+                            }
+                        ],
+                        positionX: 0,
+                        positionY: 0,
+                    },
+                ],
+            });
+
+            const execution = workflowVersion.execute({
+                inputs: [],
+                userId: 'user-1',
+            });
+
+            expect(execution).toStrictEqual(new WorkflowExecution({
+                id: expect.any(String),
+                inputs: [],
+                outputs: [
+                    {
+                        id: 'variable-string',
+                        value: {
+                            type: 'string',
+                            string: 'satisfied',
+                        },
+                    }
+                ],
                 workflowVersionId: workflowVersion.id,
                 executedById: 'user-1',
             }));

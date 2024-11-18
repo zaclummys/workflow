@@ -101,13 +101,13 @@ export class WorkflowExecutionOutput {
         }
     }
 
-    constructor ({ variableId, value }) {
-        this.variableId = variableId;
+    constructor ({ id, value }) {
+        this.id = id;
         this.value = WorkflowExecutionOutput.createValue(value);
     }
 
-    getVariableId () {
-        return this.variableId;
+    getId () {
+        return this.id;
     }
 
     getValue () {

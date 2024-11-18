@@ -18,4 +18,12 @@ export default class WorkflowBooleanValue extends WorkflowValue {
     getBoolean () {
         return this.boolean;
     }
+
+    set (other) {
+        this.boolean = other.boolean;
+    }
+
+    equalTo (other) {
+        return this.boolean === other.boolean;
+    }
 }

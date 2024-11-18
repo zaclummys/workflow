@@ -42,7 +42,7 @@ describe('Workflow Execution', () => {
             inputs: [],
             outputs: [
                 {
-                    variableId: 'variable-1',
+                    id: 'variable-1',
                     value: {
                         type: 'number',
                         number: 10,
@@ -55,7 +55,7 @@ describe('Workflow Execution', () => {
 
         expect(workflowExecution.getOutputs()).toEqual([
             new WorkflowExecutionOutput({
-                variableId: 'variable-1',
+                id: 'variable-1',
                 value: {
                     type: 'number',
                     number: 10,
@@ -67,40 +67,40 @@ describe('Workflow Execution', () => {
     describe('Workflow Execution Output', () => {
         it('Should create a string workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
-                variableId: 'variable-1',
+                id: 'variable-1',
                 value: {
                     type: 'string',
                     string: 'abc',
                 },
             });
 
-            expect(output.getVariableId()).toBe('variable-1');
+            expect(output.getId()).toBe('variable-1');
             expect(output.getValue()).toEqual(new WorkflowStringValue('abc'));
         });
 
         it('Should create a number workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
-                variableId: 'variable-1',
+                id: 'variable-1',
                 value: {
                     type: 'number',
                     number: 10,
                 },
             });
 
-            expect(output.getVariableId()).toBe('variable-1');
+            expect(output.getId()).toBe('variable-1');
             expect(output.getValue()).toEqual(new WorkflowNumberValue(10));
         });
 
         it('Should create a boolean workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
-                variableId: 'variable-1',
+                id: 'variable-1',
                 value: {
                     type: 'boolean',
                     boolean: true,
                 },
             });
 
-            expect(output.getVariableId()).toBe('variable-1');
+            expect(output.getId()).toBe('variable-1');
             expect(output.getValue()).toEqual(new WorkflowBooleanValue(true));
         });
     });
