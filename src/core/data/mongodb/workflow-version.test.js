@@ -198,7 +198,6 @@ describe('Workflow Version', () => {
                 expect(output).toEqual({
                     id: '1',
                     variableId: '2',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -305,7 +304,6 @@ describe('Workflow Version', () => {
                         {
                             id: '2',
                             variableId: '3',
-                            variableType: 'number',
                             operator: 'equal',
                             operand: {
                                 type: 'value',

@@ -179,7 +179,6 @@ export function fromWorkflowCondition (condition) {
     return {
         id: condition.getId(),
         variableId: condition.getVariableId(),
-        variableType: condition.getVariableType(),
         operator: condition.getOperator(),
         operand: fromWorkflowOperand(condition.getOperand()),
     };
