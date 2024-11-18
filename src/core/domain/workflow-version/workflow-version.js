@@ -1,12 +1,5 @@
 import { randomUUID } from 'crypto';
 
-import {
-    WorkflowExecutionContext,
-    WorkflowExecutionOutput,
-} from '~/core/domain/workflow-execution';
-
-import WorkflowExecutionVariable from '~/core/domain/workflow-execution/workflow-execution-variable';
-
 import WorkflowStartElement from '~/core/domain/workflow-version/elements/start/workflow-start-element';
 
 import WorkflowIfElement from '~/core/domain/workflow-version/elements/if/workflow-if-element';
@@ -17,6 +10,11 @@ import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/w
 
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 
+import {
+    WorkflowExecution,
+    WorkflowExecutionOutput,
+} from '~/core/domain/workflow-execution/workflow-execution';
+
 export {
     WorkflowStartElement,
     WorkflowVariable,
@@ -24,29 +22,50 @@ export {
     WorkflowCondition,
     WorkflowAssignElement,
     WorkflowAssignment,
+    WorkflowExecution,
+    WorkflowExecutionOutput,
 };
 
 export class WorkflowVersion {
+    static createVariable (variableData) {
+        return new WorkflowVariable(variableData);
+    }
+
+    static createElement (elementData) {
+        switch (elementData.type) {
+            case 'start':
+                return new WorkflowStartElement(elementData);
+
+            case 'assign':
+                return new WorkflowAssignElement(elementData);
+
+            case 'if':
+                return new WorkflowIfElement(elementData);
+
+            default:
+                throw new Error(`Unexpected element type: ${elementData.type}`);
+        }
+    }
+
     static create({
         number,
         workflowId,
         createdById,
     }) {
-        const startElement = new WorkflowStartElement({
-            id: randomUUID(),
-            positionX: 0.0,
-            positionY: 0.0,
-        });
-
         return new WorkflowVersion({
+            id: randomUUID(),
             number,
             workflowId,
             createdById,
-            id: randomUUID(),
             status: 'draft',
             variables: [],
             elements: [
-                startElement,
+                {
+                    id: randomUUID(),
+                    type: 'start',
+                    positionX: 0.0,
+                    positionY: 0.0,
+                },
             ],
             createdAt: new Date(),
         });
@@ -97,11 +116,12 @@ export class WorkflowVersion {
         this.id = id;
         this.number = number;
         this.status = status;
-        this.variables = variables;
-        this.elements = elements;
         this.workflowId = workflowId;
         this.createdAt = createdAt;
         this.createdById = createdById;
+
+        this.variables = variables.map(variableData => WorkflowVersion.createVariable(variableData));
+        this.elements = elements.map(elementData => WorkflowVersion.createElement(elementData));
     }
 
     getId() {
@@ -148,22 +168,8 @@ export class WorkflowVersion {
         variables = [],
         elements = [],
     }) {
-        this.variables = variables.map(variableData => new WorkflowVariable(variableData));
-        this.elements = elements.map(elementData => {
-            switch (elementData.type) {
-                case 'start':
-                    return new WorkflowStartElement(elementData);
-
-                case 'assign':
-                    return new WorkflowAssignElement(elementData);
-
-                case 'if':
-                    return new WorkflowIfElement(elementData);
-
-                default:
-                    throw new Error(`Unexpected element type: ${elementData.type}`);
-            }
-        });
+        this.variables = variables.map(variableData => WorkflowVersion.createVariable(variableData));
+        this.elements = elements.map(elementData => WorkflowVersion.createElement(elementData));
     }
 
     changeAsNewVersion ({
@@ -201,113 +207,113 @@ export class WorkflowVersion {
         return this.variables.find(variable => variableId === variable.getId());
     }
 
-    fillExecutionVariables (inputs) {
-        inputs.forEach(input => {
-            if (input.variableId == null) {
-                throw new Error('Input Variable ID cannot be null.');
-            }
-
-            if (input.value == null) {
-                throw new Error(`Input value cannot be null.`);
-            }
-
-            const variable = this.variables.find(variable => input.variableId === variable.getId());
-
-            if (!variable) {
-                throw new Error(`Variable '${input.variableId}' does not exist.`);
-            }
-
-            if (!variable.getMarkedAsInput()) {
-                throw new Error(`Variable '${variable.getName()}' is not marked as input.`);
-            }
-
-            const inputType = typeof input.value;
-            const variableType = variable.getType();
-
-            if (inputType !== variableType) {
-                throw new Error(`Input value for variable '${variable.getName()}' must be a ${variable.getType()}, got ${inputType}.`);
-            }
-        });
-
-        const getValue = (variable) => {
-            const defaultValue = variable.getDefaultValue();
-
-            if (variable.getMarkedAsInput()) {
-                const input = inputs.find(input => input.variableId === variable.getId());
-                
-                if (input != null) {
-                    return input.value;
-                }
-
-                if (defaultValue != null) {
-                    return defaultValue;
-                }
-
-                throw new Error(`Input value for variable '${variable.getName()}' is required.`);
-            } else {
-                return defaultValue;
-            }
-        }
-
-        return this.variables.map(variable => {
-            return new WorkflowExecutionVariable({
-                variableId: variable.getId(),
-                value: getValue(variable),
-            });
-        });
-    }
-
-    async execute ({
+    execute ({
         inputs,
+        userId,
     }) {
         if (inputs == null) {
             throw new Error('Inputs cannot be null.');
+        }
+
+        if (userId == null) {
+            throw new Error('User ID cannot be null.');
         }
 
         if (this.status !== 'active') {
             throw new Error('Cannot execute a workflow version that is not active');
         }
 
-        const executionVariables = this.fillExecutionVariables(inputs);
+        const runtimeVariables = this.variables
+            .map(variable => new WorkflowVersionRuntimeVariable(variable));
 
-        const context = new WorkflowExecutionContext(executionVariables);
+        const startElement = this.getStartElement();
 
-        let currentElement = this.getStartElement();
+        if (startElement == null) {
+            throw new Error('Workflow version does not have a start element.');
+        }
 
-        const elementIdHistory = []; 
+        let currentElement = startElement;
 
         while (true) {
-            elementIdHistory.push(currentElement.getId());
+            const nextElementId = currentElement.execute({
+                findVariableById: (variableId) => runtimeVariables.find(variable => variableId === variable.getId()),
+            });
 
-            const nextElementId = currentElement.execute(context);
-
-            if (!nextElementId) {
+            if (nextElementId == null) {
                 break;
             }
 
-            currentElement = this.findElementById(nextElementId);
+            const nextElement = this.findElementById(nextElementId);
 
-            if (!currentElement) {
-                throw new Error(`Element with ID ${nextElementId} not found.`);
-            }
+            currentElement = nextElement;
         }
 
-        const outputExecutionVariables = this.variables
-            .filter(variable => variable.getMarkedAsOutput())
-            .map(variable => {
-                const executionVariable = context.findVariableById(variable.getId());
-
-                return new WorkflowExecutionOutput({
-                    variableId: executionVariable.getVariableId(),
-                    value: executionVariable.getValue(),
-                });
-            });
-
-        return {
-            history: elementIdHistory,
-            outputs: outputExecutionVariables,
-        };
+        return WorkflowExecution.create({
+            inputs,
+            outputs: runtimeVariables
+                .filter(runtimeVariable => runtimeVariable.markedAsOutput())
+                .map(runtimeVariable => ({
+                    variableId: runtimeVariable.getId(),
+                    value: runtimeVariable.getValue(),
+                })),
+            executedById: userId,
+            workflowVersionId: this.id,
+        });
     }
 }
 
+export class WorkflowVersionRuntimeVariable {
+    constructor (variable) {
+        this.variable = variable;
+        this.value = variable.getDefaultValue();
 
+        if (!this.value) {
+            throw new Error(`Variable ${variable.getId()} does not have a default value.`);
+        }
+    }
+
+    markedAsOutput () {
+        return this.variable.getMarkedAsOutput();
+    }
+
+    getId () {
+        return this.variable.getId();
+    }
+
+    set (value) {
+        this.value = value;
+    }
+
+    increment (value) {
+        this.value += value;
+    }
+
+    decrement (value) {
+        this.value -= value;
+    }
+
+    getValue () {
+        switch (this.variable.getType()) {
+            case 'number':
+                return {
+                    type: 'number',
+                    number: this.value.getNumber(),
+                };
+
+            case 'string':
+                return {
+                    type: 'string',
+                    string: this.value.getString(),
+                };
+
+            case 'boolean':
+                return {
+                    type: 'boolean',
+                    boolean: this.value.getBoolean(),
+                }
+
+            default:
+                throw new Error(`Unknown variable type: ${this.variable.getType()}`);
+        }
+    }
+}

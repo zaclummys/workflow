@@ -2,6 +2,10 @@ import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/w
 import WorkflowElement from '../workflow-element';
 
 export default class WorkflowAssignElement extends WorkflowElement {
+    static createAssignment (assignmentData) {
+        return new WorkflowAssignment(assignmentData);
+    }
+
     constructor({
         id,
         positionX,
@@ -32,7 +36,8 @@ export default class WorkflowAssignElement extends WorkflowElement {
         this.name = name;
         this.description = description;
         this.nextElementId = nextElementId;
-        this.assignments = assignments.map(assignment => new WorkflowAssignment(assignment));
+
+        this.assignments = assignments.map(assignment => WorkflowAssignElement.createAssignment(assignment));
     }
 
     getType () {

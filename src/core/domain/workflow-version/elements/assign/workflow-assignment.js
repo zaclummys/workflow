@@ -60,10 +60,26 @@ export default class WorkflowAssignment {
     }
 
     assign (context) {
+        const operandValue = this.operand.evaluate(context);
+
         const variable = context.findVariableById(this.variableId);
-        const valueToBeAssigned = this.operand.evaluate(context);
-        
-        variable.assign(this.operator, valueToBeAssigned);
+
+        switch (this.operator) {
+            case 'set':
+                variable.set(operandValue);
+            break;
+
+            case 'increment':
+                variable.increment(operandValue);
+            break;
+
+            case 'decrement':
+                variable.decrement(operandValue);
+            break;
+
+            default:
+                throw new Error(`Unknown operator: ${this.operator}`);
+        }
     }
 }
 

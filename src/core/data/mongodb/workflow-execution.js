@@ -1,4 +1,4 @@
-import { WorkflowExecution } from "~/core/domain/workflow-execution";
+import { WorkflowExecution } from "~/core/domain/workflow-execution/workflow-execution";
 
 import database from './database';
 

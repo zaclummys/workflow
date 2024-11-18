@@ -18,29 +18,4 @@ export default  class WorkflowStringValue extends WorkflowValue {
     getString () {
         return this.string;
     }
-
-    set (string) {
-        return new WorkflowStringValue(string);
-    }
-
-    contains (string) {
-        return this.string.includes(string);
-    }
-
-    concat (string) {
-        return new StringValue(this.string + string);
-    }
-
-    assign (operator, valueToBeAssigned) {
-        switch (operator) {
-            case 'set':
-                return this.set(valueToBeAssigned);
-            
-            case 'concat':
-                return this.concat(valueToBeAssigned);
-
-            default:
-                throw new Error(`Operator ${operator} is not supported for ${this.constructor.name}`);
-        }
-    }
 }

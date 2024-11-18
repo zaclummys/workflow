@@ -4,6 +4,8 @@ import {
     WorkflowStartElement,
     WorkflowIfElement,
     WorkflowAssignElement,
+    WorkflowExecution,
+    WorkflowExecutionOutput,
 } from './workflow-version';
 
 describe('Workflow Version', () => {
@@ -582,31 +584,6 @@ describe('Workflow Version', () => {
     //     });
     // });
 
-    it('Should create a workflow version', async () => {
-        const workflowVersion = WorkflowVersion.create({
-            number: 1,
-            workflowId: 'workflow-1',
-            createdById: 'user-1',
-        });
-
-        expect(workflowVersion).toStrictEqual(new WorkflowVersion({
-            id: expect.any(String),
-            status: 'draft',
-            number: 1,
-            workflowId: 'workflow-1',
-            elements: [
-                new WorkflowStartElement({
-                    id: expect.any(String),
-                    positionX: 0,
-                    positionY: 0,
-                }),
-            ],
-            variables: [],
-            createdAt: expect.any(Date),
-            createdById: 'user-1',
-        }));
-    });
-
     it('Should change the variables', async () => {
         const workflowVersion = WorkflowVersion.create({
             number: 1,
@@ -760,5 +737,255 @@ describe('Workflow Version', () => {
                 positionY: 0,
             }),
         ]);
+    });
+
+    describe('Execution', () => {
+        it('Should execute when there is only the start element', () => {
+            const workflowVersion = new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'active',
+                variables: [],
+                elements: [
+                    {
+                        id: 'start',
+                        type: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                    },
+                ],
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+            });
+
+            const execution = workflowVersion.execute({
+                inputs: [],
+                userId: 'user-1',
+            });
+
+            expect(execution).toStrictEqual(new WorkflowExecution({
+                id: expect.any(String),
+                inputs: [],
+                outputs: [],
+                workflowVersionId: workflowVersion.id,
+                executedById: 'user-1',
+            }));
+        });
+
+        it('Should execute with an assign element', () => {
+            const workflowVersion = new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'active',
+                variables: [
+                    {
+                        id: 'variable-string',
+                        name: 'Variable String',
+                        type: 'string',
+                        defaultValue: {
+                            type: 'string',
+                            string: 'abc',
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: true,
+                    },
+
+                    {
+                        id: 'variable-number',
+                        name: 'Variable Number',
+                        type: 'number',
+                        defaultValue: {
+                            type: 'number',
+                            number: 123,
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: true,
+                    },
+
+                    {
+                        id: 'variable-boolean',
+                        name: 'Variable Boolean',
+                        type: 'boolean',
+                        defaultValue: {
+                            type: 'boolean',
+                            boolean: true,
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: true,
+                    },
+                ],
+                elements: [
+                    {
+                        id: 'start',
+                        type: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'assign-1',
+                    },
+
+                    {
+                        id: 'assign-1',
+                        type: 'assign',
+                        name: 'Assign 1',
+                        description: 'This is an assign element.',
+                        assignments: [
+                            {
+                                id: 'assignment-1',
+                                variableId: 'variable-string',
+                                operator: 'set',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'string',
+                                        string: 'xyz',
+                                    }
+                                }
+                            },
+
+                            {
+                                id: 'assignment-2',
+                                variableId: 'variable-number',
+                                operator: 'set',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'number',
+                                        number: 456,
+                                    }
+                                }
+                            },
+
+                            {
+                                id: 'assignment-3',
+                                variableId: 'variable-boolean',
+                                operator: 'set',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'boolean',
+                                        boolean: false,
+                                    }
+                                },
+                            }
+                        ],
+                        positionX: 0,
+                        positionY: 0,
+                    },
+                ],
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+            });
+
+            const execution = workflowVersion.execute({
+                inputs: [],
+                userId: 'user-1',
+            });
+
+            expect(execution).toStrictEqual(new WorkflowExecution({
+                id: expect.any(String),
+                inputs: [],
+                outputs: [
+                    {
+                        variableId: 'variable-string',
+                        value: {
+                            type: 'string',
+                            string: 'xyz',
+                        },
+                    },
+
+                    {
+                        variableId: 'variable-number',
+                        value: {
+                            type: 'number',
+                            number: 456,
+                        },
+                    },
+
+                    {
+                        variableId: 'variable-boolean',
+                        value: {
+                            type: 'boolean',
+                            boolean: false,
+                        },
+                    },
+                ],
+                workflowVersionId: workflowVersion.id,
+                executedById: 'user-1',
+            }));
+        });
+
+        it('Should execute with an if element', () => {
+            const workflowVersion = new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'active',
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+
+                variables: [
+                    {
+                        id: 'variable',
+                        name: 'Variable',
+                        type: 'string',
+                        defaultValue: {
+                            type: 'string',
+                            string: '',
+                        },
+                        markedAsInput: false,
+                        markedAsOutput: true,
+                    }
+                ],
+
+                elements: [
+                    {
+                        id: 'start',
+                        type: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'if-1',
+                    },
+
+                    {
+                        id: 'if-1',
+                        type: 'if',
+                        name: 'If 1',
+                        description: 'This is an if element.',
+                        strategy: 'all',
+                        conditions: [
+                            {
+                                id: 'condition-1',
+                                variableId: 'variable-boolean',
+                                operator: 'equal',
+                                operand: {
+                                    type: 'value',
+                                    value: {
+                                        type: 'boolean',
+                                        boolean: true,
+                                    }
+                                }
+                            }
+                        ],
+                        positionX: 0,
+                        positionY: 0,
+                    },
+                ],
+            });
+
+            const execution = workflowVersion.execute({
+                inputs: [],
+                userId: 'user-1',
+            });
+
+            expect(execution).toStrictEqual(new WorkflowExecution({
+                id: expect.any(String),
+                inputs: [],
+                outputs: [],
+                workflowVersionId: workflowVersion.id,
+                executedById: 'user-1',
+            }));
+        });
     });
 });
