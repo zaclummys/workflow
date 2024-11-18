@@ -1,6 +1,4 @@
 export default function workflowVersionEditorReducer (workflowVersionEditor, action) {
-    console.log(action);
-
     return {
         ...workflowVersionEditor,
         workflowVersion: workflowVersionReducer(workflowVersionEditor.workflowVersion, action),

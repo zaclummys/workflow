@@ -11,7 +11,7 @@ import {
     insertWorkflowVersion,
 } from '~/core/data/mongodb/workflow-version';
 
-import { WorkflowVersion } from '~/core/domain/workflow-version';
+import { WorkflowVersion } from '~/core/domain/workflow-version/workflow-version';
 
 export default async function createWorkflowVersion ({
     workflowId,

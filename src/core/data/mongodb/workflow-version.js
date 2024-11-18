@@ -2,7 +2,7 @@ import database from './database';
 
 import {
     WorkflowVersion,
-} from '~/core/domain/workflow-version';
+} from '~/core/domain/workflow-version/workflow-version';
 
 import WorkflowStartElement from '~/core/domain/workflow-version/elements/start/workflow-start-element';
 

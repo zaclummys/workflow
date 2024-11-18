@@ -5,7 +5,7 @@ import {
 
 import {
     WorkflowAssignElement,
-} from '~/core/domain/workflow-version';
+} from '~/core/domain/workflow-version/workflow-version';
 
 import { WorkflowIfElement } from '../domain/workflow-version/elements/if/workflow-if-element';
 

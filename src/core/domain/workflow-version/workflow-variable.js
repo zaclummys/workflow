@@ -65,12 +65,10 @@ export default class WorkflowVariable {
         if (!markedAsInput && defaultValue == null) {
             throw new Error('If a variable is not marked as input, it must have a default value.');
         }
-        
-        if (defaultValue != null && type !== defaultValue.type) {
-            throw new Error('Default value type must match the variable type.');
-        }
 
-        console.log(defaultValue)
+        if (defaultValue != null && type !== defaultValue.type) {
+            throw new Error('Default value type must match the variable type. Found ' + defaultValue.type + ', expected ' + type + '.');
+        }
 
         this.id = id;
         this.name = name;

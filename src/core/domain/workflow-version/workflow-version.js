@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 import {
     WorkflowExecutionContext,
     WorkflowExecutionOutput,
-} from '~/core/domain/workflow-execution.js';
+} from '~/core/domain/workflow-execution';
 
 import WorkflowExecutionVariable from '~/core/domain/workflow-execution/workflow-execution-variable';
 
@@ -16,6 +16,15 @@ import WorkflowAssignElement from '~/core/domain/workflow-version/elements/assig
 import WorkflowAssignment from '~/core/domain/workflow-version/elements/assign/workflow-assignment';
 
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
+
+export {
+    WorkflowStartElement,
+    WorkflowVariable,
+    WorkflowIfElement,
+    WorkflowCondition,
+    WorkflowAssignElement,
+    WorkflowAssignment,
+};
 
 export class WorkflowVersion {
     static create({
@@ -135,7 +144,10 @@ export class WorkflowVersion {
         return this.status === 'draft';
     }
 
-    change ({ variables, elements }) {
+    change ({
+        variables = [],
+        elements = [],
+    }) {
         this.variables = variables.map(variableData => new WorkflowVariable(variableData));
         this.elements = elements.map(elementData => {
             switch (elementData.type) {

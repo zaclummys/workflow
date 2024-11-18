@@ -6,7 +6,7 @@ import {
     fromWorkflowCondition,
     fromWorkflowVariable,
     fromWorkflowIfElement,
-} from '~/core/application/get-workflow-version';
+} from './get-workflow-version';
 
 describe('Get Workflow Version', () => {
     describe('Given a Workflow Condition', () => {

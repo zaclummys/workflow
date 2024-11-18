@@ -1,4 +1,4 @@
-import { UserPassword, UserColor } from '~/core/domain/user';
+import { UserPassword, UserColor } from './user';
 
 describe('User', () => {
     describe('User password', () => {
@@ -10,11 +10,21 @@ describe('User', () => {
             await UserPassword.create('*'.repeat(256));
         });
 
-        it('Incorrect password', async () => {
+        it('Does not store plain text password', async () => {
             const password = await UserPassword.create('12345678');
 
             expect(password.toString()).not.toBe('12345678');
+        });
+
+        it('Correct password', async () => {
+            const password = await UserPassword.create('12345678');
+
             await expect(password.verify('12345678')).resolves.toBeTruthy()
+        });
+
+        it('Incorrect password', async () => {
+            const password = await UserPassword.create('12345678');
+
             await expect(password.verify('87654321')).resolves.toBeFalsy();
         });
     });
