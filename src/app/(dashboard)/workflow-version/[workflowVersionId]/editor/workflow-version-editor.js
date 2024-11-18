@@ -20,7 +20,9 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
     );
 
     useEffect(() => {
-        dispatchWorflowVersionEditor({ type: 'workflow-version-reseted', workflowVersion });
+        if (workflowVersion != workflowVersionEditor.workflowVersion) {
+            dispatchWorflowVersionEditor({ type: 'workflow-version-reseted', workflowVersion });
+        }
     }, [workflowVersion]);
 
     const findElementById = elementId => {

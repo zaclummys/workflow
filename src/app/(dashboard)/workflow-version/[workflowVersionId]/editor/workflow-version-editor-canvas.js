@@ -246,6 +246,35 @@ function WorkflowVersionReactFlow ({
                         break;
                     }
                 break;
+
+                case 'remove':
+                    const removedEdge = instance.getEdge(change.id);
+
+                    switch (removedEdge.sourceHandle) {
+                        case 'next':
+                            dispatchWorkflowVersion({
+                                type: 'element-disconnected',
+                                sourceElementId: removedEdge.source,
+                            });
+                        break;
+
+                        case 'true':
+                            dispatchWorkflowVersion({
+                                type: 'element-disconnected',
+                                connectionType: 'true',
+                                elementId: removedEdge.source,
+                            })
+                        break;
+
+                        case 'false':
+                            dispatchWorkflowVersion({
+                                type: 'element-disconnected',
+                                connectionType: 'false',
+                                elementId: removedEdge.source,
+                            })
+                        break;
+                    }
+                break;
             }
         }
     }
