@@ -79,43 +79,13 @@ export default async function getWorkflowVersion ({ workflowVersionId }) {
     };
 }
 
-export function fromDefaultValue (defaultValue) {
-    if (defaultValue == null) {
-        return null;
-    }
-
-    switch (defaultValue.getType()) {
-        case 'number':
-            return {
-                type: defaultValue.getType(),
-                number: defaultValue.getNumber(),
-            };
-
-        case 'string':
-            return {
-                type: defaultValue.getType(),
-                string: defaultValue.getString(),
-            };
-
-        case 'boolean':
-            return {
-                type: defaultValue.getType(),
-                boolean: defaultValue.getBoolean(),
-            };
-
-        default:
-            return null;
-    }
-}
-
-
 export function fromWorkflowVariable (variable) {
     return {
         id: variable.getId(),
         name: variable.getName(),
         type: variable.getType(),
         description: variable.getDescription(),
-        defaultValue: fromDefaultValue(variable.getDefaultValue()),
+        defaultValue: variable.getDefaultValue(),
         markedAsInput: variable.getMarkedAsInput(),
         markedAsOutput: variable.getMarkedAsOutput(),
     };
@@ -180,50 +150,6 @@ export function fromWorkflowCondition (condition) {
         id: condition.getId(),
         variableId: condition.getVariableId(),
         operator: condition.getOperator(),
-        operand: fromWorkflowOperand(condition.getOperand()),
+        operand: condition.getOperand(),
     };
-}
-
-export function fromWorkflowOperand (operand) {
-    switch (operand.getType()) {
-        case 'variable':
-            return {
-                type: operand.getType(),
-                variableId: operand.getVariableId(),
-            };
-
-        case 'value':
-            return {
-                type: operand.getType(),
-                value: fromValue(operand.getValue()),
-            };
-
-        default:
-            return null;
-    }
-}
-
-export function fromValue (value) {
-    switch (value.getType()) {
-        case 'number':
-            return {
-                type: value.getType(),
-                number: value.getNumber(),
-            };
-
-        case 'string':
-            return {
-                type: value.getType(),
-                string: value.getString(),
-            };
-
-        case 'boolean':
-            return {
-                type: value.getType(),
-                boolean: value.getBoolean(),
-            };
-
-        default:
-            return null;
-    }
 }

@@ -1,7 +1,3 @@
-import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
-import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
-import WorkflowBooleanValue from '~/core/domain/workflow-version/values/workflow-boolean-value';
-
 import { WorkflowExecution, WorkflowExecutionOutput } from './workflow-execution';
 
 describe('Workflow Execution', () => {
@@ -43,10 +39,7 @@ describe('Workflow Execution', () => {
             outputs: [
                 {
                     id: 'variable-1',
-                    value: {
-                        type: 'number',
-                        number: 10,
-                    }
+                    value: 10,
                 },
             ],
             executedById: 'user-1',
@@ -56,10 +49,7 @@ describe('Workflow Execution', () => {
         expect(workflowExecution.getOutputs()).toEqual([
             new WorkflowExecutionOutput({
                 id: 'variable-1',
-                value: {
-                    type: 'number',
-                    number: 10,
-                }
+                value: 10,
             }),
         ]);
     });
@@ -68,40 +58,31 @@ describe('Workflow Execution', () => {
         it('Should create a string workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
                 id: 'variable-1',
-                value: {
-                    type: 'string',
-                    string: 'abc',
-                },
+                value: 'abc',
             });
 
             expect(output.getId()).toBe('variable-1');
-            expect(output.getValue()).toEqual(new WorkflowStringValue('abc'));
+            expect(output.getValue()).toEqual('abc');
         });
 
         it('Should create a number workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
                 id: 'variable-1',
-                value: {
-                    type: 'number',
-                    number: 10,
-                },
+                value: 10,
             });
 
             expect(output.getId()).toBe('variable-1');
-            expect(output.getValue()).toEqual(new WorkflowNumberValue(10));
+            expect(output.getValue()).toEqual(10);
         });
 
         it('Should create a boolean workflow execution output', () => {
             const output = new WorkflowExecutionOutput({
                 id: 'variable-1',
-                value: {
-                    type: 'boolean',
-                    boolean: true,
-                },
+                value: true,
             });
 
             expect(output.getId()).toBe('variable-1');
-            expect(output.getValue()).toEqual(new WorkflowBooleanValue(true));
+            expect(output.getValue()).toEqual(true);
         });
     });
 });

@@ -18,111 +18,6 @@ import WorkflowVariableOperand from '~/core/domain/workflow-version/operands/wor
 import WorkflowValueOperand from '~/core/domain/workflow-version/operands/workflow-value-operand';
 
 describe('Workflow Version', () => {
-    describe('Given a Workflow Number Value', () => {
-        it('Should convert', () => {
-            const output = fromValue(new WorkflowNumberValue(123));
-
-            expect(output).toEqual({
-                type: 'number',
-                number: 123,
-            });
-        });
-    });
-
-    describe('Given a Workflow String Value', () => {
-        it('Should convert', () => {
-            const output = fromValue(new WorkflowStringValue('abc'));
-
-            expect(output).toEqual({
-                type: 'string',
-                string: 'abc',
-            });
-        });
-    });
-
-    describe('Given a Workflow Boolean Value', () => {
-        it('Should convert', () => {
-            const output = fromValue(new WorkflowBooleanValue(true));
-
-            expect(output).toEqual({
-                type: 'boolean',
-                boolean: true,
-            });
-        });
-    });
-
-    describe('Given a Workflow Variable Operand', () => {
-        it('Should convert', () => {
-            const operand = new WorkflowVariableOperand('1');
-
-            const output = fromWorkflowOperand(operand);
-
-            expect(output).toEqual({
-                type: 'variable',
-                variableId: '1',
-            });
-        });
-    });
-
-    describe('Given a Workflow Value Operand', () => {
-        describe('When value is a number', () => {
-            it('Should convert', () => {
-                const operand = new WorkflowValueOperand({
-                    type: 'number',
-                    number: 123,
-                });
-
-                const output = fromWorkflowOperand(operand);
-
-                expect(output).toEqual({
-                    type: 'value',
-                    value: {
-                        type: 'number',
-                        number: 123,
-                    }
-                });
-            });
-        });
-
-        describe('When value is a string', () => {
-            it('Should convert', () => {
-                const operand = new WorkflowValueOperand({
-                    type: 'string',
-                    string: 'abc',
-                });
-
-                const output = fromWorkflowOperand(operand);
-
-                expect(output).toEqual({
-                    type: 'value',
-                    value: {
-                        type: 'string',
-                        string: 'abc',
-                    }
-                });
-            });
-        });
-
-        describe('When value is a boolean', () => {
-            it('Should convert', () => {
-                const operand = new WorkflowValueOperand({
-                    type: 'boolean',
-                    boolean: true,
-                });
-
-                const output = fromWorkflowOperand(operand);
-
-                expect(output).toEqual({
-                    type: 'value',
-                    value: {
-                        type: 'boolean',
-                        boolean: true,
-                    }
-                });
-            });
-        });
-    });
-
     describe('Given a Workflow Assignment', () => {
         describe('And operand is a variable', () => {
             it('Should convert', () => {
@@ -358,10 +253,7 @@ describe('Workflow Version', () => {
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    defaultValue: {
-                        type: 'string',
-                        string: 'abc',
-                    },
+                    defaultValue: 'abc',
                     markedAsInput: true,
                     markedAsOutput: true,
                 });
@@ -373,10 +265,7 @@ describe('Workflow Version', () => {
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    defaultValue: {
-                        type: 'string',
-                        string: 'abc',
-                    },
+                    defaultValue: 'abc',
                     markedAsInput: true,
                     markedAsOutput: true,
                 });

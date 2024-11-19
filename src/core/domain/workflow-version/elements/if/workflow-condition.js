@@ -1,20 +1,4 @@
-import WorkflowValueOperand from '~/core/domain/workflow-version/operands/workflow-value-operand';
-import WorkflowVariableOperand from '~/core/domain/workflow-version/operands/workflow-variable-operand';
-
 export default class WorkflowCondition {
-    static createOperand (operand) {
-        switch (operand.type) {
-            case 'value':
-                return new WorkflowValueOperand(operand.value);
-
-            case 'variable':
-                return new WorkflowVariableOperand(operand.variableId);
-
-            default:
-                throw new Error(`Unknown operand type: ${operand.type}.`);
-        }
-    }
-
     constructor ({
         id,
         variableId,
@@ -40,7 +24,7 @@ export default class WorkflowCondition {
         this.id = id;
         this.variableId = variableId;
         this.operator = operator;
-        this.operand =  WorkflowCondition.createOperand(operand);
+        this.operand =  operand;
     }
 
     getId() {
@@ -59,23 +43,11 @@ export default class WorkflowCondition {
         return this.operand;
     }
 
-    evaluate (context) {
-        const variable = context.findVariableById(this.variableId);
-
-        const operandValue = this.operand.evaluate(context);
-
-        switch (this.operator) {
-            case 'equal':
-                return variable.equalTo(operandValue);
-
-            case 'greater-than':
-                return variable.greaterThan(operandValue);
-
-            case 'less-than':
-                return variable.lessThan(operandValue);
-
-            default:
-                throw new Error(`Unknown operator: ${this.operator}.`);
-        }
+    compare (context) {
+        return context.compareVariable({
+            variableId: this.variableId,
+            operator: this.operator,
+            operand: this.operand,
+        });
     }
 }

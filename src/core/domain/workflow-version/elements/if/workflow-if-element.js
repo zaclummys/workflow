@@ -1,22 +1,7 @@
-import WorkflowIfAllStrategy from '~/core/domain/workflow-version/elements/if/strategies/workflow-all-strategy';
-import WorkflowIfAnyStrategy from '~/core/domain/workflow-version/elements/if/strategies/workflow-any-strategy';
 import WorkflowCondition from '~/core/domain/workflow-version/elements/if/workflow-condition';
 import WorkflowElement from '~/core/domain/workflow-version/elements/workflow-element';
 
 export default class WorkflowIfElement extends WorkflowElement {
-    static createStrategy (strategy) {
-        switch (strategy) {
-            case 'all':
-                return new WorkflowIfAllStrategy();
-
-            case 'any':
-                return new WorkflowIfAnyStrategy();
-                
-            default:
-                throw new Error(`Unexpected strategy: ${strategy}`);
-        }
-    }
-
     constructor({
         id,
         name,
@@ -103,13 +88,13 @@ export default class WorkflowIfElement extends WorkflowElement {
         this.nextElementIdIfTrue = defaultNextElementId;
     }
 
-    evaluateConditions (context) {
+    compareConditions (context) {
         switch (this.strategy) {
             case 'all':
-                return this.conditions.every(condition => condition.evaluate(context));
+                return this.conditions.every(condition => condition.compare(context));
 
             case 'any':
-                return this.conditions.some(condition => condition.evaluate(context));
+                return this.conditions.some(condition => condition.compare(context));
 
             default:
                 throw new Error(`Unexpected strategy: ${this.strategy}`);
@@ -117,7 +102,7 @@ export default class WorkflowIfElement extends WorkflowElement {
     }
 
     execute (context) {
-        const satisfied = this.evaluateConditions(context);
+        const satisfied = this.compareConditions(context);
 
         if (satisfied) {
             return this.nextElementIdIfTrue;

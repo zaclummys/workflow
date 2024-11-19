@@ -109,7 +109,7 @@ export function fromWorkflowVariable (workflowVariable) {
         id: workflowVariable.getId(),
         name: workflowVariable.getName(),
         description: workflowVariable.getDescription(),
-        defaultValue: fromValue(workflowVariable.getDefaultValue()),
+        defaultValue: workflowVariable.getDefaultValue(),
         type: workflowVariable.getType(),
         markedAsInput: workflowVariable.getMarkedAsInput(),
         markedAsOutput: workflowVariable.getMarkedAsOutput(),
@@ -179,27 +179,8 @@ export function fromWorkflowCondition (workflowCondition) {
         id: workflowCondition.getId(),
         variableId: workflowCondition.getVariableId(),
         operator: workflowCondition.getOperator(),
-        operand: fromWorkflowOperand(workflowCondition.getOperand()),
+        operand: workflowCondition.getOperand(),
     };
-}
-
-export function fromWorkflowOperand (workflowOperand) {
-    switch (workflowOperand.getType()) {
-        case 'variable':
-            return {
-                type: workflowOperand.getType(),
-                variableId: workflowOperand.getVariableId(),
-            };
-
-        case 'value':
-            return {
-                type: workflowOperand.getType(),
-                value: fromValue(workflowOperand.getValue()),
-            };
-
-        default:
-            throw new Error(`Unknown operand type: ${workflowOperand.getType()}`);
-    }
 }
 
 export function fromWorkflowAssignment (workflowAssignment) {
@@ -207,60 +188,8 @@ export function fromWorkflowAssignment (workflowAssignment) {
         id: workflowAssignment.getId(),
         variableId: workflowAssignment.getVariableId(),
         operator: workflowAssignment.getOperator(),
-        operand: fromAssignmentOperand(workflowAssignment.getOperand()),
+        operand: workflowAssignment.getOperand(),
     };
-}
-
-export function fromValue (value) {
-    if (value == null) {
-        return null;
-    }
-    
-    switch (value.getType()) {
-        case 'number':
-            return {
-                type: value.getType(),
-                number: value.getNumber(),
-            };
-
-        case 'string':
-            return {
-                type: value.getType(),
-                string: value.getString(),
-            };
-
-        case 'boolean':
-            return {
-                type: value.getType(),
-                boolean: value.getBoolean(),
-            };
-
-        default:
-            throw new Error(`Unknown value type: ${value.getType()}`);
-    }
-}
-
-export function fromAssignmentOperand (operand) {
-    switch (operand.getType()) {
-        case 'variable':
-            return {
-                type: operand.getType(),
-                variableId: operand.getVariableId(),
-            };
-
-        case 'value':
-            return {
-                type: operand.getType(),
-                value: fromValue(operand.getValue()),
-            };
-
-        default:
-            throw new Error(`Unknown operand type: ${operand.getType()}`);
-    }
-}
-
-export function fromWorkflowIfStrategy (workflowIfStrategy) {
-    return workflowIfStrategy.getType();
 }
 
 export function toWorkflowVersion ({

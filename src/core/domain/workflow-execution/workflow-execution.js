@@ -81,29 +81,9 @@ export class WorkflowExecution {
 }
 
 export class WorkflowExecutionOutput {
-    static createValue (value) {
-        if (value == null) {
-            throw new Error('Value cannot be null');
-        }
-
-        switch (value.type) {
-            case 'number':
-                return new WorkflowNumberValue(value.number);
-
-            case 'string':
-                return new WorkflowStringValue(value.string);
-
-            case 'boolean':
-                return new WorkflowBooleanValue(value.boolean);
-
-            default:
-                throw new Error(`Unknown value type: ${value.type}`);
-        }
-    }
-
     constructor ({ id, value }) {
         this.id = id;
-        this.value = WorkflowExecutionOutput.createValue(value);
+        this.value = value;
     }
 
     getId () {

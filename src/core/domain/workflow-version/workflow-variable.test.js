@@ -1,7 +1,3 @@
-import WorkflowBooleanValue from '~/core/domain/workflow-version/values/workflow-boolean-value';
-import WorkflowNumberValue from '~/core/domain/workflow-version/values/workflow-number-value';
-import WorkflowStringValue from '~/core/domain/workflow-version/values/workflow-string-value';
-
 import WorkflowVariable from '~/core/domain/workflow-version/workflow-variable';
 
 describe('Workflow Variable', () => {
@@ -33,10 +29,7 @@ describe('Workflow Variable', () => {
                 type: 'number',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: {
-                    type: 'number',
-                    number: 10,
-                },
+                defaultValue: 10,
             });
 
             expect(variable).toMatchObject({
@@ -45,7 +38,7 @@ describe('Workflow Variable', () => {
                 type: 'number',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: new WorkflowNumberValue(10),
+                defaultValue: 10,
             });
         });
     });
@@ -78,10 +71,7 @@ describe('Workflow Variable', () => {
                 type: 'string',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: {
-                    type: 'string',
-                    string: 'test',
-                },
+                defaultValue: 'test',
             });
 
             expect(variable).toMatchObject({
@@ -90,7 +80,7 @@ describe('Workflow Variable', () => {
                 type: 'string',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: new WorkflowStringValue('test'),
+                defaultValue: 'test',
             });
         });
     });
@@ -123,10 +113,7 @@ describe('Workflow Variable', () => {
                 type: 'boolean',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: {
-                    type: 'boolean',
-                    boolean: true,
-                },
+                defaultValue: true,
             });
 
             expect(variable).toMatchObject({
@@ -135,7 +122,7 @@ describe('Workflow Variable', () => {
                 type: 'boolean',
                 markedAsInput: true,
                 markedAsOutput: false,
-                defaultValue: new WorkflowBooleanValue(true),
+                defaultValue: true,
             });
         });
     });
