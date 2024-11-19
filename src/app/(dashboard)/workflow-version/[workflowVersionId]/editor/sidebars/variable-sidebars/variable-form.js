@@ -23,8 +23,6 @@ import {
 
 import ValueFacade from '~/components/value-facade';
 
-import { coerceVariable } from '~/value';
-
 const defaultVariable = {
     name: '',
     description: '',
@@ -50,9 +48,7 @@ export default function VariableForm ({
             return;
         }
 
-        const coercedVariable = coerceVariable(values);
-
-        onConfirm(coercedVariable);
+        onConfirm(values);
     }
 
     const handleNameChange = event => {
@@ -92,28 +88,19 @@ export default function VariableForm ({
                 case 'string':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'string',
-                            string: '',
-                        }
+                        defaultValue: '',
                     };
 
                 case 'number':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'number',
-                            number: '0',
-                        }
+                        defaultValue: '0',
                     };
 
                 case 'boolean':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'boolean',
-                            boolean: 'false',
-                        }
+                        defaultValue: 'false',
                     };
 
                 default:
@@ -128,28 +115,19 @@ export default function VariableForm ({
                 case 'string':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'string',
-                            string: event.target.value,
-                        }
+                        defaultValue: event.target.value,
                     };
 
                 case 'number':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'number',
-                            number: event.target.value,
-                        }
+                        defaultValue: event.target.value,
                     };
 
                 case 'boolean':
                     return {
                         ...values,
-                        defaultValue: {
-                            type: 'boolean',
-                            boolean: event.target.value,
-                        }
+                        defaultValue: event.target.value,
                     };
 
                 default:
@@ -251,6 +229,7 @@ export default function VariableForm ({
                 {values.defaultValue != null && (
                     <ValueFacade
                         id={defaultValueId}
+                        type={values.type}
                         value={values.defaultValue}
                         onChange={handleDefaultValueChange}
                     />

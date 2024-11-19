@@ -2,15 +2,16 @@ import { Input, Select, Option } from '~/components/form';
 
 export default function ValueFacade ({
     id,
+    type,
     value,
     onChange,
 }) {
-    switch (value.type) {
+    switch (type) {
         case 'string':
             return (
                 <StringValue
                     id={id}
-                    string={value.string}
+                    value={value}
                     onChange={onChange}
                 />
             );
@@ -19,7 +20,7 @@ export default function ValueFacade ({
             return (
                 <NumberValue
                     id={id}
-                    number={value.number}
+                    value={value}
                     onChange={onChange}
                 />
             );
@@ -28,44 +29,44 @@ export default function ValueFacade ({
             return (
                 <BooleanValue
                     id={id}
-                    boolean={value.boolean}
+                    value={value}
                     onChange={onChange}
                 />
             );
 
         default:
-            throw new Error(`Unknown value type: ${value.type}`);
+            // throw new Error(`Unknown value type: ${value.type}`);
             return null;
     }
 }
 
-function StringValue ({ id, string, onChange }) {
+function StringValue ({ id, value, onChange }) {
     return (
         <Input
             id={id}
-            value={string}
+            value={value}
             onChange={onChange}
         />
     );
 }
 
-function NumberValue ({ id, number, onChange }) {
+function NumberValue ({ id, value, onChange }) {
     return (
         <Input
             id={id}
             type="number"
-            value={number}
+            value={value}
             onChange={onChange}
         />
     );
 }
 
-function BooleanValue ({ id, boolean, onChange }) {
+function BooleanValue ({ id, value, onChange }) {
     return (
         <Select
             id={id}
             required
-            value={boolean}
+            value={value}
             onChange={onChange}
         >
             <Option value="true">True</Option>

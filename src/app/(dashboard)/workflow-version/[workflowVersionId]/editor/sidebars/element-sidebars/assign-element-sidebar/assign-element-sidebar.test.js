@@ -402,10 +402,7 @@ describe('Assign Element Sidebar', () => {
                             operator: 'set',
                             operand: {
                                 type: 'value',
-                                value: {
-                                    type: 'number',
-                                    number: 10,
-                                }
+                                value: 10,
                             },
                         },
                     ],
@@ -437,10 +434,7 @@ describe('Assign Element Sidebar', () => {
                             operator: 'set',
                             operand: {
                                 type: 'value',
-                                value: {
-                                    type: 'number',
-                                    number: 10,
-                                },
+                                value: '10',
                             },
                         },
                     ],
@@ -473,10 +467,7 @@ describe('Assign Element Sidebar', () => {
                             operator: 'set',
                             operand: {
                                 type: 'value',
-                                value: {
-                                    type: 'number',
-                                    number: 10,
-                                },
+                                value: 10,
                             },
                         },
                     ],
@@ -513,10 +504,7 @@ describe('Assign Element Sidebar', () => {
                             operator: 'set',
                             operand: {
                                 type: 'value',
-                                value: {
-                                    type: 'string',
-                                    string: 'Hello, World!',
-                                },
+                                value: 'Hello, World!',
                             },
                         },
                     ],

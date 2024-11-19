@@ -302,10 +302,7 @@ describe('Variable Form', () => {
                         name: 'Variable 1',
                         description: 'This is the first variable.',
                         type: 'number',
-                        defaultValue: {
-                            type: 'number',
-                            number: 42,
-                        },
+                        defaultValue: '42',
                         markedAsInput: true,
                         markedAsOutput: true,
                     });
@@ -345,10 +342,7 @@ describe('Variable Form', () => {
                 it('Should render with initial values', () => {
                     const initialVariable = {
                         type: 'string',
-                        defaultValue: {
-                            type: 'string',
-                            string: 'The default value.',
-                        },
+                        defaultValue: 'The default value.',
                     };
 
                     render(
@@ -415,10 +409,7 @@ describe('Variable Form', () => {
                 it('Should render with initial values', () => {
                     const initialVariable = {
                         type: 'number',
-                        defaultValue: {
-                            type: 'number',
-                            number: 42,
-                        },
+                        defaultValue: '42',
                     };
 
                     render(
@@ -509,10 +500,7 @@ describe('Variable Form', () => {
                             name: 'Variable 1',
                             description: 'This is the first variable.',
                             type: 'boolean',
-                            defaultValue: {
-                                type: 'boolean',
-                                boolean: false,
-                            },
+                            defaultValue: 'false',
                         };
 
                         const onConfirm = vi.fn();
@@ -535,10 +523,7 @@ describe('Variable Form', () => {
 
                         expect(onConfirm).toHaveBeenCalledWith(
                             expect.objectContaining({
-                                defaultValue: {
-                                    type: 'boolean',
-                                    boolean: true,
-                                },
+                                defaultValue: 'true',
                             })
                         );
                     });
@@ -548,10 +533,7 @@ describe('Variable Form', () => {
                     it('Should render with initial values', () => {
                         const initialVariable = {
                             type: 'boolean',
-                            defaultValue: {
-                                type: 'boolean',
-                                boolean: false,
-                            },
+                            defaultValue: 'false',
                         };
 
                         render(
@@ -570,10 +552,7 @@ describe('Variable Form', () => {
                     it('Should allow to change the default value', () => {
                         const initialVariable = {
                             type: 'boolean',
-                            defaultValue: {
-                                type: 'boolean',
-                                boolean: false,
-                            },
+                            defaultValue: 'false',
                         };
 
                         render(
@@ -595,10 +574,7 @@ describe('Variable Form', () => {
                             name: 'Variable 1',
                             description: 'This is the first variable.',
                             type: 'boolean',
-                            defaultValue: {
-                                type: 'boolean',
-                                boolean: true,
-                            },
+                            defaultValue: 'true',
                         };
 
                         const onConfirm = vi.fn();
@@ -621,10 +597,7 @@ describe('Variable Form', () => {
 
                         expect(onConfirm).toHaveBeenCalledWith(
                             expect.objectContaining({
-                                defaultValue: {
-                                    type: 'boolean',
-                                    boolean: false,
-                                },
+                                defaultValue: 'false',
                             })
                         );
                     });

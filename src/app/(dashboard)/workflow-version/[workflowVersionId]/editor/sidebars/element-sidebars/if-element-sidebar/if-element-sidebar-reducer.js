@@ -1,8 +1,3 @@
-import {
-    createValue,
-    updateValue,
-} from '~/value';
-
 export default function ifElementReducer (ifElement, action) {
     switch (action.type) {
         case 'name-changed':
@@ -98,13 +93,37 @@ function conditionsReducer (conditions, action) {
                             };
 
                         case 'value':
-                            return {
-                                ...condition,
-                                operand: {
-                                    type: 'value',
-                                    value: createValue(condition.variableType),
-                                }
-                            };
+                            switch (condition.variableType) {
+                                case 'string':
+                                    return {
+                                        ...condition,
+                                        operand: {
+                                            type: 'value',
+                                            value: '',
+                                        }
+                                    };
+
+                                case 'number':
+                                    return {
+                                        ...condition,
+                                        operand: {
+                                            type: 'value',
+                                            value: '0',
+                                        }
+                                    };
+
+                                case 'boolean':
+                                    return {
+                                        ...condition,
+                                        operand: {
+                                            type: 'value',
+                                            value: 'false',
+                                        }
+                                    };
+
+                                default:
+                                    return condition;
+                            }
 
                         default:
                             return condition;
@@ -136,10 +155,7 @@ function conditionsReducer (conditions, action) {
                         ...condition,
                         operand: {
                             ...condition.operand,
-                            value: updateValue(
-                                condition.operand.value.type,
-                                action.value,
-                            ),
+                            value: action.value,
                         },
                     };
                 } else {

@@ -187,6 +187,7 @@ export default function Condition ({
         
                     <ValueFacade
                         id={operandValueId}
+                        type={conditionVariable.type}
                         value={condition.operand.value}
                         onChange={handleConditionOperandValueChange}
                     />

@@ -201,10 +201,7 @@ describe('If Element Reducer', () => {
                         variableType: 'string',
                         operand: {
                             type: 'value',
-                            value: {
-                                type: 'string',
-                                value: 'abc',
-                            },
+                            value: 'abc',
                         },
                     },
                 ],
@@ -259,10 +256,7 @@ describe('If Element Reducer', () => {
                     id: 'condition-1',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'string',
-                            string: '',
-                        }
+                        value: '',
                     },
                 })
             ]);
@@ -300,10 +294,7 @@ describe('If Element Reducer', () => {
                     id: 'condition-1',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'string',
-                            string: 'xyz',
-                        }
+                        value: 'xyz',
                     },
                 })
             ]);
@@ -340,10 +331,7 @@ describe('If Element Reducer', () => {
                     id: 'condition-1',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'number',
-                            number: '0',
-                        }
+                        value: '0',
                     },
                 })
             ]);
@@ -381,10 +369,7 @@ describe('If Element Reducer', () => {
                     id: 'condition-1',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'number',
-                            number: '456',
-                        }
+                        value: '456',
                     },
                 })
             ]);

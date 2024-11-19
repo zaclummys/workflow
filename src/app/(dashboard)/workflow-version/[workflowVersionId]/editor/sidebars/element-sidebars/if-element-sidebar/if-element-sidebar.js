@@ -15,8 +15,7 @@ import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/comp
 
 import Condition from './condition';
 
-import { coerceIfElement } from '~/value';
-import ifElementReducer from '~/reducers/if-element-sidebar-reducer';
+import ifElementReducer from './if-element-sidebar-reducer';
 
 export default function IfElementSidebar ({
     ifElement,
@@ -66,9 +65,7 @@ export default function IfElementSidebar ({
     const handleSubmit = event => {
         event.preventDefault();
 
-        const coercedIfElement = coerceIfElement(localIfElement);
-
-        onConfirm(coercedIfElement);
+        onConfirm(localIfElement);
     };
 
     const handleCancelButtonClick = event => {

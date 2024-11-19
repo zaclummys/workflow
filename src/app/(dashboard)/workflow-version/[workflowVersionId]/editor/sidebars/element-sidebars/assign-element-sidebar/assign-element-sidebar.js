@@ -96,6 +96,8 @@ export default function AssignElementSidebar ({
             ...localAssignElement,
             assignments: localAssignElement.assignments.map(assignment => {
                 if (assignment.id === assignmentId) {
+                    const assignmentVariable = findVariableById(assignment.variableId);
+
                     switch (event.target.value) {
                         case 'variable':
                             return {
@@ -107,18 +109,13 @@ export default function AssignElementSidebar ({
                             };
 
                         case 'value':
-                            const assignmentVariable = findVariableById(assignment.variableId);
-
                             switch (assignmentVariable.type) {
                                 case 'string':
                                     return {
                                         ...assignment,
                                         operand: {
                                             type: 'value',
-                                            value: {
-                                                type: 'string',
-                                                string: '',
-                                            }
+                                            value: '',
                                         },
                                     };
 
@@ -127,10 +124,7 @@ export default function AssignElementSidebar ({
                                         ...assignment,
                                         operand: {
                                             type: 'value',
-                                            value: {
-                                                type: 'number',
-                                                number: '0',
-                                            }
+                                            value: '0',
                                         },
                                     };
 
@@ -139,10 +133,7 @@ export default function AssignElementSidebar ({
                                         ...assignment,
                                         operand: {
                                             type: 'value',
-                                            value: {
-                                                type: 'boolean',
-                                                boolean: 'false',
-                                            }
+                                            value: 'false',
                                         },
                                     };
 
@@ -192,10 +183,7 @@ export default function AssignElementSidebar ({
                                 ...assignment,
                                 operand: {
                                     ...assignment.operand,
-                                    value: {
-                                        type: 'string',
-                                        string: event.target.value,
-                                    },
+                                    value: event.target.value,
                                 },
                             };
 
@@ -204,10 +192,7 @@ export default function AssignElementSidebar ({
                                 ...assignment,
                                 operand: {
                                     ...assignment.operand,
-                                    value: {
-                                        type: 'number',
-                                        number: event.target.value,
-                                    },
+                                    value: event.target.value,
                                 },
                             };
 
@@ -216,10 +201,7 @@ export default function AssignElementSidebar ({
                                 ...assignment,
                                 operand: {
                                     ...assignment.operand,
-                                    value: {
-                                        type: 'boolean',
-                                        boolean: event.target.value,
-                                    },
+                                    value: event.target.value,
                                 },
                             };
 

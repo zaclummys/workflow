@@ -111,6 +111,7 @@ export default function Assignment ({
 
                     <ValueFacade
                         id={operandValueId}
+                        type={assignmentVariable.type}
                         value={assignment.operand.value}
                         onChange={onOperandValueChange}
                     />

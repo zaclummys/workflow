@@ -321,10 +321,7 @@ describe('Workflow Version Editor Sidebar', () => {
                     name: 'Variable ABC',
                     description: 'This is a variable.',
                     type: 'string',
-                    defaultValue: {
-                        type: 'string',
-                        string: 'ABC',
-                    },
+                    defaultValue: 'ABC',
                 },
             ],
             workflow: {
@@ -370,10 +367,7 @@ describe('Workflow Version Editor Sidebar', () => {
                     id: 'variable-1',
                     name: 'Variable ABC',
                     type: 'string',
-                    defaultValue: {
-                        type: 'string',
-                        string: 'ABC',
-                    },
+                    defaultValue: 'ABC',
                 },
             ],
             workflow: {

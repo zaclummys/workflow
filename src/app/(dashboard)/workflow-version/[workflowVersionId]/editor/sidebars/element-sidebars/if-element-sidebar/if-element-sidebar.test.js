@@ -453,10 +453,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: {
-                                type: 'number',
-                                number: 0,
-                            },
+                            value: '0',
                         },
                     }),
                 ],
@@ -655,10 +652,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: {
-                                type: 'number',
-                                number: 1,
-                            },
+                            value: '1',
                         },
                     }),
                 ],
@@ -689,10 +683,7 @@ describe('If Element Sidebar', () => {
                     operator: 'equal',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'string',
-                            string: 'abc',
-                        },
+                        value: 'abc',
                     },
                 },
             ],
@@ -722,10 +713,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: {
-                                type: 'string',
-                                string: 'xyz',
-                            },
+                            value: 'xyz',
                         },
                     }),
                 ],
@@ -756,10 +744,7 @@ describe('If Element Sidebar', () => {
                     operator: 'equal',
                     operand: {
                         type: 'value',
-                        value: {
-                            type: 'boolean',
-                            boolean: false,
-                        },
+                        value: false,
                     },
                 },
             ],
@@ -789,10 +774,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: {
-                                type: 'boolean',
-                                boolean: true,
-                            },
+                            value: 'true',
                         },
                     }),
                 ],
