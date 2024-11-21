@@ -206,30 +206,10 @@ export function toWorkflowVersion ({
         id,
         number,
         status,
-        elements: elements.map(toWorkflowElement),
+        elements,
         workflowId,
         createdAt,
         createdById,
-        variables: variables.map(toWorkflowVariable),
+        variables,
     });
-}
-
-export function toWorkflowVariable (workflowVariableData) {
-    return new WorkflowVariable(workflowVariableData);
-}
-
-export function toWorkflowElement (workflowElementData) {
-    switch (workflowElementData.type) {
-        case 'start':
-            return new WorkflowStartElement(workflowElementData);
-
-        case 'assign':
-            return new WorkflowAssignElement(workflowElementData);
-
-        case 'if':
-            return new WorkflowIfElement(workflowElementData);
-
-        default:
-            throw new Error(`Unknown element type: ${workflowElementData.type}`);
-    }
 }

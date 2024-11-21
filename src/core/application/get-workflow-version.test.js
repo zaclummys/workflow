@@ -74,14 +74,14 @@ describe('Get Workflow Version', () => {
     });
 
     describe('Given a Workflow Variable', () => {
-        describe('When there is no default value', () => {
+        describe('And the default value is a string', () => {
             it('Should convert', () => {
                 const workflowVariable = new WorkflowVariable({
                     id: '1',
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    defaultValue: null,
+                    defaultValue: 'abc',
                     markedAsInput: true,
                     markedAsOutput: true,
                 });
@@ -93,89 +93,61 @@ describe('Get Workflow Version', () => {
                     name: 'Name',
                     description: 'Description',
                     type: 'string',
-                    defaultValue: null,
+                    defaultValue: 'abc',
                     markedAsInput: true,
                     markedAsOutput: true,
                 });
             });
         });
 
-        describe('When there is default value', () => {
-            describe('And the default value is a string', () => {
-                it('Should convert', () => {
-                    const workflowVariable = new WorkflowVariable({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'string',
-                        defaultValue: 'abc',
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
-    
-                    const output = fromWorkflowVariable(workflowVariable);
-    
-                    expect(output).toStrictEqual({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'string',
-                        defaultValue: 'abc',
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
+        describe('And the default value is a number', () => {
+            it('Should convert', () => {
+                const workflowVariable = new WorkflowVariable({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'number',
+                    defaultValue: 1,
+                    markedAsInput: true,
+                    markedAsOutput: true,
+                });
+
+                const output = fromWorkflowVariable(workflowVariable);
+
+                expect(output).toStrictEqual({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'number',
+                    defaultValue: 1,
+                    markedAsInput: true,
+                    markedAsOutput: true,
                 });
             });
+        });
 
-            describe('And the default value is a number', () => {
-                it('Should convert', () => {
-                    const workflowVariable = new WorkflowVariable({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'number',
-                        defaultValue: 1,
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
-    
-                    const output = fromWorkflowVariable(workflowVariable);
-    
-                    expect(output).toStrictEqual({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'number',
-                        defaultValue: 1,
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
+        describe('And the default value is a boolean', () => {
+            it('Should convert', () => {
+                const workflowVariable = new WorkflowVariable({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'boolean',
+                    defaultValue: true,
+                    markedAsInput: true,
+                    markedAsOutput: true,
                 });
-            });
 
-            describe('And the default value is a boolean', () => {
-                it('Should convert', () => {
-                    const workflowVariable = new WorkflowVariable({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'boolean',
-                        defaultValue: true,
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
-    
-                    const output = fromWorkflowVariable(workflowVariable);
-    
-                    expect(output).toStrictEqual({
-                        id: '1',
-                        name: 'Name',
-                        description: 'Description',
-                        type: 'boolean',
-                        defaultValue: true,
-                        markedAsInput: true,
-                        markedAsOutput: true,
-                    });
+                const output = fromWorkflowVariable(workflowVariable);
+
+                expect(output).toStrictEqual({
+                    id: '1',
+                    name: 'Name',
+                    description: 'Description',
+                    type: 'boolean',
+                    defaultValue: true,
+                    markedAsInput: true,
+                    markedAsOutput: true,
                 });
             });
         });

@@ -35,6 +35,7 @@ export class WorkflowVersion {
     }
 
     static createElement (elementData) {
+        console.log(elementData)
         switch (elementData.type) {
             case 'start':
                 return new WorkflowStartElement(elementData);
@@ -226,13 +227,61 @@ export class WorkflowVersion {
             throw new Error('Cannot execute a workflow version that is not active');
         }
 
-        const context = new WorkflowExecutionContext({
-            variables: this.variables.map(variable => ({
+        const findVariableById = id => {
+            return this.variables.find(variable => id === variable.getId());
+        }
+
+        const findInputById = id => {
+            return inputs.find(input => input.id === id);
+        };
+
+        const getInitialValueById = id => {
+            const variable = findVariableById(id);
+
+            if (variable.getMarkedAsInput()) {
+                const input = findInputById(id);
+
+                if (input != null) {
+                    return input.value;
+                }
+            } 
+
+            return variable.getDefaultValue();
+        }
+
+        inputs.forEach(input => {
+            if (input == null) {
+                throw new Error('Input cannot be null');
+            }
+
+            if (input.id == null) {
+                throw new Error('Input Id cannot be null')
+            }
+
+            if (input.value == null) {
+                throw new Error('Input value cannot be null');
+            }
+
+            const variable = findVariableById(input.id);
+
+            if (!variable.getMarkedAsInput()) {
+                throw new Error('Input value cannot be set because variable is not marked as input');
+            }
+        });
+        
+        const variables = this.variables.map(variable => {
+            const initialValue = getInitialValueById(variable.getId());
+
+            return {
+                value: initialValue,
                 id: variable.getId(),
                 type: variable.getType(),
-                value: variable.getDefaultValue(),
                 markedAsOutput: variable.getMarkedAsOutput(),
-            })),
+            };
+        });
+
+        const context = new WorkflowExecutionContext({
+            variables,
         });
 
         const startElement = this.getStartElement();

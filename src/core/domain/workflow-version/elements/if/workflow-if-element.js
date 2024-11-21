@@ -4,10 +4,10 @@ import WorkflowElement from '~/core/domain/workflow-version/elements/workflow-el
 export default class WorkflowIfElement extends WorkflowElement {
     constructor({
         id,
-        name,
-        description,
+        name = '',
+        description = '',
+        conditions = [],
         strategy,
-        conditions,
         nextElementIdIfTrue,
         nextElementIdIfFalse,
         positionX,
@@ -20,20 +20,8 @@ export default class WorkflowIfElement extends WorkflowElement {
             positionY,
         });
 
-        if (!name) {
-            throw new Error('Name is required');
-        }
-
-        if (description == null) {
-            throw new Error('Description cannot be null');
-        }
-
         if (!strategy) {
             throw new Error('Strategy is required');
-        }
-
-        if (!conditions) {
-            throw new Error('Conditions are required');
         }
 
         this.name = name;

@@ -246,7 +246,7 @@ describe('Workflow Execution Context', () => {
             expect(output).toBe(true);
         });
     });
-    
+
     it('Should compare a variable by id', () => {
         const workflowExecutionContext = new WorkflowExecutionContext({
             variables: [

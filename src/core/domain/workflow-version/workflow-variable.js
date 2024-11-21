@@ -1,9 +1,9 @@
 export default class WorkflowVariable {
     constructor({
         id,
-        name,
         type,
-        description,
+        name = '',
+        description = '',
         defaultValue,
         markedAsInput,
         markedAsOutput,
@@ -14,10 +14,6 @@ export default class WorkflowVariable {
             throw new Error('ID is required.');
         }
 
-        if (!name) {
-            throw new Error('Name is required.');
-        }
-
         if (!type) {
             throw new Error('Type is required.');
         }
@@ -26,8 +22,8 @@ export default class WorkflowVariable {
             throw new Error(`Type must be one of ${validTypes.join(', ')}, got ${type}.`);
         }
 
-        if (defaultValue === undefined) {
-            throw new Error('Default value cannot be undefined.');
+        if (defaultValue == null) {
+            throw new Error('Default value cannot be null');
         }
 
         if (typeof markedAsInput !== 'boolean') {
@@ -36,10 +32,6 @@ export default class WorkflowVariable {
 
         if (typeof markedAsOutput !== 'boolean') {
             throw new Error('Marked as output option must be a boolean.');
-        }
-
-        if (!markedAsInput && defaultValue == null) {
-            throw new Error('If a variable is not marked as input, it must have a default value.');
         }
 
         if (defaultValue != null && type !== typeof defaultValue) {

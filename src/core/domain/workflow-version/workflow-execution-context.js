@@ -1,3 +1,13 @@
+export const ASSIGNMENT_OPERATOR_SET = 'set';
+export const ASSIGNMENT_OPERATOR_NUMBER_INCREMENT = 'increment';
+export const ASSIGNMENT_OPERATOR_NUMBER_DECREMENT = 'decrement';
+export const ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY = 'multiply';
+export const ASSIGNMENT_OPERATOR_NUMBER_DIVIDE = 'divide';
+
+export const COMPARISON_OPERATOR_EQUAL = 'equal';
+export const COMPARISON_OPERATOR_NUMBER_GREATER_THAN = 'greater-than';
+export const COMPARISON_OPERATOR_NUMBER_LESS_THAN = 'less-than';
+
 export default class WorkflowExecutionContext {
     constructor ({ variables }) { 
         this.variables = variables.map(variable => new WorkflowVersionRuntimeVariable(variable));
@@ -112,16 +122,24 @@ export class WorkflowVersionRuntimeVariable {
 
     assign (operator, other) {
         switch (operator) {
-            case 'set':
+            case ASSIGNMENT_OPERATOR_SET:
                 this.value = other;
             break;
     
-            case 'increment':
+            case ASSIGNMENT_OPERATOR_NUMBER_INCREMENT:
                 this.value += other;
             break;
     
-            case 'decrement':
+            case ASSIGNMENT_OPERATOR_NUMBER_DECREMENT:
                 this.value -= other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY:
+                this.value *= other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_NUMBER_DIVIDE:
+                this.value /= other;
             break;
     
             default:
@@ -131,13 +149,13 @@ export class WorkflowVersionRuntimeVariable {
     
     compare (operator, other) {
         switch (operator) {
-            case 'equal':
+            case COMPARISON_OPERATOR_EQUAL:
                 return this.value === other;
     
-            case 'greater-than':
+            case COMPARISON_OPERATOR_NUMBER_GREATER_THAN:
                 return this.value > other;
     
-            case 'less-than':
+            case COMPARISON_OPERATOR_NUMBER_LESS_THAN:
                 return this.value < other;
     
             default:

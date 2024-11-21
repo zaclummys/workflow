@@ -10,9 +10,9 @@ export default class WorkflowAssignElement extends WorkflowElement {
         id,
         positionX,
         positionY,
-        name,
-        description,
-        assignments,
+        name = '',
+        description = '',
+        assignments = [],
         nextElementId,
     }) {
         super({
@@ -20,18 +20,6 @@ export default class WorkflowAssignElement extends WorkflowElement {
             positionX,
             positionY,
         });
-
-        if (!name) {
-            throw new Error('Name is required.');
-        }
-
-        if (description == null) {
-            throw new Error('Description cannot be null.');
-        }
-
-        if (!assignments) {
-            throw new Error('Assignments are required.');
-        }
 
         this.name = name;
         this.description = description;

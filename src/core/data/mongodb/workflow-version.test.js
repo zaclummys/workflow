@@ -220,55 +220,27 @@ describe('Workflow Version', () => {
     });
 
     describe('Given a Workflow Variable', () => {
-        describe('When there is no default value', () => {
-            it('Should convert', () => {
-                const variable = new WorkflowVariable({
-                    id: '1',
-                    name: 'Name',
-                    description: 'Description',
-                    type: 'string',
-                    defaultValue: null,
-                    markedAsInput: true,
-                    markedAsOutput: true,
-                });
-
-                const output = fromWorkflowVariable(variable);
-
-                expect(output).toEqual({
-                    id: '1',
-                    name: 'Name',
-                    description: 'Description',
-                    type: 'string',
-                    defaultValue: null,
-                    markedAsInput: true,
-                    markedAsOutput: true,
-                });
+        it('Should convert', () => {
+            const variable = new WorkflowVariable({
+                id: '1',
+                name: 'Name',
+                description: 'Description',
+                type: 'string',
+                defaultValue: 'abc',
+                markedAsInput: true,
+                markedAsOutput: true,
             });
-        });
 
-        describe('When there is default value', () => {
-            it('Should convert', () => {
-                const variable = new WorkflowVariable({
-                    id: '1',
-                    name: 'Name',
-                    description: 'Description',
-                    type: 'string',
-                    defaultValue: 'abc',
-                    markedAsInput: true,
-                    markedAsOutput: true,
-                });
+            const output = fromWorkflowVariable(variable);
 
-                const output = fromWorkflowVariable(variable);
-
-                expect(output).toEqual({
-                    id: '1',
-                    name: 'Name',
-                    description: 'Description',
-                    type: 'string',
-                    defaultValue: 'abc',
-                    markedAsInput: true,
-                    markedAsOutput: true,
-                });
+            expect(output).toEqual({
+                id: '1',
+                name: 'Name',
+                description: 'Description',
+                type: 'string',
+                defaultValue: 'abc',
+                markedAsInput: true,
+                markedAsOutput: true,
             });
         });
     });

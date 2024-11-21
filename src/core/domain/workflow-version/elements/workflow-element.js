@@ -1,8 +1,8 @@
 export default class WorkflowElement {
     constructor ({
         id,
-        positionX,
-        positionY,
+        positionX = 0.0,
+        positionY = 0.0,
     }) {
         if (!id) {
             throw new Error('ID is required.');
