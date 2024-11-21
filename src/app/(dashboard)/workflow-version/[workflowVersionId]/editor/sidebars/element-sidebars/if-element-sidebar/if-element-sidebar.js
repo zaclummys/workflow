@@ -28,6 +28,12 @@ export default function IfElementSidebar ({
 
     const [localIfElement, dispatchIfElement] = useReducer(ifElementReducer, ifElement);
 
+    const handleSubmit = event => {
+        event.preventDefault();
+
+        onConfirm(localIfElement);
+    };
+
     const handleNameChange = event => {
         dispatchIfElement({
             type: 'name-changed',
@@ -60,12 +66,6 @@ export default function IfElementSidebar ({
             variableId: firstVariable.id,
             variableType: firstVariable.type,
         });
-    };
-
-    const handleSubmit = event => {
-        event.preventDefault();
-
-        onConfirm(localIfElement);
     };
 
     const handleCancelButtonClick = event => {
