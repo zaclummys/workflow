@@ -29,7 +29,7 @@ export async function findWorkflowVersionById (id) {
         return null;
     }
 
-    return toWorkflowVersion(workflowVersionData);
+    return new WorkflowVersion(workflowVersionData);
 }
 
 export async function findWorkflowVersionIdsByWorkflowId (workflowId) {
@@ -190,26 +190,4 @@ export function fromWorkflowAssignment (workflowAssignment) {
         operator: workflowAssignment.getOperator(),
         operand: workflowAssignment.getOperand(),
     };
-}
-
-export function toWorkflowVersion ({
-    id,
-    number,
-    status,
-    elements,
-    variables,
-    workflowId,
-    createdAt,
-    createdById,
-}) {
-    return new WorkflowVersion({
-        id,
-        number,
-        status,
-        elements,
-        workflowId,
-        createdAt,
-        createdById,
-        variables,
-    });
 }
