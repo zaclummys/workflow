@@ -35,7 +35,6 @@ export class WorkflowVersion {
     }
 
     static createElement (elementData) {
-        console.log(elementData)
         switch (elementData.type) {
             case 'start':
                 return new WorkflowStartElement(elementData);
@@ -312,4 +311,3 @@ export class WorkflowVersion {
         });
     }
 }
-
