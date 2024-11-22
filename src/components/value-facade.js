@@ -53,6 +53,7 @@ function StringValue ({ id, value, onChange }) {
 function NumberValue ({ id, value, onChange }) {
     return (
         <Input
+            required
             id={id}
             type="number"
             value={value}
@@ -64,8 +65,8 @@ function NumberValue ({ id, value, onChange }) {
 function BooleanValue ({ id, value, onChange }) {
     return (
         <Select
-            id={id}
             required
+            id={id}
             value={value}
             onChange={onChange}
         >

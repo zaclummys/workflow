@@ -4,11 +4,15 @@ import {
 } from 'react';
 
 import {
+    coerceNumber,
+    coerceBoolean,
+} from "~/coerce";
+
+import {
     Form,
     Field,
     Label,
     Input,
-    Radio,
     Select,
     Option,
     TextArea,
@@ -32,6 +36,25 @@ const defaultVariable = {
     markedAsOutput: true,
 };
 
+function coerceVariable (variable) {
+    switch (variable.type) {
+        case 'string':
+            return variable;
+        
+        case 'number':
+            return {
+                ...variable,
+                defaultValue: coerceNumber(variable.defaultValue),
+            }
+        
+        case 'boolean':
+            return {
+                ...variable,
+                defaultValue: coerceBoolean(variable.defaultValue),
+            };
+    }
+}
+
 export default function VariableForm ({
     variable = defaultVariable,
     onConfirm,
@@ -42,7 +65,9 @@ export default function VariableForm ({
     const handleSubmit = event => {
         event.preventDefault();
 
-        onConfirm(values);
+        const coercedVariable = coerceVariable(values);
+        
+        onConfirm(coercedVariable);
     }
 
     const handleNameChange = event => {
@@ -67,18 +92,21 @@ export default function VariableForm ({
                 case 'string':
                     return {
                         ...values,
+                        type: 'string',
                         defaultValue: '',
                     };
 
                 case 'number':
                     return {
                         ...values,
+                        type: 'number',
                         defaultValue: '0',
                     };
 
                 case 'boolean':
                     return {
                         ...values,
+                        type: 'boolean',
                         defaultValue: 'false',
                     };
 
@@ -139,7 +167,7 @@ export default function VariableForm ({
     const defaultValueId = useId();
     const markedAsInputId = useId();
     const markedAsOutputId = useId();
-
+    
     return (
         <Form
             onSubmit={handleSubmit}>

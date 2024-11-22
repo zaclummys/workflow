@@ -66,8 +66,6 @@ export class WorkflowVersion {
                 {
                     id: randomUUID(),
                     type: 'start',
-                    positionX: 0.0,
-                    positionY: 0.0,
                 },
             ],
             createdAt: new Date(),
