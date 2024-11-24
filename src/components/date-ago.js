@@ -11,10 +11,11 @@ export default function DateAgo ({ date }) {
         addSuffix: true,
     });
 
+    const localeDate = date.toLocaleDateString('en-US');
+    const localeTime = date.toLocaleTimeString('en-US');
+
     return (
-        <time
-            title={date.toLocaleDateString('en-US') + ' ' + date.toLocaleTimeString('en-US')}
-            dateTime={date.toISOString()}>
+        <time title={`${localeDate} ${localeTime}`}>
             {distance}
         </time>
     );
