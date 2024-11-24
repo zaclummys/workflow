@@ -16,11 +16,12 @@ export class WorkflowExecution {
         workflowVersionId,
     }) {
         return new WorkflowExecution({
-            id: randomUUID(),
             inputs,
             outputs,
             executedById,
             workflowVersionId,
+            id: randomUUID(),
+            executedAt: new Date(),
         });
     }
 
@@ -29,6 +30,7 @@ export class WorkflowExecution {
         inputs,
         outputs,
         workflowVersionId,
+        executedAt,
         executedById,
     }) {
         if (!id) {
@@ -53,8 +55,9 @@ export class WorkflowExecution {
 
         this.id = id;
         this.inputs = inputs;
-        this.workflowVersionId = workflowVersionId;
+        this.executedAt = executedAt;
         this.executedById = executedById;
+        this.workflowVersionId = workflowVersionId;
 
         this.outputs = outputs.map(output => WorkflowExecution.createOutput(output));
     }
@@ -73,6 +76,10 @@ export class WorkflowExecution {
 
     getWorkflowVersionId () {
         return this.workflowVersionId;
+    }
+
+    getExecutedAt () {
+        return this.executedAt;
     }
 
     getExecutedById () {

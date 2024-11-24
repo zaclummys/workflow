@@ -52,12 +52,11 @@ export default async function getWorkflowExecution ({
         success: true,
         workflowExecution: {
             id: workflowExecution.getId(),
-            status: workflowExecution.getStatus(),
-            startedAt: workflowExecution.getStartedAt(),
-            finishedAt: workflowExecution.getFinishedAt(),
 
-            inputValues: workflowExecution.getInputValues(),
-            outputValues: workflowExecution.getOutputValues(),
+            inputs: workflowExecution.getInputs(),
+            outputs: workflowExecution.getOutputs(),
+
+            executedAt: workflowExecution.getExecutedAt(),
 
             workflowVersion: {
                 id: workflowVersion.getId(),

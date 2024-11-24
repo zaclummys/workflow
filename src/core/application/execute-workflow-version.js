@@ -1,6 +1,8 @@
 import { findSessionByToken } from '~/core/data/mongodb/session';
 import { findWorkflowVersionById } from '~/core/data/mongodb/workflow-version';
 
+import { insertWorkflowExecution } from '~/core/data/mongodb/workflow-execution';
+
 export default async function executeWorkflowVersion ({
     inputs,
     workflowVersionId,
@@ -22,5 +24,15 @@ export default async function executeWorkflowVersion ({
         };
     }
 
-    const execution = await workflowVersion.execute({ inputs });
+    const execution = workflowVersion.execute({
+        inputs,
+        userId: session.getUserId(),
+    });
+
+    await insertWorkflowExecution(execution);
+
+    return {
+        success: true,
+        workflowExecutionId: execution.getId(),
+    };
 }

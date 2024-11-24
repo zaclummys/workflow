@@ -80,13 +80,11 @@ export async function deleteWorkflowExecutionsByWorkflowVersionIds (workflowVers
 export function fromWorkflowExecution (workflowExecution) {
     return {
         id: workflowExecution.getId(),
-        status: workflowExecution.getStatus(),
-        inputValues: workflowExecution.getInputValues(),
-        outputValues: workflowExecution.getOutputValues(),
-        workflowVersionId: workflowExecution.getWorkflowVersionId(),
-        startedAt: workflowExecution.getStartedAt(),
-        finishedAt: workflowExecution.getFinishedAt(),
+        inputs: workflowExecution.getInputs(),
+        outputs: workflowExecution.getOutputs(),
+        executedAt: workflowExecution.getExecutedAt(),
         executedById: workflowExecution.getExecutedById(),
+        workflowVersionId: workflowExecution.getWorkflowVersionId(),
     };
 }
 
