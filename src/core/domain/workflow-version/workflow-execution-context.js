@@ -1,12 +1,16 @@
-export const ASSIGNMENT_OPERATOR_SET = 'set';
-export const ASSIGNMENT_OPERATOR_NUMBER_INCREMENT = 'increment';
-export const ASSIGNMENT_OPERATOR_NUMBER_DECREMENT = 'decrement';
-export const ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY = 'multiply';
-export const ASSIGNMENT_OPERATOR_NUMBER_DIVIDE = 'divide';
+import {
+    ASSIGNMENT_OPERATOR_SET,
+    ASSIGNMENT_OPERATOR_NUMBER_INCREMENT,
+    ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
+    ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
+    ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
+} from './constants/operators/assignment';
 
-export const COMPARISON_OPERATOR_EQUAL = 'equal';
-export const COMPARISON_OPERATOR_NUMBER_GREATER_THAN = 'greater-than';
-export const COMPARISON_OPERATOR_NUMBER_LESS_THAN = 'less-than';
+import {
+    COMPARISON_OPERATOR_EQUAL,
+    COMPARISON_OPERATOR_NUMBER_GREATER_THAN,
+    COMPARISON_OPERATOR_NUMBER_LESS_THAN,
+} from './constants/operators/comparison';
 
 export default class WorkflowExecutionContext {
     constructor ({ variables }) { 

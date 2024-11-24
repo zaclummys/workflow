@@ -4,6 +4,8 @@ import { Field, Label, Select, Option, Row } from '~/components/form';
 
 import ValueFacade from '~/components/value-facade';
 
+import comparisonOperators from './comparison-operators';
+
 export default function Condition ({
     condition,
     variables,
@@ -118,25 +120,18 @@ export default function Condition ({
                     value={condition.operator}
                     onChange={handleConditionOperatorChange}
                 >
-                    <Option value="equal">
-                        Equal
-                    </Option>
-
-                    <Option value="not-equal">
-                        Not equal
-                    </Option>
-
-                    <Option value="greater-than">
-                        Greater Than
-                    </Option>
-
-                    <Option value="less-than">
-                        Less Than
-                    </Option>
-
+                    {comparisonOperators
+                        .filter(comparisonOperator => comparisonOperator.supports.includes(conditionVariable.type))
+                        .map(comparisonOperator => (
+                            <Option
+                                key={comparisonOperator.name}
+                                value={comparisonOperator.name}
+                            >
+                                {comparisonOperator.label}
+                            </Option>
+                        ))}
                 </Select>
             </Field>
-
 
             <Field>
                 <Label

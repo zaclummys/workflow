@@ -20,45 +20,42 @@ import Error from "../error";
 import useNavigation from "~/hooks/use-navigation";
 
 import executeWorkflowVersionAction from "~/actions/execute-workflow-version-action";
+import ExecuteWorkflowVersionModal from '~/components/modals/execute-workflow-version-modal';
 
 const defaultError = 'An unexpected error ocurred.';
 
 export default function ExecuteWorkflowVersionModalButton({
     workflowVersion,
 }) {
-    const [open, setOpen] = useState(false);
-    const [pending, setPending] = useState(false);
-    const [error, setError] = useState(null);
+    const [opened, setOpened] = useState(false);
+    const [executing, setExecuting] = useState(false);
 
     const { navigateToWorkflowExecution } = useNavigation();
 
-    const onExecuteButtonClick = () => {
-        setOpen(true);
+    const handleExecuteButtonClick = () => {
+        setOpened(true);
     };
 
-    const onCancelButtonClick = () => {
-        setOpen(false);
+    const handleCancel = () => {
+        setOpened(false);
     };
 
-    const onConfirmButtonClick = async () => {
-        setError(null);
-        setPending(true);
+    const handleConfirm = async (inputs) => {
+        setExecuting(true);
 
         try {
             const { success, workflowExecutionId } = await executeWorkflowVersionAction({
-                inputs: [],
+                inputs,
                 workflowVersionId: workflowVersion.id,
             });
 
             if (success && workflowExecutionId) {
                 navigateToWorkflowExecution(workflowExecutionId);
             } else {
-                setError(defaultError);
-                setPending(false);
+                setExecuting(false);
             }
         } catch {
-            setError(defaultError);
-            setPending(false);
+            setExecuting(false);
         }
     }
 
@@ -66,7 +63,7 @@ export default function ExecuteWorkflowVersionModalButton({
         <>
             {workflowVersion.status === 'active' ? (
                 <OutlineButton
-                    onClick={onExecuteButtonClick}>
+                    onClick={handleExecuteButtonClick}>
                     Execute
                 </OutlineButton>
             ) : (
@@ -76,40 +73,18 @@ export default function ExecuteWorkflowVersionModalButton({
                 </OutlineButton>
             )}
 
-            {open && (
-                <Modal>
-                    <ModalTitle>
-                        Execute Workflow Version
-                    </ModalTitle>
-
-                    <span>
-                        Would you like to execute this workflow version?
-                    </span>
-
-                    {error && (
-                        <Error>
-                            {error}
-                        </Error>
-                    )}
-
-                    <ModalFooter>
-                        <OutlineButton
-                            disabled={pending}
-                            onClick={onCancelButtonClick}>
-                            Cancel
-                        </OutlineButton>
-
-                        <PrimaryButton
-                            disabled={pending}
-                            onClick={onConfirmButtonClick}>
-                            Confirm
-                        </PrimaryButton>
-                    </ModalFooter>
-                </Modal>
+            {opened && (
+                <ExecuteWorkflowVersionModal
+                    onCancel={handleCancel}
+                    onConfirm={handleConfirm}
+                    executing={executing}
+                    workflowVersion={workflowVersion}
+                />
             )}
         </>
     );
 }
+
 
 // function WorkflowVariablesForm({
 //     id,

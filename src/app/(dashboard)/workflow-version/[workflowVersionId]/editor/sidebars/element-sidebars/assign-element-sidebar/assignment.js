@@ -4,6 +4,8 @@ import { Field, Label, Select, Option, Input, Row } from '~/components/form';
 import { DestructiveButton } from '~/components/button';
 import ValueFacade from '~/components/value-facade';
 
+import assignmentOperators from './assignment-operators';
+
 export default function Assignment ({
     assignment,
     variables,
@@ -58,9 +60,16 @@ export default function Assignment ({
                     value={assignment.operator}
                     onChange={onOperatorChange}
                 >
-                    <Option value="set">Set</Option>
-                    <Option value="increment">Increment</Option>
-                    <Option value="decrement">Decrement</Option>
+                    {assignmentOperators
+                        .filter(assignmentOperator => assignmentOperator.supports.includes(assignmentVariable.type))
+                        .map(assignmentOperator => (
+                            <Option
+                                key={assignmentOperator.name}
+                                value={assignmentOperator.name}>
+                                {assignmentOperator.label}
+                            </Option>
+                        ))
+                    }
                 </Select>
             </Field>
 

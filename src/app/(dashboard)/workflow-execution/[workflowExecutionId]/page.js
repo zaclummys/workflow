@@ -21,6 +21,11 @@ import DateAgo from "~/components/date-ago";
 
 import getWorkflowExecutionAction from "~/actions/get-workflow-execution-action";
 
+import {
+    Card,
+    CardTitle,
+} from '~/components/card';
+
 export const title = 'Workflow Execution';
 
 export default async function WorkflowExecution ({ params }) {
@@ -40,17 +45,6 @@ export default async function WorkflowExecution ({ params }) {
 
                     <Details>
                         <DetailRow>
-
-                            <DetailCell>
-                                <DetailCellHeader>
-                                    Status
-                                </DetailCellHeader>
-
-                                <WorkflowExecutionStatus
-                                    status={workflowExecution.status} />
-                            </DetailCell>
-
-                            
                             <DetailCell>
                                 <DetailCellHeader>
                                     Workflow Version
@@ -110,6 +104,33 @@ export default async function WorkflowExecution ({ params }) {
                     <SectionTitle>
                         Execution Details
                     </SectionTitle>
+
+                    <div className="flex flex-row gap-2">
+                        {[
+                            {
+                                title: 'Inputs',
+                                puts: workflowExecution.inputs,
+                            },
+
+                            {
+                                title: 'Outputs',
+                                puts: workflowExecution.outputs,
+                            }
+                        ].map(card => (
+                            <Card
+                                key={card.title}>
+                                <CardTitle>
+                                    {card.title}    
+                                </CardTitle>
+
+                                {card.puts.map(put => (
+                                    <span key={put.id}>
+                                        <b>{put.name}</b> ({put.type}): {put.value}
+                                    </span>
+                                ))}
+                            </Card>
+                        ))}
+                    </div>
                 </Section>
             </Container>
         </>

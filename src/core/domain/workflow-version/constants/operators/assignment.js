@@ -1,0 +1,5 @@
+export const ASSIGNMENT_OPERATOR_SET = 'set';
+export const ASSIGNMENT_OPERATOR_NUMBER_INCREMENT = 'increment';
+export const ASSIGNMENT_OPERATOR_NUMBER_DECREMENT = 'decrement';
+export const ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY = 'multiply';
+export const ASSIGNMENT_OPERATOR_NUMBER_DIVIDE = 'divide';

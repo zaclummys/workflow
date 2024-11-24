@@ -12,7 +12,14 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_INCREMENT,
     ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
-} from './workflow-execution-context';
+    ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
+} from './constants/operators/assignment';
+
+import {
+    COMPARISON_OPERATOR_EQUAL,
+    COMPARISON_OPERATOR_NUMBER_GREATER_THAN,
+    COMPARISON_OPERATOR_NUMBER_LESS_THAN,
+} from './constants/operators/comparison';
 
 describe('Workflow Version', () => {
     it('Should change the variables', async () => {
@@ -182,6 +189,7 @@ describe('Workflow Version', () => {
                 inputs: [],
                 outputs: [],
                 workflowVersionId: workflowVersion.id,
+                executedAt: expect.any(Date),
                 executedById: 'user-1',
             }));
         });
@@ -316,6 +324,7 @@ describe('Workflow Version', () => {
                     },
                 ],
                 workflowVersionId: workflowVersion.id,
+                executedAt: expect.any(Date),
                 executedById: 'user-1',
             }));
         });
@@ -382,6 +391,7 @@ describe('Workflow Version', () => {
                 inputs: [],
                 outputs: [],
                 workflowVersionId: workflowVersion.id,
+                executedAt: expect.any(Date),
                 executedById: 'user-1',
             }));
         });
@@ -496,6 +506,7 @@ describe('Workflow Version', () => {
 
             expect(execution).toStrictEqual(new WorkflowExecution({
                 id: expect.any(String),
+                executedAt: expect.any(Date),
                 inputs: [],
                 outputs: [
                     {

@@ -53,8 +53,31 @@ export default async function getWorkflowExecution ({
         workflowExecution: {
             id: workflowExecution.getId(),
 
-            inputs: workflowExecution.getInputs(),
-            outputs: workflowExecution.getOutputs(),
+            inputs: workflowExecution
+                .getInputs()
+                .map(input => {
+                    const inputVariable = workflowVersion.variables.find(variable =>  variable.id === input.id);
+
+                    return {
+                        id: input.id,
+                        value: input.value,
+                        name: inputVariable.name,
+                        type: inputVariable.type,
+                    };
+                }),
+
+            outputs: workflowExecution
+                .getOutputs()
+                .map(output => {
+                    const outputVariable = workflowVersion.variables.find(variable => variable.id === output.id);
+
+                    return {
+                        id: output.id,
+                        value: output.value,
+                        name: outputVariable.name,
+                        type: outputVariable.type,
+                    };
+                }),
 
             executedAt: workflowExecution.getExecutedAt(),
 

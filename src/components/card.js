@@ -5,7 +5,7 @@ import { twMerge } from 'tailwind-merge';
 export function Card ({ children }) {
     return (
         <div
-            className="relative flex flex-col gap-2 overflow-hidden bg-surface text-on-surface rounded-md p-4  hover:bg-[var(--surface-hover)] transition-colors">
+            className="relative flex flex-col flex-auto gap-2 overflow-hidden bg-surface text-on-surface rounded-md p-4  hover:bg-[var(--surface-hover)] transition-colors">
             {children}
         </div>
     );
