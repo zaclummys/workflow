@@ -13,7 +13,65 @@ describe('Assign Element Sidebar', () => {
         { id: 'variable-boolean-2', name: 'Variable Boolean 2', type: 'boolean' },
     ];
 
-    it('Should render with initial values', () => {
+    it('Should allow user to confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        };
+
+        const handleConfirm = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
+
+        const confirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(confirmButton);
+
+        expect(handleConfirm).toHaveBeenCalledWith({
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        });
+    });
+
+    it('Should allow user to cancel', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        };
+
+        const handleCancel = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onCancel={handleCancel}
+            />
+        );
+
+        const cancelButton = screen.getByText('Cancel');
+
+        fireEvent.click(cancelButton);
+
+        expect(handleCancel).toHaveBeenCalled();
+    });  
+
+    it('Should render details with initial values', () => {
         const assignElement = {
             id: 'assign-1',
             type: 'assign',
@@ -29,11 +87,14 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        expect(screen.getByLabelText('Name')).toHaveValue('Assign');
-        expect(screen.getByLabelText('Description')).toHaveValue('This is an assign element.');
+        const nameInput = screen.getByLabelText('Name');
+        const descriptionInput = screen.getByLabelText('Description');
+
+        expect(nameInput.value).toBe('Assign');
+        expect(descriptionInput.value).toBe('This is an assign element.');
     });
 
-    it('Should allow user to change values', () => {
+    it('Should allow user to change details', () => {
         const assignElement = {
             id: 'assign-1',
             type: 'assign',
@@ -55,11 +116,92 @@ describe('Assign Element Sidebar', () => {
         fireEvent.change(nameInput, { target: { value: 'Changed Assign' } });
         fireEvent.change(descriptionInput, { target: { value: 'This is a changed assign element.' } });
 
-        expect(nameInput).toHaveValue('Changed Assign');
-        expect(descriptionInput).toHaveValue('This is a changed assign element.');
+        expect(nameInput.value).toBe('Changed Assign');
+        expect(descriptionInput.value).toBe('This is a changed assign element.');
     });
 
-    it('Should reset values when variable is changed', () => {
+    it('Should allow user to change details and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        };
+
+        const handleConfirm = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
+
+        const nameInput = screen.getByLabelText('Name');
+        const descriptionInput = screen.getByLabelText('Description');
+
+        fireEvent.change(nameInput, { target: { value: 'Changed Assign' } });
+        fireEvent.change(descriptionInput, { target: { value: 'This is a changed assign element.' } });
+
+        const confirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(confirmButton);
+
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                name: 'Changed Assign',
+                description: 'This is a changed assign element.',
+            }),
+        );
+    });
+
+    it('Should allow user to add an assignment and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        };
+
+        const handleConfirm = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
+
+        const addAssignmentButton = screen.getByText('Add assignment');
+
+        fireEvent.click(addAssignmentButton);
+
+        const confirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(confirmButton);
+
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: expect.any(String),
+                        variableId: 'variable-string-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-string-1',
+                        }
+                    }
+                ],
+            }),
+        );
+    });
+
+    it('Should allow user to edit condition variable and confirm', () => {
         const assignElement = {
             id: 'assign-1',
             type: 'assign',
@@ -73,727 +215,411 @@ describe('Assign Element Sidebar', () => {
                     operand: {
                         type: 'variable',
                         variableId: 'variable-string-1',
-                    },
+                    }
                 },
             ],
         };
+
+        const handleConfirm = vi.fn();
 
         render(
             <AssignElementSidebar
                 assignElement={assignElement}
                 variables={variables}
+                onConfirm={handleConfirm}
             />
         );
 
         const variableSelect = screen.getByLabelText('Variable');
-        const operatorSelect = screen.getByLabelText('Operator');
-        const operandTypeSelect = screen.getByLabelText('Operand Type');
-        const operandVariableSelect = screen.getByLabelText('Operand Variable');
 
         fireEvent.change(variableSelect, { target: { value: 'variable-string-2' } });
 
-        expect(variableSelect).toHaveValue('variable-string-2');
-        expect(operatorSelect).toHaveValue('set');
-        expect(operandTypeSelect).toHaveValue('variable');
-        expect(operandVariableSelect).toHaveValue('variable-string-2');
-    });
+        const confirmButton = screen.getByText('Confirm');
 
-    describe('Assignments', () => {
-        it('Should allow user to add assignments', () => {
-            const assignElement = {
-                id: 'assign-1',
-                type: 'assign',
-                name: 'Assign',
-                description: 'This is an assign element.',
-                assignments: [],
-            };
+        fireEvent.click(confirmButton);
 
-            render(
-                <AssignElementSidebar
-                    assignElement={assignElement}
-                    variables={variables}
-                />
-            );
-
-            const addAssignmentButton = screen.getByText('Add assignment');
-
-            fireEvent.click(addAssignmentButton);
-
-            expect(screen.getByLabelText('Variable')).toHaveValue('variable-string-1');
-            expect(screen.getByLabelText('Operator')).toHaveValue('set');
-            expect(screen.getByLabelText('Operand Type')).toHaveValue('variable');
-            expect(screen.getByLabelText('Operand Variable')).toHaveValue('variable-string-1');
-        });
-
-        it('Should allow user to change an added assignment', () => {
-            const assignElement = {
-                id: 'assign-1',
-                type: 'assign',
-                name: 'Assign',
-                description: 'This is an assign element.',
-                assignments: [],
-            };
-
-            render(
-                <AssignElementSidebar
-                    assignElement={assignElement}
-                    variables={variables}
-                />
-            );
-
-            const addAssignmentButton = screen.getByText('Add assignment');
-
-            fireEvent.click(addAssignmentButton);
-
-            const variableSelect = screen.getByLabelText('Variable');
-            const operatorSelect = screen.getByLabelText('Operator');
-            const operandTypeSelect = screen.getByLabelText('Operand Type');
-
-            fireEvent.change(variableSelect, { target: { value: 'variable-number-2' } });
-            fireEvent.change(operatorSelect, { target: { value: 'increment' } });
-            fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
-
-            const operandValueInput = screen.getByLabelText('Operand Value');
-
-            fireEvent.change(operandValueInput, { target: { value: '10' } });
-
-            expect(variableSelect).toHaveValue('variable-number-2');
-            expect(operatorSelect).toHaveValue('increment');
-            expect(operandTypeSelect).toHaveValue('value');
-            expect(operandValueInput).toHaveValue(10);
-        });
-
-        describe('When operand type is variable', () => {
-            describe('And variable type is string', () => {
-                it('Should allow user to change the operand type', () => {
-                    const assignElement = {
-                        id: 'assign-1',
-                        type: 'assign',
-                        name: 'Assign',
-                        description: 'This is an assign element.',
-                        assignments: [
-                            {
-                                id: 'assignment-1',
-                                variableId: 'variable-string-1',
-                                operator: 'set',
-                                operand: {
-                                    type: 'variable',
-                                    variableId: 'variable-string-1',
-                                },
-                            },
-                        ],
-                    };
-    
-                    render(
-                        <AssignElementSidebar
-                            assignElement={assignElement}
-                            variables={variables}
-                        />
-                    );
-    
-                    const operandTypeSelect = screen.getByLabelText('Operand Type');
-    
-                    fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
-    
-                    expect(operandTypeSelect).toHaveValue('value');
-    
-                    const operandValueInput = screen.getByLabelText('Operand Value');
-    
-                    expect(operandValueInput).toHaveValue('');
-                });
-            });
-
-            describe('And variable type is string', () => {
-                it('Should allow user to change the operand type', () => {
-                    const assignElement = {
-                        id: 'assign-1',
-                        type: 'assign',
-                        name: 'Assign',
-                        description: 'This is an assign element.',
-                        assignments: [
-                            {
-                                id: 'assignment-1',
-                                variableId: 'variable-number-1',
-                                operator: 'set',
-                                operand: {
-                                    type: 'variable',
-                                    variableId: 'variable-number-1',
-                                },
-                            },
-                        ],
-                    };
-    
-                    render(
-                        <AssignElementSidebar
-                            assignElement={assignElement}
-                            variables={variables}
-                        />
-                    );
-    
-                    const operandTypeSelect = screen.getByLabelText('Operand Type');
-    
-                    fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
-    
-                    expect(operandTypeSelect).toHaveValue('value');
-    
-                    const operandValueInput = screen.getByLabelText('Operand Value');
-    
-                    expect(operandValueInput).toHaveValue(0);
-                });
-            });
-
-            describe('And variable type is number', () => {
-                it('Should allow user to change the operand type', () => {
-                    const assignElement = {
-                        id: 'assign-1',
-                        type: 'assign',
-                        name: 'Assign',
-                        description: 'This is an assign element.',
-                        assignments: [
-                            {
-                                id: 'assignment-1',
-                                variableId: 'variable-boolean-1',
-                                operator: 'set',
-                                operand: {
-                                    type: 'variable',
-                                    variableId: 'variable-boolean-1',
-                                },
-                            },
-                        ],
-                    };
-    
-                    render(
-                        <AssignElementSidebar
-                            assignElement={assignElement}
-                            variables={variables}
-                        />
-                    );
-    
-                    const operandTypeSelect = screen.getByLabelText('Operand Type');
-    
-                    fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
-    
-                    expect(operandTypeSelect).toHaveValue('value');
-    
-                    const operandValueInput = screen.getByLabelText('Operand Value');
-    
-                    expect(operandValueInput).toHaveValue('false');
-                });
-            });
-
-            it('Should render with initial values', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-string-2',
+                        operator: 'set',
+                        operand: {
+                            type: 'variable',
                             variableId: 'variable-string-2',
-                            operator: 'set',
-                            operand: {
-                                type: 'variable',
-                                variableId: 'variable-string-2',
-                            },
-                        },
-                    ],
-                };
-
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-
-                expect(screen.getByLabelText('Variable')).toHaveValue('variable-string-2');
-                expect(screen.getByLabelText('Operator')).toHaveValue('set');
-                expect(screen.getByLabelText('Operand Type')).toHaveValue('variable');
-                expect(screen.getByLabelText('Operand Variable')).toHaveValue('variable-string-2');
-            });
-
-            it('Should allow user to change the variable', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-number-1',
-                            operator: 'set',
-                            operand: {
-                                type: 'variable',
-                                variableId: 'variable-number-1',
-                            },
-                        },
-                    ],
-                };
-
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-
-                const operandVariableSelect = screen.getByLabelText('Operand Variable');
-
-                fireEvent.change(operandVariableSelect, { target: { value: 'variable-number-2' } });
-
-                expect(operandVariableSelect).toHaveValue('variable-number-2');
-            });
-
-            it('Should allow user to remove the assignment', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-string-1',
-                            operator: 'set',
-                            operand: {
-                                type: 'variable',
-                                variableId: 'variable-string-1',
-                            },
-                        },
-                    ],
-                };
-    
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-    
-                const variableSelect = screen.getByLabelText('Variable');
-                const operatorSelect = screen.getByLabelText('Operator');
-                const operandTypeSelect = screen.getByLabelText('Operand Type');
-                const operandVariableSelect = screen.getByLabelText('Operand Variable');
-    
-                const removeAssignmentButton = screen.getByText('Remove');
-    
-                fireEvent.click(removeAssignmentButton);
-    
-                expect(variableSelect).not.toBeInTheDocument();
-                expect(operatorSelect).not.toBeInTheDocument();
-                expect(operandTypeSelect).not.toBeInTheDocument();
-                expect(operandVariableSelect).not.toBeInTheDocument();
-            });
-        });
-
-        describe('When operand type is value', () => {
-            it('Should render with initial values', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-number-1',
-                            operator: 'set',
-                            operand: {
-                                type: 'value',
-                                value: 10,
-                            },
-                        },
-                    ],
-                };
-
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-
-                expect(screen.getByLabelText('Variable')).toHaveValue('variable-number-1');
-                expect(screen.getByLabelText('Operator')).toHaveValue('set');
-                expect(screen.getByLabelText('Operand Type')).toHaveValue('value');
-                expect(screen.getByLabelText('Operand Value')).toHaveValue(10);
-            });
-
-            it('Should allow user to change the value', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-number-2',
-                            operator: 'set',
-                            operand: {
-                                type: 'value',
-                                value: '10',
-                            },
-                        },
-                    ],
-                };
-
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-
-                const operandValueInput = screen.getByLabelText('Operand Value');
-
-                fireEvent.change(operandValueInput, { target: { value: '20' } });
-
-                expect(operandValueInput).toHaveValue(20);
-            });
-
-            it('Should allow user to change the operand type', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-number-2',
-                            operator: 'set',
-                            operand: {
-                                type: 'value',
-                                value: 10,
-                            },
-                        },
-                    ],
-                };
-
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-
-                const operandTypeSelect = screen.getByLabelText('Operand Type');
-
-                fireEvent.change(operandTypeSelect, { target: { value: 'variable' } });
-
-                expect(operandTypeSelect).toHaveValue('variable');
-
-                const operandVariableSelect = screen.getByLabelText('Operand Variable');
-
-                expect(operandVariableSelect).toHaveValue('variable-number-2');
-            });
-
-            it('Should allow user to remove the assignment', () => {
-                const assignElement = {
-                    id: 'assign-1',
-                    type: 'assign',
-                    name: 'Assign',
-                    description: 'This is an assign element.',
-                    assignments: [
-                        {
-                            id: 'assignment-1',
-                            variableId: 'variable-string-1',
-                            operator: 'set',
-                            operand: {
-                                type: 'value',
-                                value: 'Hello, World!',
-                            },
-                        },
-                    ],
-                };
-    
-                render(
-                    <AssignElementSidebar
-                        assignElement={assignElement}
-                        variables={variables}
-                    />
-                );
-    
-                const variableSelect = screen.getByLabelText('Variable');
-                const operatorSelect = screen.getByLabelText('Operator');
-                const operandTypeSelect = screen.getByLabelText('Operand Type');
-                const operandValueInput = screen.getByLabelText('Operand Value');
-    
-                const removeAssignmentButton = screen.getByText('Remove');
-    
-                fireEvent.click(removeAssignmentButton);
-    
-                expect(variableSelect).not.toBeInTheDocument();
-                expect(operatorSelect).not.toBeInTheDocument();
-                expect(operandTypeSelect).not.toBeInTheDocument();
-                expect(operandValueInput).not.toBeInTheDocument();
-            });
-        });
+                        }
+                    },
+                ],
+            }),
+        );
     });
 
-    // it('Should allow user to change values', () => {
-    //     const variables = [];
+    it('Should allow user to edit condition operator and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-number-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-number-1',
+                    }
+                },
+            ],
+        };
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [],
-    //     };
+        const handleConfirm = vi.fn();
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //         />
-    //     );
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     const nameInput = screen.getByLabelText('Name');
-    //     const descriptionInput = screen.getByLabelText('Description');
+        const operatorSelect = screen.getByLabelText('Operator');
 
-    //     fireEvent.change(nameInput, { target: { value: 'Changed Assign' } });
-    //     fireEvent.change(descriptionInput, { target: { value: 'This is a changed assign element.' } });
+        fireEvent.change(operatorSelect, { target: { value: 'increment' } });
 
-    //     expect(nameInput).toHaveValue('Changed Assign');
-    //     expect(descriptionInput).toHaveValue('This is a changed assign element.');
-    // });
+        const confirmButton = screen.getByText('Confirm');
 
-    // it('Should allow user to confirm changed values', () => {
-    //     const variables = [];
+        fireEvent.click(confirmButton);
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [],
-    //     };
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-number-1',
+                        operator: 'increment',
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-number-1',
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     const onConfirm = vi.fn();
+    it('Should allow user to edit condition operand type from variable to value and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-boolean-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-boolean-1',
+                    }
+                },
+            ],
+        };
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //             onConfirm={onConfirm}
-    //         />
-    //     );
+        const handleConfirm = vi.fn();
 
-    //     const nameInput = screen.getByLabelText('Name');
-    //     const descriptionInput = screen.getByLabelText('Description');
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     fireEvent.change(nameInput, { target: { value: 'Changed Assign' } });
-    //     fireEvent.change(descriptionInput, { target: { value: 'This is a changed assign element.' } });
+        const operandTypeSelect = screen.getByLabelText('Operand Type');
 
-    //     const confirmButton = screen.getByText('Confirm');
+        fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
 
-    //     fireEvent.click(confirmButton);
+        const confirmButton = screen.getByText('Confirm');
 
-    //     expect(onConfirm).toHaveBeenCalledWith({
-    //         id: 'assign-1',
-    //         name: 'Changed Assign',
-    //         description: 'This is a changed assign element.',
-    //         assignments: [],
-    //     });
-    // });
+        fireEvent.click(confirmButton);
 
-    // it('Should allow user to add assignments', () => {
-    //     const variables = [
-    //         { id: 'variable-1', name: 'Variable 1' },
-    //         { id: 'variable-2', name: 'Variable 2' },
-    //     ];
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-boolean-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'value',
+                            value: false,
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [],
-    //     };
+    it('Should allow user to edit condition operand type from value to variable and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-boolean-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'value',
+                        value: false,
+                    }
+                },
+            ],
+        };
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //         />
-    //     );
+        const handleConfirm = vi.fn();
 
-    //     const addAssignmentButton = screen.getByText('Add assignment');
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     fireEvent.click(addAssignmentButton);
+        const operandTypeSelect = screen.getByLabelText('Operand Type');
 
-    //     expect(screen.getByLabelText('Variable')).toHaveValue('variable-1');
-    //     expect(screen.getByLabelText('Operator')).toHaveValue('set');
-    //     expect(screen.getByLabelText('Operand Type')).toHaveValue('variable');
-    //     expect(screen.getByLabelText('Operand Variable')).toHaveValue('variable-1');
-    // });
+        fireEvent.change(operandTypeSelect, { target: { value: 'variable' } });
 
-    // it('Should allow user to confirm added assignments', () => {
-    //     const variables = [
-    //         { id: 'variable-1', name: 'Variable 1' },
-    //         { id: 'variable-2', name: 'Variable 2' },
-    //     ];
+        const confirmButton = screen.getByText('Confirm');
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [],
-    //     };
+        fireEvent.click(confirmButton);
 
-    //     const handleConfirm = vi.fn();
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-boolean-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-boolean-1',
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //             onConfirm={handleConfirm}
-    //         />
-    //     );
+    it('Should allow user to edit condition operand string and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-string-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'value',
+                        value: 'Initial Value',
+                    }
+                },
+            ],
+        };
 
-    //     const addAssignmentButton = screen.getByText('Add assignment');
+        const handleConfirm = vi.fn();
 
-    //     fireEvent.click(addAssignmentButton);
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     const confirmButton = screen.getByText('Confirm');
+        const operandValueInput = screen.getByLabelText('Operand Value');
 
-    //     fireEvent.click(confirmButton);
+        fireEvent.change(operandValueInput, { target: { value: 'Changed Value' } });
 
-    //     expect(handleConfirm).toHaveBeenCalledWith(
-    //         expect.objectContaining({
-    //             assignments: [
-    //                 {
-    //                     id: expect.any(String),
-    //                     variableId: 'variable-1',
-    //                     operator: 'set',
-    //                     operand: {
-    //                         type: 'variable',
-    //                         variableId: 'variable-1',
-    //                     },
-    //                 },
-    //             ],
-    //         })
-    //     );
-    // });
+        const confirmButton = screen.getByText('Confirm');
 
-    // it('Should allow user to change assignment values', () => {
-    //     const variables = [
-    //         { id: 'variable-1', name: 'Variable 1' },
-    //         { id: 'variable-2', name: 'Variable 2' },
-    //     ];
+        fireEvent.click(confirmButton);
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [
-    //             {
-    //                 id: 'assignment-1',
-    //                 variableId: 'variable-1',
-    //                 operator: 'set',
-    //                 operand: {
-    //                     type: 'variable',
-    //                     variableId: 'variable-1',
-    //                 },
-    //             },
-    //         ],
-    //     };
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-string-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'value',
+                            value: 'Changed Value',
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //         />
-    //     );
+    it('Should allow user to edit condition operand boolean and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-boolean-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'value',
+                        value: false,
+                    }
+                },
+            ],
+        };
 
-    //     const variableSelect = screen.getByLabelText('Variable');
-    //     const operatorSelect = screen.getByLabelText('Operator');
-    //     const operandTypeSelect = screen.getByLabelText('Operand Type');
+        const handleConfirm = vi.fn();
 
-    //     fireEvent.change(variableSelect, { target: { value: 'variable-2' } });
-    //     fireEvent.change(operatorSelect, { target: { value: 'increment' } });
-    //     fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     const operandValueInput = screen.getByLabelText('Operand Value');
+        const operandValueSelect = screen.getByLabelText('Operand Value');
 
-    //     fireEvent.change(operandValueInput, { target: { value: '10' } });
+        fireEvent.change(operandValueSelect, { target: { value: 'true' } });
 
-    //     expect(variableSelect).toHaveValue('variable-2');
-    //     expect(operatorSelect).toHaveValue('increment');
-    //     expect(operandTypeSelect).toHaveValue('value');
-    //     expect(operandValueInput).toHaveValue('10');
-    // });
+        const confirmButton = screen.getByText('Confirm');
 
-    // it('Should allow user to confirm changed assignments', () => {
-    //     const variables = [
-    //         { id: 'variable-1', name: 'Variable 1' },
-    //         { id: 'variable-2', name: 'Variable 2' },
-    //     ];
+        fireEvent.click(confirmButton);
 
-    //     const assignElement = {
-    //         id: 'assign-1',
-    //         type: 'assign',
-    //         name: 'Assign',
-    //         description: 'This is an assign element.',
-    //         assignments: [
-    //             {
-    //                 id: 'assignment-1',
-    //                 variableId: 'variable-1',
-    //                 operator: 'set',
-    //                 operand: {
-    //                     type: 'variable',
-    //                     variableId: 'variable-1',
-    //                 },
-    //             },
-    //         ],
-    //     };
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-boolean-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'value',
+                            value: true,
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     const handleConfirm = vi.fn();
+    it('Should allow user to edit condition operand number and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-number-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'value',
+                        value: '0',
+                    }
+                },
+            ],
+        };
 
-    //     render(
-    //         <AssignElementSidebar
-    //             assignElement={assignElement}
-    //             variables={variables}
-    //             onConfirm={handleConfirm}
-    //         />
-    //     );
+        const handleConfirm = vi.fn();
 
-    //     const variableSelect = screen.getByLabelText('Variable');
-    //     const operatorSelect = screen.getByLabelText('Operator');
-    //     const operandTypeSelect = screen.getByLabelText('Operand Type');
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
 
-    //     fireEvent.change(variableSelect, { target: { value: 'variable-2' } });
-    //     fireEvent.change(operatorSelect, { target: { value: 'increment' } });
-    //     fireEvent.change(operandTypeSelect, { target: { value: 'value' } });
+        const operandValueInput = screen.getByLabelText('Operand Value');
 
-    //     const operandValueInput = screen.getByLabelText('Operand Value');
+        fireEvent.change(operandValueInput, { target: { value: '123' } });
 
-    //     fireEvent.change(operandValueInput, { target: { value: '10' } });
+        const confirmButton = screen.getByText('Confirm');
 
-    //     const confirmButton = screen.getByText('Confirm');
+        fireEvent.click(confirmButton);
 
-    //     fireEvent.click(confirmButton);
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [
+                    {
+                        id: 'assignment-1',
+                        variableId: 'variable-number-1',
+                        operator: 'set',
+                        operand: {
+                            type: 'value',
+                            value: 123,
+                        }
+                    },
+                ],
+            }),
+        );
+    });
 
-    //     expect(handleConfirm).toHaveBeenCalledWith(
-    //         expect.objectContaining({
-    //             assignments: [
-    //                 {
-    //                     id: 'assignment-1',
-    //                     variableId: 'variable-2',
-    //                     operator: 'increment',
-    //                     operand: {
-    //                         type: 'value',
-    //                         value: null,
-    //                     },
-    //                 },
-    //             ],
-    //         })
-    //     );
-    // });
+    it('Should allow user to remove an assignment and confirm', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-string-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-string-1',
+                    }
+                }
+            ],
+        };
+
+        const handleConfirm = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onConfirm={handleConfirm}
+            />
+        );
+
+        const removeAssignmentButton = screen.getByText('Remove');
+
+        fireEvent.click(removeAssignmentButton);
+
+        const confirmButton = screen.getByText('Confirm');
+
+        fireEvent.click(confirmButton);
+
+        expect(handleConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                assignments: [],
+            }),
+        );
+    });
 });

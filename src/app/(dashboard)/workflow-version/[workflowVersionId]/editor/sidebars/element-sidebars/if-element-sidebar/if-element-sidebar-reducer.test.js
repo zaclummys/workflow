@@ -66,7 +66,6 @@ describe('If Element Reducer', () => {
                 type: 'condition-added', 
                 conditionId: 'condition-1',
                 variableId: 'variable-1',
-                variableType: 'string',
             }
         );
 
@@ -74,7 +73,6 @@ describe('If Element Reducer', () => {
             expect.objectContaining({
                 id: 'condition-1',
                 variableId: 'variable-1',
-                variableType: 'string',
                 operator: 'equal',
                 operand: {
                     type: 'variable',
@@ -90,7 +88,6 @@ describe('If Element Reducer', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'string',
                     operator: 'concat',
                     operand: {
                         type: 'value',
@@ -109,7 +106,6 @@ describe('If Element Reducer', () => {
                 type: 'condition-variable-changed',
                 conditionId: 'condition-1',
                 variableId: 'variable-2',
-                variableType: 'number',
             }
         );
 
@@ -117,7 +113,6 @@ describe('If Element Reducer', () => {
             expect.objectContaining({
                 id: 'condition-1',
                 variableId: 'variable-2',
-                variableType: 'number',
                 operator: 'equal',
                 operand: {
                     type: 'variable',
@@ -198,7 +193,6 @@ describe('If Element Reducer', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-1',
-                        variableType: 'string',
                         operand: {
                             type: 'value',
                             value: 'abc',
@@ -233,7 +227,6 @@ describe('If Element Reducer', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-1',
-                        variableType: 'string',
                         operand: {
                             type: 'variable',
                             variableId: 'variable-1',
@@ -247,6 +240,7 @@ describe('If Element Reducer', () => {
                 {
                     type: 'condition-operand-type-changed',
                     conditionId: 'condition-1',
+                    variableType: 'string',
                     operandType: 'value',
                 }
             );
@@ -268,7 +262,6 @@ describe('If Element Reducer', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-1',
-                        variableType: 'string',
                         operand: {
                             type: 'value',
                             value: {
@@ -306,12 +299,11 @@ describe('If Element Reducer', () => {
             const ifElementWithCondition = createIfElement({
                 conditions: [
                     {
-                        id: 'condition-1',
-                        variableId: 'variable-1',
-                        variableType: 'number',
+                        id: 'condition-number',
+                        variableId: 'variable-number',
                         operand: {
                             type: 'variable',
-                            variableId: 'variable-1',
+                            variableId: 'variable-number',
                         },
                     },
                 ],
@@ -321,14 +313,15 @@ describe('If Element Reducer', () => {
                 ifElementWithCondition,
                 {
                     type: 'condition-operand-type-changed',
-                    conditionId: 'condition-1',
+                    conditionId: 'condition-number',
+                    variableType: 'number',
                     operandType: 'value',
                 }
             );
     
             expect(output.conditions).toEqual([
                 expect.objectContaining({
-                    id: 'condition-1',
+                    id: 'condition-number',
                     operand: {
                         type: 'value',
                         value: '0',
@@ -343,7 +336,6 @@ describe('If Element Reducer', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-1',
-                        variableType: 'number',
                         operand: {
                             type: 'value',
                             value: {

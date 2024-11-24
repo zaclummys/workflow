@@ -104,22 +104,7 @@ export function fromWorkflowElement (element) {
             };
 
         case 'assign':
-            return {
-                id: element.getId(),
-                type: element.getType(),
-                name: element.getName(),
-                positionX: element.getPositionX(),
-                positionY: element.getPositionY(),
-                description: element.getDescription(),
-                nextElementId: element.getNextElementId(),
-                assignments: element.getAssignments()
-                    .map(assignment => ({
-                        id: assignment.getId(),
-                        variableId: assignment.getVariableId(),
-                        type: assignment.getType(),
-                        value: assignment.getValue(),
-                    }))
-            };
+            return fromWorkflowAssignElement(element);
 
         case 'if':
             return fromWorkflowIfElement(element);
@@ -129,6 +114,29 @@ export function fromWorkflowElement (element) {
     }
 }
 
+export function fromWorkflowAssignElement (assignElement) {
+    return {
+        id: assignElement.getId(),
+        type: assignElement.getType(),
+        name: assignElement.getName(),
+        positionX: assignElement.getPositionX(),
+        positionY: assignElement.getPositionY(),
+        description: assignElement.getDescription(),
+        nextElementId: assignElement.getNextElementId(),
+        assignments: assignElement.getAssignments()
+            .map(fromWorkflowAssignment),
+    };
+}
+
+export function fromWorkflowAssignment (assignment) {
+    return {
+        id: assignment.getId(),
+        variableId: assignment.getVariableId(),
+        operator: assignment.getOperator(),
+        operand: assignment.getOperand(),
+    };
+
+}
 export function fromWorkflowIfElement (element) {
     return {
         id: element.getId(),

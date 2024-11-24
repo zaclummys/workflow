@@ -12,19 +12,20 @@ export default function Condition ({
     const findVariableById = variableId => {
         return variables.find(variable => variable.id === variableId);
     };
+    
+    const conditionVariable = findVariableById(condition.variableId);
 
     const handleConditionVariableChange = (event) => {
         const variable = findVariableById(event.target.value);
 
         if (variable == null) {
             return;
-        };
+        }
 
         dispatchIfElement({
             type: 'condition-variable-changed',
             conditionId: condition.id,
             variableId: variable.id,
-            variableType: variable.type,
         });
     };
 
@@ -40,6 +41,7 @@ export default function Condition ({
         dispatchIfElement({
             type: 'condition-operand-type-changed',
             conditionId: condition.id,
+            variableType: conditionVariable.type,
             operandType: event.target.value,
         });
     };
@@ -71,8 +73,7 @@ export default function Condition ({
         });
     };
 
-    const conditionVariable = variables
-        .find(variable => variable.id === condition.variableId);
+
 
     const variableId = useId();
     const operatorId = useId();

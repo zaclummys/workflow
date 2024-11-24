@@ -16,6 +16,7 @@ import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/comp
 import Condition from './condition';
 
 import ifElementReducer from './if-element-sidebar-reducer';
+import {coerceBoolean, coerceNumber} from "~/coerce";
 
 export default function IfElementSidebar ({
     ifElement,
@@ -30,8 +31,46 @@ export default function IfElementSidebar ({
 
     const handleSubmit = event => {
         event.preventDefault();
+        
+        function coerceIfElement (ifElement) {
+            return {
+                ...ifElement,
+                conditions: ifElement.conditions.map(condition => {
+                    if (condition.operand.type === 'value') {
+                        const conditionVariable = variables.find(variable => variable.id === condition.variableId);
+                        
+                        switch (conditionVariable.type) {
+                            case 'number':
+                                return {
+                                    ...condition,
+                                    operand: {
+                                        ...condition.operand,
+                                        value: coerceNumber(condition.operand.value),
+                                    }
+                                };
+                            
+                            case 'boolean':
+                                return {
+                                    ...condition,
+                                    operand: {
+                                        ...condition.operand,
+                                        value: coerceBoolean(condition.operand.value),
+                                    }
+                                };
+                            
+                            default:
+                                return condition;
+                        }
+                    } else {
+                        return condition;
+                    }
+                }),
+            }
+        }
+        
+        const coercedLocalIfElement = coerceIfElement(localIfElement);
 
-        onConfirm(localIfElement);
+        onConfirm(coercedLocalIfElement);
     };
 
     const handleNameChange = event => {
@@ -64,7 +103,6 @@ export default function IfElementSidebar ({
             type: 'condition-added',
             conditionId: crypto.randomUUID(),
             variableId: firstVariable.id,
-            variableType: firstVariable.type,
         });
     };
 
@@ -178,4 +216,3 @@ export default function IfElementSidebar ({
         </>
     );
 }
-

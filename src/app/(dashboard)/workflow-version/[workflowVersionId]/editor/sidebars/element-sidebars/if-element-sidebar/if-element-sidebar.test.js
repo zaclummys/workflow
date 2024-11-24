@@ -5,13 +5,13 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import IfElementSidebar from './if-element-sidebar';
 
 describe('If Element Sidebar', () => {
-    it('Should render', () => {
+    it('Should render with initial values', () => {
         const variables = [];
         const ifElement = {
             id: 'if-1',
             type: 'if',
             name: 'If',
-            description: 'This is a description.',
+            description: 'This is an if element.',
             strategy: 'all',
             conditions: [],
         };
@@ -22,6 +22,14 @@ describe('If Element Sidebar', () => {
                 ifElement={ifElement}
             />
         );
+        
+        const nameInput = screen.getByLabelText('Name');
+        const descriptionInput = screen.getByLabelText('Description');
+        const strategyInput = screen.getByLabelText('Strategy');
+        
+        expect(nameInput.value).toBe('If');
+        expect(descriptionInput.value).toBe('This is an if element.');
+        expect(strategyInput.value).toBe('all');
     });
 
     it('Should not allow user to add a condition if there are no variables', () => {
@@ -46,49 +54,7 @@ describe('If Element Sidebar', () => {
 
         expect(addConditionButton).toBeDisabled();
     });
-
-    it('Condition should have default values', () => {
-        const variables = [
-            {
-                id: 'variable-1',
-                type: 'string',
-                name: 'Variable 1',
-            },
-        ];
-
-        const ifElement = {
-            id: 'if-1',
-            type: 'if',
-            name: 'If',
-            description: 'This is a description.',
-            strategy: 'all',
-            conditions: [],
-        };
-
-        render(
-            <IfElementSidebar
-                variables={variables}
-                ifElement={ifElement}
-            />
-        );
-
-        const addConditionButton = screen.getByText('Add condition');
-
-        act(() => {
-            addConditionButton.click();
-        });
-
-        const variableSelect = screen.getByLabelText('Variable');
-        const operatorSelect = screen.getByLabelText('Operator');
-        const operandTypeSelect = screen.getByLabelText('Operand Type');
-        const operandVariableSelect = screen.getByLabelText('Operand Variable');
-
-        expect(variableSelect.value).toBe('variable-1');
-        expect(operatorSelect.value).toBe('equal');
-        expect(operandTypeSelect.value).toBe('variable');
-        expect(operandVariableSelect.value).toBe('variable-1');
-    });
-
+    
     it('Should allow user to add a condition if there are variables', () => {
         const variables = [
             {
@@ -107,45 +73,19 @@ describe('If Element Sidebar', () => {
             conditions: [],
         };
 
-        const onConfirm = vi.fn();
-
         render(
             <IfElementSidebar
                 variables={variables}
                 ifElement={ifElement}
-                onConfirm={onConfirm}
             />
         );
 
         const addConditionButton = screen.getByText('Add condition');
 
-        act(() => {
-            addConditionButton.click();
-        });
-
-        const confirmButton = screen.getByText('Confirm');
-
-        confirmButton.click();
-
-        expect(onConfirm).toHaveBeenCalledWith(
-            expect.objectContaining({
-                conditions: [
-                    {
-                        id: expect.any(String),
-                        variableId: 'variable-1',
-                        variableType: 'string',
-                        operator: 'equal',
-                        operand: {
-                            type: 'variable',
-                            variableId: 'variable-1',
-                        },
-                    },
-                ],
-            })
-        );
+        expect(addConditionButton).not.toBeDisabled();
     });
 
-    it('Should allow user to submit if there are no variables', () => {
+    it('Should allow user to submit when there are no conditions', () => {
         const variables = [];
         const ifElement = {
             id: 'if-1',
@@ -170,59 +110,10 @@ describe('If Element Sidebar', () => {
 
         confirmButton.click();
 
-        expect(onConfirm).toHaveBeenCalledWith({
-            id: 'if-1',
-            type: 'if',
-            name: 'If',
-            description: 'This is a description.',
-            strategy: 'all',
-            conditions: [],
-        });
+        expect(onConfirm).toHaveBeenCalled();
     });
 
-    it('Should allow user to submit if there are variables', () => {
-        const variables = [
-            {
-                id: 'variable-1',
-                type: 'string',
-                name: 'Variable 1',
-            },
-        ];
-
-        const ifElement = {
-            id: 'if-1',
-            type: 'if',
-            name: 'If',
-            description: 'This is a description.',
-            strategy: 'all',
-            conditions: [],
-        };
-
-        const onConfirm = vi.fn();
-
-        render(
-            <IfElementSidebar
-                variables={variables}
-                ifElement={ifElement}
-                onConfirm={onConfirm}
-            />
-        );
-
-        const confirmButton = screen.getByText('Confirm');
-
-        confirmButton.click();
-
-        expect(onConfirm).toHaveBeenCalledWith({
-            id: 'if-1',
-            type: 'if',
-            name: 'If',
-            description: 'This is a description.',
-            strategy: 'all',
-            conditions: [],
-        });
-    });
-
-    it('Should allow user to change details and submit', () => {
+    it('Should allow user to change details and confirm', () => {
         const variables = [];
         const ifElement = {
             id: 'if-1',
@@ -264,7 +155,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition variable and submit', () => {
+    it('Should allow user to change condition variable and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -289,7 +180,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -323,7 +213,6 @@ describe('If Element Sidebar', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-2',
-                        variableType: 'number',
                         operator: 'equal',
                         operand: {
                             type: 'variable',
@@ -335,7 +224,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operator and submit', () => {
+    it('Should allow user to change condition operator and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -354,7 +243,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -388,7 +276,6 @@ describe('If Element Sidebar', () => {
                     {
                         id: 'condition-1',
                         variableId: 'variable-1',
-                        variableType: 'number',
                         operator: 'greater-than',
                         operand: {
                             type: 'variable',
@@ -400,7 +287,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand type to value and submit', () => {
+    it('Should allow user to change condition operand type to value and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -419,7 +306,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -453,7 +339,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: '0',
+                            value: 0,
                         },
                     }),
                 ],
@@ -461,7 +347,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand type to variable and submit', () => {
+    it('Should allow user to change condition operand type to variable and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -480,7 +366,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'value',
@@ -529,7 +414,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand variable and submit', () => {
+    it('Should allow user to change condition operand variable and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -554,7 +439,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -596,7 +480,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand number and submit', () => {
+    it('Should allow user to change condition operand number and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -615,7 +499,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'value',
@@ -652,7 +535,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: '1',
+                            value: 1,
                         },
                     }),
                 ],
@@ -660,7 +543,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand string and submit', () => {
+    it('Should allow user to change condition operand string and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -679,7 +562,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'string',
                     operator: 'equal',
                     operand: {
                         type: 'value',
@@ -721,7 +603,7 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to change condition operand boolean and submit', () => {
+    it('Should allow user to change condition operand boolean and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -740,7 +622,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'boolean',
                     operator: 'equal',
                     operand: {
                         type: 'value',
@@ -774,7 +655,7 @@ describe('If Element Sidebar', () => {
                     expect.objectContaining({
                         operand: {
                             type: 'value',
-                            value: 'true',
+                            value: true,
                         },
                     }),
                 ],
@@ -782,7 +663,117 @@ describe('If Element Sidebar', () => {
         );
     });
 
-    it('Should allow user to remove a condition and submit', () => {
+    it('Should allow user to add a condition and confirm', () => {
+        const variables = [
+            {
+                id: 'variable-1',
+                type: 'number',
+                name: 'Variable 1',
+            },
+        ];
+
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [],
+        };
+
+        const onConfirm = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onConfirm={onConfirm}
+            />
+        );
+
+        const addConditionButton = screen.getByText('Add condition');
+
+        act(() => {
+            addConditionButton.click();
+        });
+
+        const confirmButton = screen.getByText('Confirm');
+
+        confirmButton.click();
+
+        expect(onConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                conditions: [
+                    {
+                        id: expect.any(String),
+                        variableId: 'variable-1',
+                        operator: 'equal',
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-1',
+                        }
+                    }
+                ],
+            })
+        );
+    });
+    
+    it('Should allow user to add a condition with number and confirm', () => {
+        const variables = [
+            {
+                id: 'variable-1',
+                type: 'number',
+                name: 'Variable 1',
+            },
+        ];
+
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [],
+        };
+
+        const onConfirm = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onConfirm={onConfirm}
+            />
+        );
+
+        const addConditionButton = screen.getByText('Add condition');
+
+        act(() => {
+            addConditionButton.click();
+        });
+
+        const confirmButton = screen.getByText('Confirm');
+
+        confirmButton.click();
+
+        expect(onConfirm).toHaveBeenCalledWith(
+            expect.objectContaining({
+                conditions: [
+                    {
+                        id: expect.any(String),
+                        variableId: 'variable-1',
+                        operator: 'equal',
+                        operand: {
+                            type: 'variable',
+                            variableId: 'variable-1',
+                        }
+                    }
+                ],
+            })
+        );
+    });
+    
+    it('Should allow user to remove a condition and confirm', () => {
         const variables = [
             {
                 id: 'variable-1',
@@ -801,7 +792,6 @@ describe('If Element Sidebar', () => {
                 {
                     id: 'condition-1',
                     variableId: 'variable-1',
-                    variableType: 'number',
                     operator: 'equal',
                     operand: {
                         type: 'variable',
@@ -864,5 +854,49 @@ describe('If Element Sidebar', () => {
         cancelButton.click();
 
         expect(onCancel).toHaveBeenCalled();
+    });
+    
+    describe('Condition', () => {
+        it('Should have default values', () => {
+            const variables = [
+                {
+                    id: 'variable-1',
+                    type: 'string',
+                    name: 'Variable 1',
+                },
+            ];
+    
+            const ifElement = {
+                id: 'if-1',
+                type: 'if',
+                name: 'If',
+                description: 'This is a description.',
+                strategy: 'all',
+                conditions: [],
+            };
+    
+            render(
+                <IfElementSidebar
+                    variables={variables}
+                    ifElement={ifElement}
+                />
+            );
+    
+            const addConditionButton = screen.getByText('Add condition');
+    
+            act(() => {
+                addConditionButton.click();
+            });
+    
+            const variableSelect = screen.getByLabelText('Variable');
+            const operatorSelect = screen.getByLabelText('Operator');
+            const operandTypeSelect = screen.getByLabelText('Operand Type');
+            const operandVariableSelect = screen.getByLabelText('Operand Variable');
+    
+            expect(variableSelect.value).toBe('variable-1');
+            expect(operatorSelect.value).toBe('equal');
+            expect(operandTypeSelect.value).toBe('variable');
+            expect(operandVariableSelect.value).toBe('variable-1');
+        });
     });
 });

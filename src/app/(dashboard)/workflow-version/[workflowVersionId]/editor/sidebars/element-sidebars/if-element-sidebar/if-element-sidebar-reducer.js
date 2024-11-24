@@ -41,7 +41,6 @@ function conditionsReducer (conditions, action) {
             return conditions.concat({
                 id: action.conditionId,
                 variableId: action.variableId,
-                variableType: action.variableType,
                 operator: 'equal',
                 operand: {
                     type: 'variable',
@@ -55,7 +54,6 @@ function conditionsReducer (conditions, action) {
                     return {
                         ...condition,
                         variableId: action.variableId,
-                        variableType: action.variableType,
                         operator: 'equal',
                         operand: {
                             type: 'variable',
@@ -93,7 +91,7 @@ function conditionsReducer (conditions, action) {
                             };
 
                         case 'value':
-                            switch (condition.variableType) {
+                            switch (action.variableType) {
                                 case 'string':
                                     return {
                                         ...condition,

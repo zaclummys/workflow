@@ -12,6 +12,7 @@ import { OutlineButton, PrimaryButton } from '~/components/button';
 import { Field, Form, Input, Label, TextArea } from '~/components/form';
 
 import Assignment from './assignment';
+import { coerceBoolean, coerceNumber } from '~/coerce';
 
 export default function AssignElementSidebar ({
     assignElement,
@@ -22,13 +23,7 @@ export default function AssignElementSidebar ({
 }) {
     const formId = useId();
 
-    const [localAssignElement, setLocalAssignElement] = useState({
-        id: assignElement.id,
-        name: assignElement.name,
-        description: assignElement.description,
-        strategy: assignElement.strategy,
-        assignments: assignElement.assignments,
-    });
+    const [localAssignElement, setLocalAssignElement] = useState(assignElement);
 
     const findVariableById = variableId => {
         return variables.find(variable => variable.id === variableId);
@@ -36,6 +31,46 @@ export default function AssignElementSidebar ({
 
     const findAssignmentById = assignmentId => {
         return localAssignElement.assignments.find(assignment => assignment.id === assignmentId);
+    };
+
+    const handleSubmit = event => {
+        event.preventDefault();
+
+        const coercedLocalAssignElement = {
+            ...localAssignElement,
+            assignments: localAssignElement.assignments.map(assignment => {
+                if (assignment.operand.type === 'value') {
+                    const assignmentVariable = findVariableById(assignment.variableId);
+
+                    switch (assignmentVariable.type) {
+                        case 'number':
+                            return {
+                                ...assignment,
+                                operand: {
+                                    ...assignment.operand,
+                                    value: coerceNumber(assignment.operand.value),
+                                },
+                            };
+
+                        case 'boolean':
+                            return {
+                                ...assignment,
+                                operand: {
+                                    ...assignment.operand,
+                                    value: coerceBoolean(assignment.operand.value),
+                                },
+                            };
+                        
+                        default:
+                            return assignment;
+                    }
+                } else {
+                    return assignment;
+                }
+            }),
+        };
+
+        onConfirm(coercedLocalAssignElement);
     };
 
     const handleNameChange = event => {
@@ -243,11 +278,7 @@ export default function AssignElementSidebar ({
         }));
     };
 
-    const handleSubmit = event => {
-        event.preventDefault();
 
-        onConfirm(localAssignElement);
-    };
 
     const nameId = useId();
     const descriptionId = useId();
