@@ -22,7 +22,12 @@ export default function SaveWorkflowVersionButton ({
                     variables: workflowVersion.variables,
                 }
             });
-        } finally {
+        } catch (error) {
+            console.error(error);
+
+            throw error;
+        }
+        finally {
             setSaving(false);
         }
     };
