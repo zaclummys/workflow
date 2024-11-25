@@ -1,5 +1,7 @@
 'use client';
 
+import '@xyflow/react/dist/style.css';
+
 import { useEffect } from 'react';
 
 import {

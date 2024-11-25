@@ -81,12 +81,23 @@ export default function Condition ({
     const operandVariableId = useId();
     const operandValueId = useId();
 
+    if (!conditionVariable) {
+        return (
+            <div className="flex flex-row items-center">
+                <p className="flex-auto text-red-400">
+                    Condition variable `{condition.variableId}` does not exist anymore.
+                </p>
+
+                <DestructiveButton
+                    onClick={handleRemoveConditionButtonClick}>
+                    Remove
+                </DestructiveButton>
+            </div>
+        )
+    }
+
     return (
-        <div
-            className="grid gap-2 items-end"
-            style={{
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr)) min-content',
-            }}>
+        <div className="grid grid-cols-condition gap-2 items-end">
             <Field>
                 <Label
                     htmlFor={variableId}>
@@ -97,13 +108,11 @@ export default function Condition ({
                     required
                     id={variableId}
                     value={condition.variableId}
-                    onChange={handleConditionVariableChange}
-                >
+                    onChange={handleConditionVariableChange}>
                     {variables.map(variable => (
                         <Option
                             key={variable.id}
-                            value={variable.id}
-                        >
+                            value={variable.id}>
                             {variable.name}
                         </Option>
                     ))}
@@ -120,15 +129,13 @@ export default function Condition ({
                     required
                     id={operatorId}
                     value={condition.operator}
-                    onChange={handleConditionOperatorChange}
-                >
+                    onChange={handleConditionOperatorChange}>
                     {comparisonOperators
                         .filter(comparisonOperator => comparisonOperator.supports.includes(conditionVariable.type))
                         .map(comparisonOperator => (
                             <Option
                                 key={comparisonOperator.name}
-                                value={comparisonOperator.name}
-                            >
+                                value={comparisonOperator.name}>
                                 {comparisonOperator.label}
                             </Option>
                         ))}

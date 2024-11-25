@@ -622,4 +622,35 @@ describe('Assign Element Sidebar', () => {
             }),
         );
     });
+
+    it('Should show an alert when a assignment is referecing a variable that does not exist anymore', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [
+                {
+                    id: 'assignment-1',
+                    variableId: 'variable-unknown-1',
+                    operator: 'set',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-unknown-1',
+                    }
+                }
+            ],
+        };
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+            />
+        );
+
+        const alert = screen.getByText('Assignment variable `variable-unknown-1` does not exist anymore.');
+
+        expect(alert).toBeInTheDocument();
+    });
 });

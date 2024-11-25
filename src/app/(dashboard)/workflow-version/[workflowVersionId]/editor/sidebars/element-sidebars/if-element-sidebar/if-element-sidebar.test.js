@@ -899,4 +899,47 @@ describe('If Element Sidebar', () => {
             expect(operandVariableSelect.value).toBe('variable-1');
         });
     });
+
+    it('Should show an alert when a condition is referecing a variable that does not exist anymore', () => {
+        const variables = [];
+
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [
+                {
+                    id: 'condition-1',
+                    variableId: 'variable-1',
+                    operator: 'equal',
+                    operand: {
+                        type: 'variable',
+                        variableId: 'variable-1',
+                    },
+                },
+            ],
+        };
+
+        const onConfirm = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onConfirm={onConfirm}
+            />
+        );
+
+        const conditionVariableDoesNotExistAlert = screen.getByText('Condition variable `variable-1` does not exist anymore.');
+
+        expect(conditionVariableDoesNotExistAlert).toBeInTheDocument();
+
+        const removeConditionButton = screen.getByText('Remove');
+
+        fireEvent.click(removeConditionButton);
+
+        expect(conditionVariableDoesNotExistAlert).not.toBeInTheDocument();
+    });
 });

@@ -26,12 +26,23 @@ export default function Assignment ({
     const operandVariableId = useId();
     const operandValueId = useId();
 
+    if (!assignmentVariable) {
+        return (
+            <div className="flex flex-row items-center">
+                <p className="flex-auto text-red-400">
+                    Assignment variable `{assignment.variableId}` does not exist anymore.
+                </p>
+
+                <DestructiveButton
+                    onClick={onRemoveButtonClick}>
+                    Remove
+                </DestructiveButton>
+            </div>
+        )
+    }
+
     return (
-        <div
-            className="grid gap-2 items-end"
-            style={{
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr)) min-content',
-            }}>
+        <div className="grid grid-cols-assignment gap-2 items-end">
             <Field>
                 <Label
                     htmlFor={variableId}>

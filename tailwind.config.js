@@ -9,6 +9,11 @@ module.exports = {
     ],
     theme: {
         extend: {
+            gridTemplateColumns: {
+                condition: 'repeat(4, minmax(0, 1fr)) min-content',
+                assignment: 'repeat(4, minmax(0, 1fr)) min-content',
+            },
+            
             colors: {
                 primary: colors.violet[400],
 

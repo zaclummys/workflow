@@ -205,6 +205,7 @@ export default function AssignElementSidebar ({
             }),
         }));
     };
+    
     const handleAssignmentOperandValueChange = (event, assignmentId) => {
         setLocalAssignElement(localAssignElement => ({
             ...localAssignElement,
