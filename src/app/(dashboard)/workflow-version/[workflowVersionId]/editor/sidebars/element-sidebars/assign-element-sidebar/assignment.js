@@ -1,5 +1,5 @@
 import { useId } from 'react';
-import { Field, Label, Select, Option, Input, Row } from '~/components/form';
+import { Field, Label, Select, Option } from '~/components/form';
 
 import { DestructiveButton } from '~/components/button';
 import ValueFacade from '~/components/value-facade';
@@ -27,7 +27,11 @@ export default function Assignment ({
     const operandValueId = useId();
 
     return (
-        <Row>
+        <div
+            className="grid gap-2 items-end"
+            style={{
+                gridTemplateColumns: 'repeat(4, minmax(0, 1fr)) min-content',
+            }}>
             <Field>
                 <Label
                     htmlFor={variableId}>
@@ -131,6 +135,6 @@ export default function Assignment ({
                 onClick={onRemoveButtonClick}>
                 Remove
             </DestructiveButton>
-        </Row>
+        </div>
     )
 }

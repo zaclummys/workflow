@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { DestructiveButton } from '~/components/button';
-import { Field, Label, Select, Option, Row } from '~/components/form';
+import { Field, Label, Select, Option } from '~/components/form';
 
 import ValueFacade from '~/components/value-facade';
 
@@ -75,8 +75,6 @@ export default function Condition ({
         });
     };
 
-
-
     const variableId = useId();
     const operatorId = useId();
     const operandTypeId = useId();
@@ -84,7 +82,11 @@ export default function Condition ({
     const operandValueId = useId();
 
     return (
-        <Row>
+        <div
+            className="grid gap-2 items-end"
+            style={{
+                gridTemplateColumns: 'repeat(4, minmax(0, 1fr)) min-content',
+            }}>
             <Field>
                 <Label
                     htmlFor={variableId}>
@@ -194,6 +196,6 @@ export default function Condition ({
                 onClick={handleRemoveConditionButtonClick}>
                 Remove
             </DestructiveButton>
-        </Row>
+        </div>
     );
 }
