@@ -1,4 +1,5 @@
 export const COMPARISON_OPERATOR_EQUAL = 'equal';
+export const COMPARISON_OPERATOR_NOT_EQUAL = 'not-equal';
 
 export const COMPARISON_OPERATOR_NUMBER_GREATER_THAN = 'greater-than';
 export const COMPARISON_OPERATOR_NUMBER_LESS_THAN = 'less-than';

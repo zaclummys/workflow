@@ -8,8 +8,18 @@ import {
 
 import {
     COMPARISON_OPERATOR_EQUAL,
+    COMPARISON_OPERATOR_NOT_EQUAL,
+
     COMPARISON_OPERATOR_NUMBER_GREATER_THAN,
     COMPARISON_OPERATOR_NUMBER_LESS_THAN,
+    COMPARISON_OPERATOR_NUMBER_GREATER_THAN_OR_EQUAL_TO,
+    COMPARISON_OPERATOR_NUMBER_LESS_THAN_OR_EQUAL_TO,
+
+    COMPARISON_OPERATOR_BOOLEAN_AND,
+    COMPARISON_OPERATOR_BOOLEAN_OR,
+    
+    COMPARISON_OPERATOR_STRING_CONTAINS,
+    COMPARISON_OPERATOR_STRING_CONTAINED,
 } from './constants/operators/comparison';
 
 export default class WorkflowExecutionContext {
@@ -155,13 +165,34 @@ export class WorkflowVersionRuntimeVariable {
         switch (operator) {
             case COMPARISON_OPERATOR_EQUAL:
                 return this.value === other;
+
+            case COMPARISON_OPERATOR_NOT_EQUAL:
+                return this.value !== other;
     
             case COMPARISON_OPERATOR_NUMBER_GREATER_THAN:
                 return this.value > other;
     
             case COMPARISON_OPERATOR_NUMBER_LESS_THAN:
                 return this.value < other;
-    
+
+            case COMPARISON_OPERATOR_NUMBER_GREATER_THAN_OR_EQUAL_TO:
+                return this.value >= other;
+
+            case COMPARISON_OPERATOR_NUMBER_LESS_THAN_OR_EQUAL_TO:
+                return this.value <= other;
+            
+            case COMPARISON_OPERATOR_BOOLEAN_AND:
+                return this.value && other;
+
+            case COMPARISON_OPERATOR_BOOLEAN_OR:
+                return this.value || other;
+
+            case COMPARISON_OPERATOR_STRING_CONTAINS:
+                return this.value.includes(other);
+
+            case COMPARISON_OPERATOR_STRING_CONTAINED:
+                return other.includes(this.value);
+
             default:
                 throw new Error(`Unknown operator: ${operator}`);
         }
