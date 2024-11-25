@@ -278,8 +278,6 @@ export default function AssignElementSidebar ({
         }));
     };
 
-
-
     const nameId = useId();
     const descriptionId = useId();
 
