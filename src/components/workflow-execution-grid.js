@@ -43,7 +43,7 @@ export async function WorkflowExecutionGridItem ({ workflowExecutionId }) {
             </CardText>
 
             <CardText>
-                Started <DateAgo date={workflowExecution.startedAt} /> &bull; Finished <DateAgo date={workflowExecution.finishedAt} />
+                Executed <DateAgo date={workflowExecution.executedAt} />
             </CardText>
 
             <CardLink
