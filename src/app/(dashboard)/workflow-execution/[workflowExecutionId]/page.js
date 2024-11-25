@@ -123,11 +123,21 @@ export default async function WorkflowExecution ({ params }) {
                                     {card.title}    
                                 </CardTitle>
 
-                                {card.puts.map(put => (
-                                    <span key={put.id}>
-                                        <b>{put.name}</b> ({put.type}): {put.value}
-                                    </span>
-                                ))}
+                                {card.puts.map(put => {
+                                    if (put.type === 'boolean') {
+                                        return (
+                                            <span key={put.id}>
+                                                <b>{put.name}</b> ({put.type}): {put.value ? 'true' : 'false'}
+                                            </span>
+                                        );
+                                    } else {
+                                        return (
+                                            <span key={put.id}>
+                                                <b>{put.name}</b> ({put.type}): {put.value}
+                                            </span>
+                                        );
+                                    }
+                                })}
                             </Card>
                         ))}
                     </div>
