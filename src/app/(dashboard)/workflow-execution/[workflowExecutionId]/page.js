@@ -78,24 +78,6 @@ export default async function WorkflowExecution ({ params }) {
                                     {workflowExecution.executedBy.name}
                                 </DetailCellText>
                             </DetailCell>
-
-                            <DetailCell>
-                                <DetailCellHeader>
-                                    Started At
-                                </DetailCellHeader>
-
-                                <DateAgo
-                                    date={workflowExecution.startedAt} />
-                            </DetailCell>
-
-                            <DetailCell>
-                                <DetailCellHeader>
-                                    Finished At
-                                </DetailCellHeader>
-
-                                <DateAgo
-                                    date={workflowExecution.finishedAt} />
-                            </DetailCell>
                         </DetailRow>
                     </Details>
                 </Section>
@@ -105,7 +87,7 @@ export default async function WorkflowExecution ({ params }) {
                         Execution Details
                     </SectionTitle>
 
-                    <div className="flex flex-row gap-2">
+                    <div className="grid grid-cols-2 items-start gap-2">
                         {[
                             {
                                 title: 'Inputs',
@@ -127,13 +109,13 @@ export default async function WorkflowExecution ({ params }) {
                                     if (put.type === 'boolean') {
                                         return (
                                             <span key={put.id}>
-                                                <b>{put.name}</b> ({put.type}): {put.value ? 'true' : 'false'}
+                                                <span className="font-medium">{put.name}</span> ({put.type}): {put.value ? 'true' : 'false'}
                                             </span>
                                         );
                                     } else {
                                         return (
                                             <span key={put.id}>
-                                                <b>{put.name}</b> ({put.type}): {put.value}
+                                                <span className="font-medium">{put.name}</span> ({put.type}): {put.value}
                                             </span>
                                         );
                                     }

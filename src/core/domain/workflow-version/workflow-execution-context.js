@@ -19,7 +19,7 @@ import {
     COMPARISON_OPERATOR_BOOLEAN_OR,
     
     COMPARISON_OPERATOR_STRING_CONTAINS,
-    COMPARISON_OPERATOR_STRING_CONTAINED,
+    COMPARISON_OPERATOR_STRING_IS_CONTAINED,
 } from './constants/operators/comparison';
 
 export default class WorkflowExecutionContext {
@@ -190,7 +190,7 @@ export class WorkflowVersionRuntimeVariable {
             case COMPARISON_OPERATOR_STRING_CONTAINS:
                 return this.value.includes(other);
 
-            case COMPARISON_OPERATOR_STRING_CONTAINED:
+            case COMPARISON_OPERATOR_STRING_IS_CONTAINED:
                 return other.includes(this.value);
 
             default:

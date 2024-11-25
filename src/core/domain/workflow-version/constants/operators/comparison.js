@@ -10,4 +10,4 @@ export const COMPARISON_OPERATOR_BOOLEAN_AND = 'and';
 export const COMPARISON_OPERATOR_BOOLEAN_OR = 'or';
 
 export const COMPARISON_OPERATOR_STRING_CONTAINS = 'contains';
-export const COMPARISON_OPERATOR_STRING_CONTAINED = 'contained';
+export const COMPARISON_OPERATOR_STRING_IS_CONTAINED = 'contained';

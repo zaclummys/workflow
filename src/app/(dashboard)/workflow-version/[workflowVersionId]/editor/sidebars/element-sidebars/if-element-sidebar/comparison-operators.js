@@ -13,7 +13,7 @@ import {
     COMPARISON_OPERATOR_BOOLEAN_AND,
     COMPARISON_OPERATOR_BOOLEAN_OR,
     COMPARISON_OPERATOR_STRING_CONTAINS,
-    COMPARISON_OPERATOR_STRING_CONTAINED,
+    COMPARISON_OPERATOR_STRING_IS_CONTAINED,
 } from '~/core/domain/workflow-version/constants/operators/comparison';
 
 const comparisonOperators = [
@@ -66,8 +66,8 @@ const comparisonOperators = [
     },
 
     {
-        name: COMPARISON_OPERATOR_STRING_CONTAINED,
-        label: 'Contained',
+        name: COMPARISON_OPERATOR_STRING_IS_CONTAINED,
+        label: 'Is contained',
         supports: [VALUE_STRING],
     },
 ];
