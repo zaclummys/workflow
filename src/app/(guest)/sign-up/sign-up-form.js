@@ -105,6 +105,7 @@ export default function SignUpForm() {
             </Field>
 
             <PrimaryButton
+                type="submit"
                 disabled={pending}>
                 Sign Up
             </PrimaryButton>
