@@ -252,6 +252,17 @@ function WorkflowVersionReactFlow ({
                 case 'remove':
                     const removedEdge = instance.getEdge(change.id);
 
+                    const source = instance.getNode(removedEdge.source);
+                    const target = instance.getNode(removedEdge.target);
+
+                    if (!source || !target) {
+                        continue;
+                    }
+
+                    if (source.type === 'new' || target.type === 'new') {
+                        continue;
+                    }
+
                     switch (removedEdge.sourceHandle) {
                         case 'next':
                             dispatchWorkflowVersion({
