@@ -1,22 +1,20 @@
-import {
-    Handle,
-    Position,
-} from '@xyflow/react';
+import { Position } from '@xyflow/react';
+
+import SingleHandle from './handles/single-handle';
 
 export default function AssignNode ({ data }) {
     return (
         <>
-            <Handle
+            <SingleHandle
                 type="source"
                 id="next"
                 position={Position.Bottom}
             />
 
-            <Handle
+            <SingleHandle
                 type="target"
                 position={Position.Top}
             />
-
 
             {data.label}
         </>

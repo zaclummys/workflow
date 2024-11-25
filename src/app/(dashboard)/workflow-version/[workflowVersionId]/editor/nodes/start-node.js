@@ -1,12 +1,11 @@
-import {
-    Handle,
-    Position,
-} from '@xyflow/react';
+import { Position } from '@xyflow/react';
+
+import SingleHandle from './handles/single-handle';
 
 export default function StartNode () {
     return (
         <>
-            <Handle
+            <SingleHandle
                 type="source"
                 id="next"
                 position={Position.Bottom}
