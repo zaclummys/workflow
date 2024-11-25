@@ -23,7 +23,7 @@ export default function SaveWorkflowVersionButton ({
                 }
             });
         } catch (error) {
-            console.error(error);
+            console.log(error);
 
             throw error;
         }
