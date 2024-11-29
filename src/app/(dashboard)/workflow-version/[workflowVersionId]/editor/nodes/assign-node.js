@@ -6,14 +6,14 @@ export default function AssignNode ({ data }) {
     return (
         <>
             <SingleHandle
-                type="source"
-                id="next"
-                position={Position.Bottom}
+                type="target"
+                position={Position.Top}
             />
 
             <SingleHandle
-                type="target"
-                position={Position.Top}
+                type="source"
+                id="next"
+                position={Position.Bottom}
             />
 
             {data.label}

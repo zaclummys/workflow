@@ -1,13 +1,12 @@
 import {
-    useReactFlow,
+    Handle,
     Position,
+    useReactFlow,
 } from '@xyflow/react';
 
 import { Split, Equal, X } from 'lucide-react';
 
 import { Menu, MenuItem } from '~/components/menu';
-
-import SingleHandle from './handles/single-handle';
 
 export default function NewNode ({ id, data: { onNodeTypeSelected } }) {
     const instance = useReactFlow();
@@ -46,7 +45,7 @@ export default function NewNode ({ id, data: { onNodeTypeSelected } }) {
 
     return (
         <>
-            <SingleHandle
+            <Handle
                 type="target"
                 position={Position.Top}
             />

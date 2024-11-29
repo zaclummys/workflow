@@ -1,11 +1,11 @@
-import { Position } from '@xyflow/react';
+import { Handle, Position } from '@xyflow/react';
 
 import SingleHandle from './handles/single-handle';
 
 export default function IfNode ({ data }) {
     return (
         <>
-            <SingleHandle
+            <Handle
                 type="target"
                 position={Position.Top}
             />
