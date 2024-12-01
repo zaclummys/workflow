@@ -4,6 +4,7 @@ import WorkflowVersionStatus from "~/components/workflow-version-status";
 import SaveWorkflowVersionButton from '~/components/save-workflow-version-button';
 import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
 import { OutlineButton } from '~/components/button';
+import ExecuteWorkflowVersionModalButton from '~/components/modal-buttons/execute-workflow-version-modal-button';
 
 export default function WorkflowVersionEditorHeader ({
     workflowVersion,
@@ -44,6 +45,11 @@ export default function WorkflowVersionEditorHeader ({
                 <OutlineButton onClick={onVariablesButtonClick}>
                     Variables
                 </OutlineButton>
+
+                <ExecuteWorkflowVersionModalButton
+                    workflowVersion={workflowVersion}>
+                    Execute
+                </ExecuteWorkflowVersionModalButton>
 
                 <ToggleWorkflowVersionButton
                     disabled={disableToggleButton}
