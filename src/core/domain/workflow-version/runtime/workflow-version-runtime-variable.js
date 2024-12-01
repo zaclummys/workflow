@@ -6,6 +6,7 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
     ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
     ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
+    ASSIGNMENT_OPERATOR_STRING_CONCATENATE,
 } from '../constants/operators/assignment';
 
 import {
@@ -97,6 +98,10 @@ export default class WorkflowVersionRuntimeVariable {
 
             case ASSIGNMENT_OPERATOR_BOOLEAN_NOT:
                 this.value = !other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_STRING_CONCATENATE:
+                this.value += other;
             break;
     
             default:
