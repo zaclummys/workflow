@@ -59,7 +59,13 @@ function WorkflowVersionReactFlow ({
 
         setNodes(nodes => {
             const updatedNodes = nodes.map(node => {
-                const initialNode = initialNodes.find(initialNode => initialNode.id === node.id);
+                const initialNode = initialNodes.find(initialNode => {
+                    if (initialNode == null) {
+                        return false;
+                    }
+
+                    return initialNode.id === node.id;
+                });
     
                 if (!initialNode) {
                     return node;
@@ -249,7 +255,7 @@ function WorkflowVersionReactFlow ({
                     }
                 break;
 
-                case 'remove':
+                case 'remove': {
                     const removedEdge = instance.getEdge(change.id);
 
                     const source = instance.getNode(removedEdge.source);
@@ -287,6 +293,7 @@ function WorkflowVersionReactFlow ({
                             })
                         break;
                     }
+                }
                 break;
             }
         }

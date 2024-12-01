@@ -45,17 +45,27 @@ export function createEdge ({
 }
 
 export function fromWorkflowElements (workflowElements) {
-    const reactFlowNodes = workflowElements.map(element => createNode({
-        id: element.id,
-        type: element.type,
-        positionX: element.positionX,
-        positionY: element.positionY,
-        data: {
-            label: element.name,
-        },
-    }));
+    const reactFlowNodes = workflowElements.map(element => {
+        if (element == null) {
+            return null;
+        }
+
+        return createNode({
+            id: element.id,
+            type: element.type,
+            positionX: element.positionX,
+            positionY: element.positionY,
+            data: {
+                label: element.name,
+            },
+        });
+    });
 
     const reactFlowEdges = workflowElements.flatMap(element => {
+        if (element == null) {
+            return [];
+        }
+        
         const edges = [];
 
         switch (element.type) {
