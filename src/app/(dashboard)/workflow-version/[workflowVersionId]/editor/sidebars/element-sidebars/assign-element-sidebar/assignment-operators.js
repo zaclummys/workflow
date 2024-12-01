@@ -11,6 +11,7 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
     ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
+    ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
 } from '~/core/domain/workflow-version/constants/operators/assignment';
 
 const assignmentOperators = [
@@ -41,6 +42,12 @@ const assignmentOperators = [
     {
         name: ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
         label: 'Divide By',
+        supports: [VALUE_NUMBER],
+    },
+
+    {
+        name: ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
+        label: 'Remainder By',
         supports: [VALUE_NUMBER],
     },
 

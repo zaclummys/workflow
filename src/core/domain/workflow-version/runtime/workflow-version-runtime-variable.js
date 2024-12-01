@@ -4,6 +4,7 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
+    ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
     ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
 } from '../constants/operators/assignment';
 
@@ -88,6 +89,10 @@ export default class WorkflowVersionRuntimeVariable {
 
             case ASSIGNMENT_OPERATOR_NUMBER_DIVIDE:
                 this.value /= other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_NUMBER_REMAINDER:
+                this.value %= other;
             break;
 
             case ASSIGNMENT_OPERATOR_BOOLEAN_NOT:
