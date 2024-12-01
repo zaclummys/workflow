@@ -1,10 +1,10 @@
-import WorkflowExecutionContext from './workflow-execution-context';
-import { WorkflowVersionRuntimeVariable } from './workflow-execution-context';
+import WorkflowVersionRuntimeContext from './workflow-version-runtime-context';
+import WorkflowVersionRuntimeVariable from './workflow-version-runtime-variable';
 
-describe('Workflow Execution Context', () => {
+describe('Workflow Version Runtime Context', () => {
     describe('String variable', () => {
         it('Should assign the value to the variable', () => {
-            const workflowExecutionContext = new WorkflowExecutionContext({
+            const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                 variables: [
                     {
                         id: 'variable-1',
@@ -14,7 +14,7 @@ describe('Workflow Execution Context', () => {
                 ],
             });
 
-            workflowExecutionContext.assignVariable({
+            workflowVersionRuntimeContext.assignVariable({
                 variableId: 'variable-1',
                 operator: 'set',
                 operand: {
@@ -23,7 +23,7 @@ describe('Workflow Execution Context', () => {
                 }
             });
 
-            expect(workflowExecutionContext.getVariables()).toStrictEqual([
+            expect(workflowVersionRuntimeContext.getVariables()).toStrictEqual([
                 new WorkflowVersionRuntimeVariable({
                     id: 'variable-1',
                     type: 'string',
@@ -33,7 +33,7 @@ describe('Workflow Execution Context', () => {
         });
 
         it('Should compare the variable by an value', () => {
-            const workflowExecutionContext = new WorkflowExecutionContext({
+            const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                 variables: [
                     {
                         id: 'variable-1',
@@ -43,7 +43,7 @@ describe('Workflow Execution Context', () => {
                 ],
             });
 
-            const output = workflowExecutionContext.compareVariable({
+            const output = workflowVersionRuntimeContext.compareVariable({
                 variableId: 'variable-1',
                 operator: 'equal',
                 operand: {
@@ -57,7 +57,7 @@ describe('Workflow Execution Context', () => {
 
         describe('Compare the variable by an value', () => {
             it('Should be equal', () => {
-                const workflowExecutionContext = new WorkflowExecutionContext({
+                const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                     variables: [
                         {
                             id: 'variable-1',
@@ -67,7 +67,7 @@ describe('Workflow Execution Context', () => {
                     ],
                 });
 
-                const output = workflowExecutionContext.compareVariable({
+                const output = workflowVersionRuntimeContext.compareVariable({
                     variableId: 'variable-1',
                     operator: 'equal',
                     operand: {
@@ -80,7 +80,7 @@ describe('Workflow Execution Context', () => {
             });
 
             it('Should be not equal', () => {
-                const workflowExecutionContext = new WorkflowExecutionContext({
+                const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                     variables: [
                         {
                             id: 'variable-1',
@@ -90,7 +90,7 @@ describe('Workflow Execution Context', () => {
                     ],
                 });
 
-                const output = workflowExecutionContext.compareVariable({
+                const output = workflowVersionRuntimeContext.compareVariable({
                     variableId: 'variable-1',
                     operator: 'equal',
                     operand: {
@@ -105,7 +105,7 @@ describe('Workflow Execution Context', () => {
 
         describe('Compare the variable by another variable', () => {
             it('Should be equal', () => {
-                const workflowExecutionContext = new WorkflowExecutionContext({
+                const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                     variables: [
                         {
                             id: 'variable-1',
@@ -121,7 +121,7 @@ describe('Workflow Execution Context', () => {
                     ],
                 });
 
-                const output = workflowExecutionContext.compareVariable({
+                const output = workflowVersionRuntimeContext.compareVariable({
                     variableId: 'variable-1',
                     operator: 'equal',
                     operand: {
@@ -134,7 +134,7 @@ describe('Workflow Execution Context', () => {
             });
 
             it('Should be not equal', () => {
-                const workflowExecutionContext = new WorkflowExecutionContext({
+                const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                     variables: [
                         {
                             id: 'variable-1',
@@ -150,7 +150,7 @@ describe('Workflow Execution Context', () => {
                     ],
                 });
 
-                const output = workflowExecutionContext.compareVariable({
+                const output = workflowVersionRuntimeContext.compareVariable({
                     variableId: 'variable-1',
                     operator: 'equal',
                     operand: {
@@ -166,7 +166,7 @@ describe('Workflow Execution Context', () => {
 
     describe('Number variable', () => {
         it('Should assign the value to the variable', () => {
-            const workflowExecutionContext = new WorkflowExecutionContext({
+            const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                 variables: [
                     {
                         id: 'variable-1',
@@ -176,7 +176,7 @@ describe('Workflow Execution Context', () => {
                 ],
             });
 
-            workflowExecutionContext.assignVariable({
+            workflowVersionRuntimeContext.assignVariable({
                 variableId: 'variable-1',
                 operator: 'set',
                 operand: {
@@ -185,7 +185,7 @@ describe('Workflow Execution Context', () => {
                 }
             });
 
-            expect(workflowExecutionContext.getVariables()).toStrictEqual([
+            expect(workflowVersionRuntimeContext.getVariables()).toStrictEqual([
                 new WorkflowVersionRuntimeVariable({
                     id: 'variable-1',
                     type: 'number',
@@ -195,7 +195,7 @@ describe('Workflow Execution Context', () => {
         });
 
         it('Should compare the variable by an value', () => {
-            const workflowExecutionContext = new WorkflowExecutionContext({
+            const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                 variables: [
                     {
                         id: 'variable-1',
@@ -205,7 +205,7 @@ describe('Workflow Execution Context', () => {
                 ],
             });
 
-            const output = workflowExecutionContext.compareVariable({
+            const output = workflowVersionRuntimeContext.compareVariable({
                 variableId: 'variable-1',
                 operator: 'equal',
                 operand: {
@@ -218,7 +218,7 @@ describe('Workflow Execution Context', () => {
         });
 
         it('Should compare the variable by another variable', () => {
-            const workflowExecutionContext = new WorkflowExecutionContext({
+            const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
                 variables: [
                     {
                         id: 'variable-1',
@@ -234,7 +234,7 @@ describe('Workflow Execution Context', () => {
                 ],
             });
 
-            const output = workflowExecutionContext.compareVariable({
+            const output = workflowVersionRuntimeContext.compareVariable({
                 variableId: 'variable-1',
                 operator: 'equal',
                 operand: {
@@ -248,7 +248,7 @@ describe('Workflow Execution Context', () => {
     });
 
     it('Should compare a variable by id', () => {
-        const workflowExecutionContext = new WorkflowExecutionContext({
+        const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
             variables: [
                 {
                     id: 'variable-1',
@@ -258,7 +258,7 @@ describe('Workflow Execution Context', () => {
             ],
         });
 
-        const output = workflowExecutionContext.compareVariable({
+        const output = workflowVersionRuntimeContext.compareVariable({
             variableId: 'variable-1',
             operator: 'equal',
             operand: {
@@ -271,7 +271,7 @@ describe('Workflow Execution Context', () => {
     });
 
     it('Should get output variables', () => {
-        const workflowExecutionContext = new WorkflowExecutionContext({
+        const workflowVersionRuntimeContext = new WorkflowVersionRuntimeContext({
             variables: [
                 {
                     id: 'variable-1',
@@ -289,7 +289,7 @@ describe('Workflow Execution Context', () => {
             ],
         });
 
-        const variables = workflowExecutionContext.getOutputVariables();
+        const variables = workflowVersionRuntimeContext.getOutputVariables();
 
         expect(variables).toStrictEqual([
             expect.objectContaining({

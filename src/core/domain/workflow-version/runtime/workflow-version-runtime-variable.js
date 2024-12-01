@@ -5,7 +5,7 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
     ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
-} from './constants/operators/assignment';
+} from '../constants/operators/assignment';
 
 import {
     COMPARISON_OPERATOR_EQUAL,
@@ -21,9 +21,9 @@ import {
     
     COMPARISON_OPERATOR_STRING_CONTAINS,
     COMPARISON_OPERATOR_STRING_IS_CONTAINED,
-} from './constants/operators/comparison';
+} from '../constants/operators/comparison';
 
-export class WorkflowVersionRuntimeVariable {
+export default class WorkflowVersionRuntimeVariable {
     constructor ({
         id,
         type,

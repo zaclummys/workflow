@@ -1,4 +1,6 @@
-export default class WorkflowExecutionContext {
+import WorkflowVersionRuntimeVariable from './workflow-version-runtime-variable';
+
+export default class WorkflowVersionRuntimeContext {
     constructor ({ variables }) { 
         this.variables = variables.map(variable => new WorkflowVersionRuntimeVariable(variable));
     }

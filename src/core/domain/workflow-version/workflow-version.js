@@ -15,7 +15,7 @@ import {
     WorkflowExecutionOutput,
 } from '~/core/domain/workflow-execution/workflow-execution';
 
-import WorkflowExecutionContext from './workflow-execution-context';
+import WorkflowVersionRuntimeContext from './runtime/workflow-version-runtime-context';
 
 export {
     WorkflowStartElement,
@@ -25,7 +25,7 @@ export {
     WorkflowAssignElement,
     WorkflowAssignment,
     WorkflowExecution,
-    WorkflowExecutionContext,
+    WorkflowVersionRuntimeContext,
     WorkflowExecutionOutput,
 };
 
@@ -277,7 +277,7 @@ export class WorkflowVersion {
             };
         });
 
-        const context = new WorkflowExecutionContext({
+        const context = new WorkflowVersionRuntimeContext({
             variables,
         });
 
