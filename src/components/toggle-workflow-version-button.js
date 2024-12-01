@@ -80,11 +80,11 @@ function DeactivateWorkflowVersionButton ({
     };
 
     return (
-        <OutlineButton
+        <PrimaryButton
             disabled={isDeactivating || disabled}
             onClick={handleDeactivateButtonClick}
         >
             Deactivate
-        </OutlineButton>
+        </PrimaryButton>
     );
 }
