@@ -42,14 +42,14 @@ export default function WorkflowVersionEditorHeader ({
                     workflowVersion={workflowVersion}
                 />
 
-                <OutlineButton onClick={onVariablesButtonClick}>
-                    Variables
-                </OutlineButton>
-
                 <ExecuteWorkflowVersionModalButton
                     workflowVersion={workflowVersion}>
                     Execute
                 </ExecuteWorkflowVersionModalButton>
+
+                <OutlineButton onClick={onVariablesButtonClick}>
+                    Variables
+                </OutlineButton>
 
                 <ToggleWorkflowVersionButton
                     disabled={disableToggleButton}
