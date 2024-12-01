@@ -3,6 +3,8 @@ import {
     findUserByEmail, 
 } from '~/core/data/mongodb/user';
 
+import { insertWorkspace } from '~/core/data/mongodb/workspace';
+
 import {
     User, 
 } from '~/core/domain/user';
@@ -27,7 +29,10 @@ export default async function signUp ({
         password,
     });
 
+    const personalWorkspace = user.createPersonalWorkspace();
+
     await insertUser(user);
+    await insertWorkspace(personalWorkspace);
 
     return {
         success: true,

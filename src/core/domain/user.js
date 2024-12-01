@@ -7,6 +7,8 @@ import {
     verify, 
 } from 'argon2';
 
+import { Workspace } from './workspace';
+
 export class User {
     static async create ({
         name,
@@ -38,6 +40,14 @@ export class User {
 
     verifyPassword (passwordToBeVerified) {
         return this.password.verify(passwordToBeVerified);
+    }
+
+    createPersonalWorkspace () {
+        return Workspace.create({
+            name: `${this.name}'s Workspace`,
+            description: 'This is your personal workspace. Create workflows and invite members.',
+            userId: this.id,
+        });
     }
 
     getId () {

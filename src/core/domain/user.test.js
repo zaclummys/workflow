@@ -1,6 +1,20 @@
-import { UserPassword, UserColor } from './user';
+import { User, UserPassword, UserColor } from './user';
 
 describe('User', () => {
+    it('Should create a personal workspace', async () => {
+        const user = await User.create({
+            name: 'John Doe',
+            email: 'johndo@acme.com',
+            password: '12345678',
+        });
+
+        const workspace = user.createPersonalWorkspace();
+
+        expect(workspace.getName()).toBe("John Doe's Workspace");
+        expect(workspace.getDescription()).toBe("This is your personal workspace. Create workflows and invite members.");
+        expect(workspace.getCreatedById()).toBe(user.getId());
+    });
+
     describe('User password', () => {
         it.fails('Too small password', async () => {
             await UserPassword.create('123');
