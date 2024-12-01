@@ -1,4 +1,8 @@
 export function coerceNumber (number) {
+    if (typeof number === 'number') {
+        return number;
+    }
+    
     const coercedNumber = Number(number);
     
     if (Number.isNaN(coercedNumber)) {
@@ -9,6 +13,10 @@ export function coerceNumber (number) {
 }
 
 export function coerceBoolean (boolean) {
+    if (typeof boolean === 'boolean') {
+        return boolean;
+    }
+
     switch (boolean) {
         case 'true':
             return true;
