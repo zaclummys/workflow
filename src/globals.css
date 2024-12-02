@@ -90,7 +90,6 @@ input:focus {
     height: 28px;
 }
 
-
 .react-flow__node-start,
 .react-flow__node-if,
 .react-flow__node-assign {
@@ -109,13 +108,6 @@ input:focus {
     border: var(--xy-node-border, var(--xy-node-border-default));
     background-color: var(--xy-node-background-color, var(--xy-node-background-color-default));
     @apply transition-colors transition-shadow;
-}
-
-.react-flow__node-new:hover,
-.react-flow__node-start:hover,
-.react-flow__node-if:hover,
-.react-flow__node-assign:hover {
-
 }
 
 .react-flow__node-new.selected,
