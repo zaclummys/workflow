@@ -34,7 +34,7 @@ function WorkflowLogo () {
 function WorkflowTitle () {
     return (
         <span className="text-base font-medium">
-            Workflow
+            Easy Flow
         </span>
     );
 }
