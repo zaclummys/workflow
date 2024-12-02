@@ -13,7 +13,6 @@ import useNavigation from '~/hooks/use-navigation';
 import executeWorkflowVersionAction from '~/actions/execute-workflow-version-action';
 import ExecuteWorkflowVersionModal from '~/components/modals/execute-workflow-version-modal';
 
-
 export default function ExecuteWorkflowVersionModalButton({
     workflowVersion,
 }) {
