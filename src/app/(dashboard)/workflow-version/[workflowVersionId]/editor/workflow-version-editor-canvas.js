@@ -42,7 +42,8 @@ export default function WorkflowVersionEditorCanvas (props) {
 }
 
 function WorkflowVersionReactFlow ({
-    onNodeDoubleClick,
+    onElementSelect,
+    onElementRemove,
 
     workflowVersion,
     dispatchWorkflowVersion,
@@ -173,10 +174,7 @@ function WorkflowVersionReactFlow ({
                 break;
                 
                 case 'remove':
-                    dispatchWorkflowVersion({
-                        type: 'element-removed',
-                        elementId: change.id,
-                    });
+                    onElementRemove(change.id);
                 break;
 
                 case 'add': {
@@ -303,6 +301,16 @@ function WorkflowVersionReactFlow ({
         return nodes.every(node => node.type !== 'start');
     }
 
+    const handleNodeDoubleClick = (event, node) => {
+        const element = workflowVersion.elements.find(element => element.id === node.id);
+
+        if (!element) {
+            return;
+        }
+        
+        onElementSelect(element);
+    }
+
     return (
         <div className="w-full h-full relative">
             <ReactFlow
@@ -310,7 +318,7 @@ function WorkflowVersionReactFlow ({
                 nodes={nodes}
                 edges={edges}
                 nodeTypes={nodeTypes}
-                onNodeDoubleClick={onNodeDoubleClick}
+                onNodeDoubleClick={handleNodeDoubleClick}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChanges}
                 onConnectEnd={handleConnectEnd}

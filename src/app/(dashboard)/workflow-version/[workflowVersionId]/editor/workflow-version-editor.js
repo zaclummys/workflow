@@ -30,12 +30,12 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             .elements.find(element => element.id === elementId);
     }
 
-    const handleCanvasNodeDoubleClick = (event, node) => {
-        const element = findElementById(node.id);
+    const handleElementSelect = (element) => {
+        dispatchWorflowVersionEditor({ type: 'element-selected', element });
+    };
 
-        if (element != null) {
-            dispatchWorflowVersionEditor({ type: 'element-selected', element });
-        }
+    const handleElementRemove = (elementId) => {
+        dispatchWorflowVersionEditor({ type: 'element-removed', elementId });
     };
 
     const handleVariablesButtonClick = () => {
@@ -119,7 +119,8 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
 
             <div className="w-full h-full relative">
                 <WorkflowVersionEditorCanvas
-                    onNodeDoubleClick={handleCanvasNodeDoubleClick}
+                    onElementSelect={handleElementSelect}
+                    onElementRemove={handleElementRemove}
                     workflowVersion={workflowVersionEditor.workflowVersion}
                     dispatchWorkflowVersion={dispatchWorflowVersionEditor}
                 />
