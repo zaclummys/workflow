@@ -1,12 +1,12 @@
 import Link from 'next/link';
 
-import Header from "~/components/header";
-import Container from "~/components/container";
+import Header from '~/components/header';
+import Container from '~/components/container';
 
 import {
     Section,
     SectionTitle,
-} from "~/components/section";
+} from '~/components/section';
 
 import {
     Details,
@@ -14,12 +14,11 @@ import {
     DetailCell,
     DetailCellHeader,
     DetailCellText,
-} from "~/components/details";
+} from '~/components/details';
 
-import WorkflowExecutionStatus from "~/components/workflow-execution-status";
-import DateAgo from "~/components/date-ago";
+import GoBack from '~/components/go-back';
 
-import getWorkflowExecutionAction from "~/actions/get-workflow-execution-action";
+import getWorkflowExecutionAction from '~/actions/get-workflow-execution-action';
 
 import {
     Card,
@@ -40,6 +39,8 @@ export default async function WorkflowExecution ({ params }) {
             <Container>
                 <Section>
                     <SectionTitle>
+                        <GoBack url={`/workflow-version/${workflowExecution.workflowVersion.id}`} />
+
                         Workflow Execution
                     </SectionTitle>
 

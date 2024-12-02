@@ -87,7 +87,7 @@ export default function WorkflowVersionEditorSidebar ({
                 case 'assign':
                     return (
                         <AssignElementSidebar
-                            key={sidebar.elementId}
+                            key={sidebar.element.id}
 
                             assignElement={sidebar.element}
                             variables={variables}

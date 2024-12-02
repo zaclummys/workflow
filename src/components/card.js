@@ -21,7 +21,7 @@ export function CardTitle ({ className, children }) {
 
 export function CardText ({ children }) {
     return (
-        <span className="text-base font-normal">
+        <span className="text-sm font-normal">
             {children}
         </span>
     );
@@ -37,7 +37,7 @@ export function CardSection ({ children }) {
 
 export function CardSectionTitle ({ children }) {
     return (
-        <span className="text-sm font-normal">
+        <span className="text-sm font-medium">
             {children}
         </span>
     );

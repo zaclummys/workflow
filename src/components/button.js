@@ -6,7 +6,7 @@ export function Button ({
     ...props
 }) {
     const buttonClassName = twMerge(
-        'flex items-center justify-center text-sm font-medium h-10 px-4 py-0 rounded-md disabled:opacity-70 disabled:pointer-events-none transition-colors',
+        'flex items-center justify-center text-sm font-medium h-10 px-4 py-0 rounded-md disabled:opacity-50 disabled:pointer-events-none transition-colors',
         className,
     );
 

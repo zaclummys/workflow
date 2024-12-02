@@ -1,9 +1,10 @@
+import { OutlineButton } from '~/components/button';
+
 import GoBack from '~/components/go-back';
 import ButtonGroup from '~/components/button-group';
 import WorkflowVersionStatus from "~/components/workflow-version-status";
 import SaveWorkflowVersionButton from '~/components/save-workflow-version-button';
 import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
-import { OutlineButton } from '~/components/button';
 
 export default function WorkflowVersionEditorHeader ({
     workflowVersion,

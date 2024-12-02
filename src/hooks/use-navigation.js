@@ -24,6 +24,10 @@ export default function useNavigation () {
             router.push(`/workflow-version/${workflowVersionId}/editor`);
         },
 
+        openWorkflowVersionEditor: (workflowVersionId) => {
+            window.open(`/workflow-version/${workflowVersionId}/editor`, '_blank');
+        },
+
         navigateToWorkflowExecution: (workflowExecutionId) => {
             router.push(`/workflow-execution/${workflowExecutionId}`);
         },

@@ -3,3 +3,6 @@ export const ASSIGNMENT_OPERATOR_NUMBER_INCREMENT = 'increment';
 export const ASSIGNMENT_OPERATOR_NUMBER_DECREMENT = 'decrement';
 export const ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY = 'multiply';
 export const ASSIGNMENT_OPERATOR_NUMBER_DIVIDE = 'divide';
+export const ASSIGNMENT_OPERATOR_NUMBER_REMAINDER = 'remainder';
+export const ASSIGNMENT_OPERATOR_BOOLEAN_NOT = 'not';
+export const ASSIGNMENT_OPERATOR_STRING_CONCATENATE = 'concatenate';

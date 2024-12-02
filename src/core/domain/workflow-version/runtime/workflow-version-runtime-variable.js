@@ -4,7 +4,10 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
-} from './constants/operators/assignment';
+    ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
+    ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
+    ASSIGNMENT_OPERATOR_STRING_CONCATENATE,
+} from '../constants/operators/assignment';
 
 import {
     COMPARISON_OPERATOR_EQUAL,
@@ -20,76 +23,9 @@ import {
     
     COMPARISON_OPERATOR_STRING_CONTAINS,
     COMPARISON_OPERATOR_STRING_IS_CONTAINED,
-} from './constants/operators/comparison';
+} from '../constants/operators/comparison';
 
-export default class WorkflowExecutionContext {
-    constructor ({ variables }) { 
-        this.variables = variables.map(variable => new WorkflowVersionRuntimeVariable(variable));
-    }
-
-    findVariableById (variableId) {
-        const variable = this.variables.find(variable => variableId === variable.getId());
-
-        if (variable == null) {
-            throw new Error(`Variable ${variableId} not found.`);
-        }
-
-        return variable;
-    }
-
-    evaluateOperand (operand) {
-        switch (operand.type) {
-            case 'value':
-                return operand.value;
-
-            case 'variable':
-                const variable = this.findVariableById(operand.variableId);
-
-                return variable.getValue();
-
-            default:
-                throw new Error(`Unknown operand type: ${operand.type}`);
-        }
-    }
-
-    assignVariable ({
-        variableId,
-        operator,
-        operand,
-    }) {
-        const variable = this.findVariableById(variableId);
-        const value = this.evaluateOperand(operand);
-
-        variable.assign(operator, value);
-    }
-
-    compareVariable ({
-        variableId,
-        operator,
-        operand,
-    }) {
-        const variable = this.findVariableById(variableId);
-        const value = this.evaluateOperand(operand);
-
-        return variable.compare(operator, value);
-    }
-
-    getVariables () {
-        return this.variables;
-    }
-
-    getOutputVariables () {
-        return this.variables
-            .filter(variable => variable.getMarkedAsOutput())
-            .map(variable => ({
-                id: variable.getId(),
-                type: variable.getType(),
-                value: variable.getValue(),
-            }));
-    }
-}
-
-export class WorkflowVersionRuntimeVariable {
+export default class WorkflowVersionRuntimeVariable {
     constructor ({
         id,
         type,
@@ -154,6 +90,18 @@ export class WorkflowVersionRuntimeVariable {
 
             case ASSIGNMENT_OPERATOR_NUMBER_DIVIDE:
                 this.value /= other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_NUMBER_REMAINDER:
+                this.value %= other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_BOOLEAN_NOT:
+                this.value = !other;
+            break;
+
+            case ASSIGNMENT_OPERATOR_STRING_CONCATENATE:
+                this.value += other;
             break;
     
             default:

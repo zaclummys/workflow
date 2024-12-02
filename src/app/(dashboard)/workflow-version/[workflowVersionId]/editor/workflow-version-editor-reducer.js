@@ -103,47 +103,29 @@ function workflowVersionElementsReducer (elements, action) {
             return elements.map(element => {
                 switch (element.type) {
                     case 'start':
-                        if (element.id === action.sourceElementId && element.nextElementId === action.targetElementId) {
-                            return {
-                                ...element,
-                                nextElementId: null,
-                            };
-                        }
-                    break;
-
                     case 'assign':
-                        if (element.id === action.sourceElementId && element.nextElementId === action.targetElementId) {
-                            return {
-                                ...element,
-                                nextElementId: null,
-                            };
-                        }
-                    break;
+                        return {
+                            ...element,
+                            nextElementId: null,
+                        };
 
                     case 'if':
                         switch (action.connectionType) {
                             case 'true':
-                                if (element.id === action.sourceElementId && element.nextElementIdIfTrue === action.targetElementId) {
-                                    return {
-                                        ...element,
-                                        nextElementIdIfTrue: null,
-                                    };
-                                }
-                            break;
+                                return {
+                                    ...element,
+                                    nextElementIdIfTrue: null,
+                                };
 
                             case 'false':
-                                if (element.id === action.sourceElementId && element.nextElementIdIfFalse === action.targetElementId) {
-                                    return {
-                                        ...element,
-                                        nextElementIdIfFalse: null,
-                                    };
-                                }
-                            break;
+                                return {
+                                    ...element,
+                                    nextElementIdIfFalse: null,
+                                };
 
                             default:
                                 return element;
                         }
-                    break;
 
                     default:
                         return element;
