@@ -46,7 +46,7 @@ export default function Assignment ({
             <Field>
                 <Label
                     htmlFor={variableId}>
-                    Variable
+                    Variable (Target)
                 </Label>
 
                 <Select
@@ -108,7 +108,7 @@ export default function Assignment ({
                 <Field>
                     <Label
                         htmlFor={operandVariableId}>
-                        Operand Variable
+                        Operand Variable (Source)
                     </Label>
 
                     <Select
@@ -130,7 +130,7 @@ export default function Assignment ({
                 <Field>
                     <Label
                         htmlFor={operandValueId}>
-                        Operand Value
+                        Operand Value (Source)
                     </Label>
 
                     <ValueFacade
