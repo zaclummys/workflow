@@ -30,26 +30,56 @@ export {
 };
 
 export class WorkflowVersion {
-    static createVariable (variableData) {
-        return new WorkflowVariable(variableData);
-    }
+    static ensureThatEveryElementIsConnected (elements) {
+        const elementIds = elements.map(element => element.id);
 
-    static createElement (elementData) {
-        switch (elementData.type) {
-            case 'start':
-                return new WorkflowStartElement(elementData);
+        const connections = [];
+        
+        for (const element of elements) {
+            switch (element.type) {
+                case 'start':
+                    if (element.nextElementId != null) {
+                        connections.push(element.nextElementId);
+                    }
+                break;
 
-            case 'assign':
-                return new WorkflowAssignElement(elementData);
+                case 'assign':
+                    if (element.nextElementId != null) {
+                        connections.push(element.nextElementId);
+                    }
+                break;
 
-            case 'if':
-                return new WorkflowIfElement(elementData);
+                case 'if':
+                    if (element.nextElementIdIfTrue != null) {
+                        connections.push(element.nextElementIdIfTrue);
+                    }
 
-            default:
-                throw new Error(`Unexpected element type: ${elementData.type}`);
+                    if (element.nextElementIdIfFalse != null) {
+                        connections.push(element.nextElementIdIfFalse);
+                    }
+                break;
+            }
+        }
+
+        for (const connection of connections) {
+            if (!elementIds.includes(connection)) {
+                throw new Error(`Element '${connection}' does not exist.`);
+            }
+        }
+
+        for (const element of elements) {
+            if (element.type === 'start') {
+                continue;
+            }
+
+            const isConnected = connections.includes(element.id);
+
+            if (!isConnected) {
+                throw new Error(`Element '${element.name}' is not connected.`);
+            }
         }
     }
-
+    
     static create({
         number,
         workflowId,
@@ -76,8 +106,8 @@ export class WorkflowVersion {
         id,
         number,
         status,
-        variables,
-        elements,
+        variables = [],
+        elements = [],
         workflowId,
         createdAt,
         createdById,
@@ -121,8 +151,11 @@ export class WorkflowVersion {
         this.createdAt = createdAt;
         this.createdById = createdById;
 
-        this.variables = variables.map(variableData => WorkflowVersion.createVariable(variableData));
-        this.elements = elements.map(elementData => WorkflowVersion.createElement(elementData));
+        this.elements = [];
+        this.variables = [];
+
+        this.updateVariables(variables);
+        this.updateElements(elements);
     }
 
     getId() {
@@ -165,12 +198,40 @@ export class WorkflowVersion {
         return this.status === 'draft';
     }
 
+    updateVariables (variables) {
+        this.variables = variables.map(variableData => new WorkflowVariable(variableData));
+    }
+
+    updateElements (elements) {
+        WorkflowVersion.ensureThatEveryElementIsConnected(elements);
+
+        this.elements = elements.map(elementData => {
+            switch (elementData.type) {
+                case 'start':
+                    return new WorkflowStartElement(elementData);
+    
+                case 'assign':
+                    return new WorkflowAssignElement(elementData);
+    
+                case 'if':
+                    return new WorkflowIfElement(elementData);
+    
+                default:
+                    throw new Error(`Unexpected element type: ${elementData.type}`);
+            }
+        });
+    }
+
     change ({
         variables = [],
         elements = [],
     }) {
-        this.variables = variables.map(variableData => WorkflowVersion.createVariable(variableData));
-        this.elements = elements.map(elementData => WorkflowVersion.createElement(elementData));
+        if (this.status !== 'draft') {
+            throw new Error('Cannot change a workflow version that is not in draft.');
+        }
+
+        this.updateVariables(variables);
+        this.updateElements(elements);
     }
 
     changeAsNewVersion ({

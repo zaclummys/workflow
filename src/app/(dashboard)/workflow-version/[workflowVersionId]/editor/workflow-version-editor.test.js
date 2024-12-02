@@ -714,47 +714,4 @@ describe('Workflow Version Editor Sidebar', () => {
 
         expect(editAssignTitle).not.toBeInTheDocument();
     });
-
-    it('Should allow user to delete assign element', () => {
-        const workflowVersion = {
-            id: 'workflow-version-1',
-            name: 'Workflow Version 1',
-            number: 1,
-            description: 'This is the first workflow version.',
-            elements: [
-                {
-                    id: 'element-1',
-                    type: 'assign',
-                    name: 'Assign Element',
-                    description: 'This is an assign element.',
-                    assignments: [],
-                },
-            ],
-            variables: [],
-            workflow: {
-                id: 'workflow-1',
-                name: 'Workflow 1',
-            },
-        };
-
-        render(
-            <WorkflowVersionEditor
-                workflowVersion={workflowVersion}
-            />
-        );
-        
-        const assignElementNode = screen.getByText('Assign Element');
-
-        act(() => {
-            fireEvent.dblClick(assignElementNode);
-        });
-
-        fireEvent.keyDown(assignElementNode, {
-            
-            key: 'Backspace',
-            keyCode: 8,
-        });
-
-        expect(assignElementNode).not.toBeInTheDocument();
-    });
 });

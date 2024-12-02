@@ -34,6 +34,38 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         dispatchWorflowVersionEditor({ type: 'element-selected', element });
     };
 
+    const handleElementAdd = (element) => {
+        dispatchWorflowVersionEditor({ type: 'element-added', element });
+    };
+
+    const handleElementConnect = ({
+        sourceElementId,
+        targetElementId,
+        connectionType,
+    }) => {
+        dispatchWorflowVersionEditor({
+            type: 'element-connected',
+            sourceElementId,
+            targetElementId,
+            connectionType,
+        });
+    };
+
+    const handleElementDisconnect = ({
+        elementId,
+        connectionType,
+    }) => {
+        dispatchWorflowVersionEditor({
+            type: 'element-disconnected',
+            elementId,
+            connectionType,
+        });
+    };
+
+    const handleElementMove = ({ elementId, positionX, positionY }) => {
+        dispatchWorflowVersionEditor({ type: 'element-moved', elementId, positionX, positionY });
+    };
+
     const handleElementRemove = (elementId) => {
         dispatchWorflowVersionEditor({ type: 'element-removed', elementId });
     };
@@ -120,7 +152,11 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             <div className="w-full h-full relative">
                 <WorkflowVersionEditorCanvas
                     onElementSelect={handleElementSelect}
+                    onElementAdd={handleElementAdd}
                     onElementRemove={handleElementRemove}
+                    onElementConnect={handleElementConnect}
+                    onElementDisconnect={handleElementDisconnect}
+                    onElementMove={handleElementMove}
                     workflowVersion={workflowVersionEditor.workflowVersion}
                     dispatchWorkflowVersion={dispatchWorflowVersionEditor}
                 />
