@@ -2,21 +2,23 @@ import {
     VALUE_STRING,
     VALUE_NUMBER,
     VALUE_BOOLEAN,
-} from '~/core/domain/workflow-version/constants/values';
+} from '~/core/domain/workflow-version/values';
 
-import {
-    COMPARISON_OPERATOR_EQUAL,
-    COMPARISON_OPERATOR_NUMBER_GREATER_THAN,
-    COMPARISON_OPERATOR_NUMBER_LESS_THAN,
-    COMPARISON_OPERATOR_NUMBER_GREATER_THAN_OR_EQUAL_TO,
-    COMPARISON_OPERATOR_NUMBER_LESS_THAN_OR_EQUAL_TO,
-    COMPARISON_OPERATOR_BOOLEAN_AND,
-    COMPARISON_OPERATOR_BOOLEAN_OR,
-    COMPARISON_OPERATOR_STRING_CONTAINS,
-    COMPARISON_OPERATOR_STRING_IS_CONTAINED,
-} from '~/core/domain/workflow-version/constants/operators/comparison';
+export const COMPARISON_OPERATOR_EQUAL = 'equal';
+export const COMPARISON_OPERATOR_NOT_EQUAL = 'not-equal';
 
-const comparisonOperators = [
+export const COMPARISON_OPERATOR_NUMBER_GREATER_THAN = 'greater-than';
+export const COMPARISON_OPERATOR_NUMBER_LESS_THAN = 'less-than';
+export const COMPARISON_OPERATOR_NUMBER_GREATER_THAN_OR_EQUAL_TO = 'greater-than-or-equal-to';
+export const COMPARISON_OPERATOR_NUMBER_LESS_THAN_OR_EQUAL_TO = 'less-than-or-equal-to';
+
+export const COMPARISON_OPERATOR_BOOLEAN_AND = 'and';
+export const COMPARISON_OPERATOR_BOOLEAN_OR = 'or';
+
+export const COMPARISON_OPERATOR_STRING_CONTAINS = 'contains';
+export const COMPARISON_OPERATOR_STRING_IS_CONTAINED = 'contained';
+
+export const comparisonOperators = [
     {
         name: COMPARISON_OPERATOR_EQUAL,
         label: 'Equal',
@@ -71,5 +73,3 @@ const comparisonOperators = [
         supports: [VALUE_STRING],
     },
 ];
-
-export default comparisonOperators;

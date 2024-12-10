@@ -4,7 +4,7 @@ import { Field, Label, Select, Option } from '~/components/form';
 import { DestructiveButton } from '~/components/button';
 import ValueFacade from '~/components/value-facade';
 
-import assignmentOperators from './assignment-operators';
+import { assignmentOperators } from '~/core/domain/workflow-version/operators/assignment';
 
 export default function Assignment ({
     assignment,

@@ -2,20 +2,18 @@ import {
     VALUE_STRING,
     VALUE_NUMBER,
     VALUE_BOOLEAN,
-} from '~/core/domain/workflow-version/constants/values';
+} from '~/core/domain/workflow-version/values';
 
-import {
-    ASSIGNMENT_OPERATOR_SET,
-    ASSIGNMENT_OPERATOR_NUMBER_INCREMENT,
-    ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
-    ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
-    ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
-    ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
-    ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
-    ASSIGNMENT_OPERATOR_STRING_CONCATENATE,
-} from '~/core/domain/workflow-version/constants/operators/assignment';
+export const ASSIGNMENT_OPERATOR_SET = 'set';
+export const ASSIGNMENT_OPERATOR_NUMBER_INCREMENT = 'increment';
+export const ASSIGNMENT_OPERATOR_NUMBER_DECREMENT = 'decrement';
+export const ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY = 'multiply';
+export const ASSIGNMENT_OPERATOR_NUMBER_DIVIDE = 'divide';
+export const ASSIGNMENT_OPERATOR_NUMBER_REMAINDER = 'remainder';
+export const ASSIGNMENT_OPERATOR_BOOLEAN_NOT = 'not';
+export const ASSIGNMENT_OPERATOR_STRING_CONCATENATE = 'concatenate';
 
-const assignmentOperators = [
+export const assignmentOperators = [
     {
         name: ASSIGNMENT_OPERATOR_SET,
         label: 'Set',
@@ -64,5 +62,3 @@ const assignmentOperators = [
         supports: [VALUE_STRING],
     }
 ];
-
-export default assignmentOperators;
