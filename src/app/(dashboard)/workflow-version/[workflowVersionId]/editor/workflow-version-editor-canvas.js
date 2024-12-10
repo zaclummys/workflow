@@ -2,15 +2,11 @@
 
 import '@xyflow/react/dist/style.css';
 
-import { useEffect } from 'react';
-
 import {
     ReactFlow,
     Background,
     Controls,
     MiniMap,
-    useNodesState,
-    useEdgesState,
     useReactFlow,
     ReactFlowProvider,
 } from '@xyflow/react';
@@ -18,13 +14,14 @@ import {
 import {
     createNode,
     createEdge,
-    fromWorkflowElements,
 } from './react-flow-helpers';
 
 import NewNode from './nodes/new-node';
 import StartNode from './nodes/start-node';
 import IfNode from './nodes/if-node';
 import AssignNode from './nodes/assign-node';
+
+import useSyncCanvas from './use-sync-canvas';
 
 const nodeTypes = {
     new: NewNode,
@@ -55,56 +52,12 @@ function WorkflowVersionReactFlow ({
 }) {
     const instance = useReactFlow();
 
-    const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-    useEffect(() => {
-        const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
-
-        setNodes(nodes => {
-            const updatedNodes = nodes.map(node => {
-                const initialNode = initialNodes.find(initialNode => {
-                    if (initialNode == null) {
-                        return false;
-                    }
-
-                    return initialNode.id === node.id;
-                });
-    
-                if (!initialNode) {
-                    return node;
-                }
-    
-                return {
-                    ...node,
-                    ...initialNode,
-                };
-            });
-
-            return updatedNodes;
-        });
-
-        setEdges(edges => {
-            const updatedEdges = edges.map(edge => {
-                const initialEdge = initialEdges.find(initialEdge => initialEdge.id === edge.id);
-    
-                if (!initialEdge) {
-                    return edge;
-                }
-    
-                return {
-                    ...edge,
-                    ...initialEdge,
-                };
-            });
-
-            return updatedEdges;
-        });
-    }, [workflowVersion]);
-
-    const { screenToFlowPosition } = useReactFlow();
+    const {
+        nodes,
+        edges,
+        onNodesChange,
+        onEdgesChange,
+    } = useSyncCanvas(workflowVersion);
 
     const handleConnectEnd = (event, connectionState) => {
         const sourceNodeId = connectionState.fromNode.id;
@@ -119,7 +72,7 @@ function WorkflowVersionReactFlow ({
 
             instance.addEdges(edge);
         } else {
-            const position = screenToFlowPosition({
+            const position = instance.screenToFlowPosition({
                 x: event.clientX,
                 y: event.clientY,
             });
