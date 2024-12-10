@@ -1,7 +1,5 @@
 import '@testing-library/jest-dom/vitest';
 
-import userEvent from '@testing-library/user-event'
-
 import { screen, render, fireEvent, act } from '@testing-library/react';
 
 import WorkflowVersionEditorCanvas from './workflow-version-editor-canvas';
@@ -15,6 +13,20 @@ describe('Workflow Version Editor Canvas', () => {
         }));
     });
 
+    const ifElement = {
+        id: 'if-element',
+        type: 'if',
+        name: 'If',
+        position: { x: 200, y: 200 }
+    };
+
+    const assignElement = {
+        id: 'assign-element',
+        type: 'assign',
+        name: 'Assign',
+        position: { x: 300, y: 300 }
+    };
+
     const workflowVersion = {
         id: 'workflow-version-1',
         elements: [
@@ -24,12 +36,8 @@ describe('Workflow Version Editor Canvas', () => {
                 position: { x: 100, y: 100 }
             },
 
-            {
-                id: 'if-element',
-                type: 'if',
-                name: 'If',
-                position: { x: 200, y: 200 }
-            },
+            ifElement,
+            assignElement,
         ]
     };
 
@@ -43,7 +51,7 @@ describe('Workflow Version Editor Canvas', () => {
         screen.getByText('Start');
     });
 
-    it.skip('Should render if element', () => {
+    it('Should render if element', () => {
         render(
             <WorkflowVersionEditorCanvas
                 workflowVersion={workflowVersion}
@@ -53,7 +61,17 @@ describe('Workflow Version Editor Canvas', () => {
         screen.getByText('If');
     });
 
-    it.skip('Should allow user to select an element', () => {
+    it('Should render assign element', () => {
+        render(
+            <WorkflowVersionEditorCanvas
+                workflowVersion={workflowVersion}
+            />
+        );
+
+        screen.getByText('Assign');
+    });
+
+    it('Should allow user to select an if element', () => {
         const handleElementSelect = vi.fn();
 
         render(
@@ -63,10 +81,27 @@ describe('Workflow Version Editor Canvas', () => {
             />
         );
 
-        const ifElement = screen.getByText('If');
+        const ifNode = screen.getByText('If');
 
-        fireEvent.dblClick(ifElement);
+        fireEvent.dblClick(ifNode);
 
-        expect(handleElementSelect).toHaveBeenCalledWith(workflowVersion.elements[1]);
+        expect(handleElementSelect).toHaveBeenCalledWith(ifElement);
+    });
+
+    it('Should allow user to select an assign element', () => {
+        const handleElementSelect = vi.fn();
+
+        render(
+            <WorkflowVersionEditorCanvas
+                workflowVersion={workflowVersion}
+                onElementSelect={handleElementSelect}
+            />
+        );
+
+        const assignNode = screen.getByText('Assign');
+
+        fireEvent.dblClick(assignNode);
+
+        expect(handleElementSelect).toHaveBeenCalledWith(assignElement);
     });
 });
