@@ -7,7 +7,7 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_REMAINDER,
     ASSIGNMENT_OPERATOR_BOOLEAN_NOT,
     ASSIGNMENT_OPERATOR_STRING_CONCATENATE,
-} from '../operators/assignment';
+} from '../operators/assignment-operators';
 
 import {
     COMPARISON_OPERATOR_EQUAL,
@@ -23,7 +23,7 @@ import {
     
     COMPARISON_OPERATOR_STRING_CONTAINS,
     COMPARISON_OPERATOR_STRING_IS_CONTAINED,
-} from '../operators/comparison';
+} from '../operators/comparison-operators';
 
 export default class WorkflowVersionRuntimeVariable {
     constructor ({
