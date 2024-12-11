@@ -13,13 +13,13 @@ import {
     ASSIGNMENT_OPERATOR_NUMBER_DECREMENT,
     ASSIGNMENT_OPERATOR_NUMBER_MULTIPLY,
     ASSIGNMENT_OPERATOR_NUMBER_DIVIDE,
-} from './constants/operators/assignment';
+} from './operators/assignment-operators';
 
 import {
     COMPARISON_OPERATOR_EQUAL,
     COMPARISON_OPERATOR_NUMBER_GREATER_THAN,
     COMPARISON_OPERATOR_NUMBER_LESS_THAN,
-} from './constants/operators/comparison';
+} from './operators/comparison-operators';
 
 describe('Workflow Version', () => {
     it('Should change the variables', async () => {
@@ -126,6 +126,7 @@ describe('Workflow Version', () => {
                     assignments: [],
                     positionX: 0,
                     positionY: 0,
+                    nextElementId: 'if-1',
                 },
             ],
         });
@@ -155,8 +156,74 @@ describe('Workflow Version', () => {
                 assignments: [],
                 positionX: 0,
                 positionY: 0,
+                nextElementId: 'if-1',
             }),
         ]);
+    });
+
+    it('Should throw an error trying to change the workflow version that is not in draft', async () => {
+        const workflowVersion = new WorkflowVersion({
+            id: 'workflow-version-1',
+            status: 'active',
+            number: 1,
+            workflowId: 'workflow-1',
+            createdAt: new Date(),
+            createdById: 'user-1',
+        });
+
+        expect(() => {
+            workflowVersion.change({
+                variables: [],
+            });
+        }).toThrow('Cannot change a workflow version that is not in draft.');
+    });
+
+    it('Should throw an error when there is any element not connected', async () => {
+        expect(() => {
+            new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'draft',
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+    
+                variables: [],
+                elements: [
+                    {
+                        id: 'assign-1',
+                        type: 'assign',
+                        name: 'Assign 1',
+                        positionX: 0,
+                        positionY: 0,
+                    },
+                ],
+            });
+        }).toThrow(`Element 'Assign 1' is not connected.`);
+    });
+
+    it('Should throw an error when any element is connected to an element that does not exist', async () => {
+        expect(() => {
+            new WorkflowVersion({
+                id: 'workflow-version-1',
+                status: 'draft',
+                number: 1,
+                workflowId: 'workflow-1',
+                createdAt: new Date(),
+                createdById: 'user-1',
+    
+                variables: [],
+                elements: [
+                    {
+                        id: 'start',
+                        type: 'start',
+                        positionX: 0,
+                        positionY: 0,
+                        nextElementId: 'assign-1',
+                    },
+                ],
+            });
+        }).toThrow(`Element 'assign-1' does not exist.`);
     });
 
     describe('Execution', () => {

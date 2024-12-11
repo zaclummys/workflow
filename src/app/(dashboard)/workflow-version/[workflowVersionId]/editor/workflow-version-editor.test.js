@@ -5,7 +5,7 @@ import { render, screen, act, fireEvent } from '@testing-library/react';
 import WorkflowVersionEditor from './workflow-version-editor';
 
 describe('Workflow Version Editor Sidebar', () => {
-    beforeEach(() => {
+    beforeAll(() => {
         global.ResizeObserver = vi.fn(() => ({
             observe: vi.fn(),
             unobserve: vi.fn(),

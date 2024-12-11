@@ -230,7 +230,7 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        const variableSelect = screen.getByLabelText('Variable');
+        const variableSelect = screen.getByLabelText('Variable (Target)');
 
         fireEvent.change(variableSelect, { target: { value: 'variable-string-2' } });
 
@@ -446,7 +446,7 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        const operandValueInput = screen.getByLabelText('Operand Value');
+        const operandValueInput = screen.getByLabelText('Operand Value (Source)');
 
         fireEvent.change(operandValueInput, { target: { value: 'Changed Value' } });
 
@@ -500,7 +500,7 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        const operandValueSelect = screen.getByLabelText('Operand Value');
+        const operandValueSelect = screen.getByLabelText('Operand Value (Source)');
 
         fireEvent.change(operandValueSelect, { target: { value: 'true' } });
 
@@ -554,7 +554,7 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        const operandValueInput = screen.getByLabelText('Operand Value');
+        const operandValueInput = screen.getByLabelText('Operand Value (Source)');
 
         fireEvent.change(operandValueInput, { target: { value: '123' } });
 

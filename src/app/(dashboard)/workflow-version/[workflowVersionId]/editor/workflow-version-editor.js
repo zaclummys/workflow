@@ -30,12 +30,44 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
             .elements.find(element => element.id === elementId);
     }
 
-    const handleCanvasNodeDoubleClick = (event, node) => {
-        const element = findElementById(node.id);
+    const handleElementSelect = (element) => {
+        dispatchWorflowVersionEditor({ type: 'element-selected', element });
+    };
 
-        if (element != null) {
-            dispatchWorflowVersionEditor({ type: 'element-selected', element });
-        }
+    const handleElementAdd = (element) => {
+        dispatchWorflowVersionEditor({ type: 'element-added', element });
+    };
+
+    const handleElementConnect = ({
+        sourceElementId,
+        targetElementId,
+        connectionType,
+    }) => {
+        dispatchWorflowVersionEditor({
+            type: 'element-connected',
+            sourceElementId,
+            targetElementId,
+            connectionType,
+        });
+    };
+
+    const handleElementDisconnect = ({
+        elementId,
+        connectionType,
+    }) => {
+        dispatchWorflowVersionEditor({
+            type: 'element-disconnected',
+            elementId,
+            connectionType,
+        });
+    };
+
+    const handleElementMove = ({ elementId, positionX, positionY }) => {
+        dispatchWorflowVersionEditor({ type: 'element-moved', elementId, positionX, positionY });
+    };
+
+    const handleElementRemove = (elementId) => {
+        dispatchWorflowVersionEditor({ type: 'element-removed', elementId });
     };
 
     const handleVariablesButtonClick = () => {
@@ -119,7 +151,12 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
 
             <div className="w-full h-full relative">
                 <WorkflowVersionEditorCanvas
-                    onNodeDoubleClick={handleCanvasNodeDoubleClick}
+                    onElementSelect={handleElementSelect}
+                    onElementAdd={handleElementAdd}
+                    onElementRemove={handleElementRemove}
+                    onElementConnect={handleElementConnect}
+                    onElementDisconnect={handleElementDisconnect}
+                    onElementMove={handleElementMove}
                     workflowVersion={workflowVersionEditor.workflowVersion}
                     dispatchWorkflowVersion={dispatchWorflowVersionEditor}
                 />

@@ -4,7 +4,7 @@ import { Field, Label, Select, Option } from '~/components/form';
 
 import ValueFacade from '~/components/value-facade';
 
-import comparisonOperators from './comparison-operators';
+import { comparisonOperators } from '~/core/domain/workflow-version/operators/comparison-operators';
 
 export default function Condition ({
     condition,

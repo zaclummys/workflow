@@ -4,7 +4,7 @@ import { Field, Label, Select, Option } from '~/components/form';
 import { DestructiveButton } from '~/components/button';
 import ValueFacade from '~/components/value-facade';
 
-import assignmentOperators from './assignment-operators';
+import { assignmentOperators } from '~/core/domain/workflow-version/operators/assignment-operators';
 
 export default function Assignment ({
     assignment,
@@ -46,7 +46,7 @@ export default function Assignment ({
             <Field>
                 <Label
                     htmlFor={variableId}>
-                    Variable
+                    Variable (Target)
                 </Label>
 
                 <Select
@@ -108,7 +108,7 @@ export default function Assignment ({
                 <Field>
                     <Label
                         htmlFor={operandVariableId}>
-                        Operand Variable
+                        Operand Variable (Source)
                     </Label>
 
                     <Select
@@ -130,7 +130,7 @@ export default function Assignment ({
                 <Field>
                     <Label
                         htmlFor={operandValueId}>
-                        Operand Value
+                        Operand Value (Source)
                     </Label>
 
                     <ValueFacade

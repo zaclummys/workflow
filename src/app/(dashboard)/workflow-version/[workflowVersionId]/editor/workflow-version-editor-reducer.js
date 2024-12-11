@@ -101,34 +101,38 @@ function workflowVersionElementsReducer (elements, action) {
 
         case 'element-disconnected':
             return elements.map(element => {
-                switch (element.type) {
-                    case 'start':
-                    case 'assign':
-                        return {
-                            ...element,
-                            nextElementId: null,
-                        };
+                if (element.id === action.elementId) {
+                    switch (element.type) {
+                        case 'start':
+                        case 'assign':
+                            return {
+                                ...element,
+                                nextElementId: null,
+                            };
 
-                    case 'if':
-                        switch (action.connectionType) {
-                            case 'true':
-                                return {
-                                    ...element,
-                                    nextElementIdIfTrue: null,
-                                };
+                        case 'if':
+                            switch (action.connectionType) {
+                                case 'true':
+                                    return {
+                                        ...element,
+                                        nextElementIdIfTrue: null,
+                                    };
 
-                            case 'false':
-                                return {
-                                    ...element,
-                                    nextElementIdIfFalse: null,
-                                };
+                                case 'false':
+                                    return {
+                                        ...element,
+                                        nextElementIdIfFalse: null,
+                                    };
 
-                            default:
-                                return element;
-                        }
+                                default:
+                                    return element;
+                            }
 
-                    default:
-                        return element;
+                        default:
+                            return element;
+                    }
+                } else {
+                    return element;
                 }
             });
 

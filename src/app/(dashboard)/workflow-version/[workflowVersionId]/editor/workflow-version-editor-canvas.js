@@ -2,15 +2,11 @@
 
 import '@xyflow/react/dist/style.css';
 
-import { useEffect } from 'react';
-
 import {
     ReactFlow,
     Background,
     Controls,
     MiniMap,
-    useNodesState,
-    useEdgesState,
     useReactFlow,
     ReactFlowProvider,
 } from '@xyflow/react';
@@ -18,13 +14,14 @@ import {
 import {
     createNode,
     createEdge,
-    fromWorkflowElements,
 } from './react-flow-helpers';
 
 import NewNode from './nodes/new-node';
 import StartNode from './nodes/start-node';
 import IfNode from './nodes/if-node';
 import AssignNode from './nodes/assign-node';
+
+import useSyncCanvas from './use-sync-canvas';
 
 const nodeTypes = {
     new: NewNode,
@@ -42,63 +39,25 @@ export default function WorkflowVersionEditorCanvas (props) {
 }
 
 function WorkflowVersionReactFlow ({
-    onNodeDoubleClick,
+    onElementSelect,
+    onElementMove,
+    
+    onElementConnect,
+    onElementDisconnect,
+
+    onElementAdd,
+    onElementRemove,
 
     workflowVersion,
-    dispatchWorkflowVersion,
 }) {
     const instance = useReactFlow();
 
-    const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
-
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-    useEffect(() => {
-        const [initialNodes, initialEdges] = fromWorkflowElements(workflowVersion.elements); 
-
-        setNodes(nodes => {
-            const updatedNodes = nodes.map(node => {
-                const initialNode = initialNodes.find(initialNode => {
-                    if (initialNode == null) {
-                        return false;
-                    }
-
-                    return initialNode.id === node.id;
-                });
-    
-                if (!initialNode) {
-                    return node;
-                }
-    
-                return {
-                    ...node,
-                    ...initialNode,
-                };
-            });
-
-            return updatedNodes;
-        });
-
-        setEdges(edges => {
-            const updatedEdges = edges.map(edge => {
-                const initialEdge = initialEdges.find(initialEdge => initialEdge.id === edge.id);
-    
-                if (!initialEdge) {
-                    return edge;
-                }
-    
-                return {
-                    ...edge,
-                    ...initialEdge,
-                };
-            });
-
-            return updatedEdges;
-        });
-    }, [workflowVersion]);
-
-    const { screenToFlowPosition } = useReactFlow();
+    const {
+        nodes,
+        edges,
+        onNodesChange,
+        onEdgesChange,
+    } = useSyncCanvas(workflowVersion);
 
     const handleConnectEnd = (event, connectionState) => {
         const sourceNodeId = connectionState.fromNode.id;
@@ -113,7 +72,7 @@ function WorkflowVersionReactFlow ({
 
             instance.addEdges(edge);
         } else {
-            const position = screenToFlowPosition({
+            const position = instance.screenToFlowPosition({
                 x: event.clientX,
                 y: event.clientY,
             });
@@ -159,13 +118,12 @@ function WorkflowVersionReactFlow ({
     }
 
     const handleNodesChange = changes => {
-        onNodesChange(changes);
+        onNodesChange(changes.filter(change => change.type !== 'add' || change.item.type !== 'if'));
 
         for (const change of changes) {
             switch (change.type) {
                 case 'position':
-                    dispatchWorkflowVersion({
-                        type: 'element-moved',
+                    onElementMove({
                         elementId: change.id,
                         positionX: change.position.x,
                         positionY: change.position.y,
@@ -173,43 +131,34 @@ function WorkflowVersionReactFlow ({
                 break;
                 
                 case 'remove':
-                    dispatchWorkflowVersion({
-                        type: 'element-removed',
-                        elementId: change.id,
-                    });
+                    onElementRemove(change.id);
                 break;
 
                 case 'add': {
                     switch (change.item.type) {
                         case 'if': {
-                            dispatchWorkflowVersion({
-                                type: 'element-added',
-                                element: {
-                                    id: change.item.id,
-                                    type: change.item.type,
-                                    name: change.item.data.label,
-                                    positionX: change.item.position.x,
-                                    positionY: change.item.position.y,
-                                    strategy: 'all',
-                                    description: '',
-                                    conditions: [],
-                                },
+                            onElementAdd({
+                                id: change.item.id,
+                                type: change.item.type,
+                                name: change.item.data.label,
+                                positionX: change.item.position.x,
+                                positionY: change.item.position.y,
+                                strategy: 'all',
+                                description: '',
+                                conditions: [],
                             });
                         }
                         break;
 
                         case 'assign': {
-                            dispatchWorkflowVersion({
-                                type: 'element-added',
-                                element: {
-                                    id: change.item.id,
-                                    type: change.item.type,
-                                    name: change.item.data.label,
-                                    positionX: change.item.position.x,
-                                    positionY: change.item.position.y,
-                                    description: '',
-                                    assignments: [],
-                                },
+                            onElementAdd({
+                                id: change.item.id,
+                                type: change.item.type,
+                                name: change.item.data.label,
+                                positionX: change.item.position.x,
+                                positionY: change.item.position.y,
+                                description: '',
+                                assignments: [],
                             });
                         }
                         break;
@@ -228,16 +177,14 @@ function WorkflowVersionReactFlow ({
                 case 'add':
                     switch (change.item.sourceHandle) {
                         case 'next':
-                            dispatchWorkflowVersion({
-                                type: 'element-connected',
+                            onElementConnect({
                                 sourceElementId: change.item.source,
                                 targetElementId: change.item.target,
                             });
                         break;
 
                         case 'true':
-                            dispatchWorkflowVersion({
-                                type: 'element-connected',
+                            onElementConnect({
                                 connectionType: 'true',
                                 sourceElementId: change.item.source,
                                 targetElementId: change.item.target,
@@ -245,8 +192,7 @@ function WorkflowVersionReactFlow ({
                         break;
 
                         case 'false':
-                            dispatchWorkflowVersion({
-                                type: 'element-connected',
+                            onElementConnect({
                                 connectionType: 'false',
                                 sourceElementId: change.item.source,
                                 targetElementId: change.item.target,
@@ -271,23 +217,20 @@ function WorkflowVersionReactFlow ({
 
                     switch (removedEdge.sourceHandle) {
                         case 'next':
-                            dispatchWorkflowVersion({
-                                type: 'element-disconnected',
-                                sourceElementId: removedEdge.source,
+                            onElementDisconnect({
+                                elementId: removedEdge.source,
                             });
                         break;
 
                         case 'true':
-                            dispatchWorkflowVersion({
-                                type: 'element-disconnected',
+                            onElementDisconnect({
                                 connectionType: 'true',
                                 elementId: removedEdge.source,
                             })
                         break;
 
                         case 'false':
-                            dispatchWorkflowVersion({
-                                type: 'element-disconnected',
+                            onElementDisconnect({
                                 connectionType: 'false',
                                 elementId: removedEdge.source,
                             })
@@ -303,6 +246,16 @@ function WorkflowVersionReactFlow ({
         return nodes.every(node => node.type !== 'start');
     }
 
+    const handleNodeDoubleClick = (event, node) => {
+        const element = workflowVersion.elements.find(element => element.id === node.id);
+
+        if (!element) {
+            return;
+        }
+        
+        onElementSelect(element);
+    }
+
     return (
         <div className="w-full h-full relative">
             <ReactFlow
@@ -310,7 +263,7 @@ function WorkflowVersionReactFlow ({
                 nodes={nodes}
                 edges={edges}
                 nodeTypes={nodeTypes}
-                onNodeDoubleClick={onNodeDoubleClick}
+                onNodeDoubleClick={handleNodeDoubleClick}
                 onNodesChange={handleNodesChange}
                 onEdgesChange={handleEdgesChanges}
                 onConnectEnd={handleConnectEnd}
