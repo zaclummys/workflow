@@ -382,6 +382,13 @@ function workflowVersionSidebarReducer (workflowVersionSidebar, action) {
                 element: action.element,
             };
 
+        case 'element-removed':
+            if (workflowVersionSidebar.type === 'edit-element' && workflowVersionSidebar.element.id === action.elementId) {
+                return null;
+            } else {
+                return workflowVersionSidebar;
+            }
+
         case 'edit-element-confirmed':
         case 'edit-element-canceled':
             return null;
