@@ -342,6 +342,148 @@ describe('Workflow Version Editor Reducer', () => {
                 }),
             )
         });
+
+        it('Should remove element', () => {
+            const workflowVersionEditor = {
+                workflowVersion: {
+                    elements: [
+                        {
+                            id: 'element-1',
+                            type: 'if',
+                        },
+                    ],
+                },
+            };
+
+            const output = workflowVersionEditorReducer(workflowVersionEditor, {
+                type: 'element-removed',
+                elementId: 'element-1',
+            });
+
+            expect(output).toStrictEqual(
+                expect.objectContaining({
+                    workflowVersion: expect.objectContaining({
+                        elements: [],
+                    }),
+                }),
+            )
+        });
+
+        it('Should remove all references from start element when another element is removed', () => {
+            const workflowVersionEditor = {
+                workflowVersion: {
+                    elements: [
+                        {
+                            id: 'element-1',
+                            type: 'start',
+                            nextElementId: 'element-2',
+                        },
+
+                        {
+                            id: 'element-2',
+                            type: 'assign',
+                        }
+                    ],
+                },
+            };
+
+            const output = workflowVersionEditorReducer(workflowVersionEditor, {
+                type: 'element-removed',
+                elementId: 'element-2',
+            });
+
+            expect(output).toStrictEqual(
+                expect.objectContaining({
+                    workflowVersion: expect.objectContaining({
+                        elements: [
+                            {
+                                id: 'element-1',
+                                type: 'start',
+                                nextElementId: null,
+                            },
+                        ],
+                    }),
+                }),
+            )
+        });
+
+        it('Should remove all references from assign element when another element is removed', () => {
+            const workflowVersionEditor = {
+                workflowVersion: {
+                    elements: [
+                        {
+                            id: 'element-1',
+                            type: 'assign',
+                            nextElementId: 'element-2',
+                        },
+
+                        {
+                            id: 'element-2',
+                            type: 'assign',
+                        }
+                    ],
+                },
+            };
+
+            const output = workflowVersionEditorReducer(workflowVersionEditor, {
+                type: 'element-removed',
+                elementId: 'element-2',
+            });
+
+            expect(output).toStrictEqual(
+                expect.objectContaining({
+                    workflowVersion: expect.objectContaining({
+                        elements: [
+                            {
+                                id: 'element-1',
+                                type: 'assign',
+                                nextElementId: null,
+                            },
+                        ],
+                    }),
+                }),
+            )
+        });
+
+        it('Should remove all references from if element when another element is removed', () => {
+            const workflowVersionEditor = {
+                workflowVersion: {
+                    elements: [
+                        {
+                            id: 'element-1',
+                            type: 'if',
+                            nextElementIdIfTrue: 'element-2',
+                            nextElementIdIfFalse: 'element-2',
+                        },
+
+                        {
+                            id: 'element-2',
+                            type: 'assign',
+                        }
+                    ],
+                },
+            };
+
+            const output = workflowVersionEditorReducer(workflowVersionEditor, {
+                type: 'element-removed',
+                elementId: 'element-2',
+            });
+
+            expect(output).toStrictEqual(
+                expect.objectContaining({
+                    workflowVersion: expect.objectContaining({
+                        elements: [
+                            {
+                                id: 'element-1',
+                                type: 'if',
+                                nextElementIdIfTrue: null,
+                                nextElementIdIfFalse: null,
+                            },
+                        ],
+                    }),
+                }),
+            )
+        });
     });
 
     describe('Variables', () => {
