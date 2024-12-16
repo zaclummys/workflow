@@ -68,7 +68,7 @@ export default async function WorkflowVersion ({ params }) {
                         <SectionTitle>
                             <GoBack url={`/workflow/${workflowVersion.workflow.id}`} />
 
-                            {workflowVersion.workflow.name} - Version {workflowVersion.number}
+                            Version {workflowVersion.number} - {workflowVersion.workflow.name}
                         </SectionTitle>
 
                         <SectionActions>
