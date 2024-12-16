@@ -1,6 +1,5 @@
 import getWorkspacesAction from '~/actions/get-workspaces-action';
 
-import Header from '~/components/header';
 import Container from '~/components/container';
 
 import {
@@ -30,8 +29,6 @@ export default async function Workspaces() {
 
     return (
         <>
-            <Header />
-
             <Container>
                 <Section>
                     <SectionHeader>

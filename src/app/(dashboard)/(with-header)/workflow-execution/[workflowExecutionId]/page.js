@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import Header from '~/components/header';
 import Container from '~/components/container';
 
 import {
@@ -34,8 +33,6 @@ export default async function WorkflowExecution ({ params }) {
 
     return (
         <>
-            <Header />
-
             <Container>
                 <Section>
                     <SectionTitle>

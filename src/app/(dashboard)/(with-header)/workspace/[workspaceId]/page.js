@@ -1,4 +1,3 @@
-import Header from '~/components/header';
 import Container from '~/components/container';
 import DateAgo from '~/components/date-ago';
 
@@ -60,8 +59,6 @@ export default async function Workspace({ params }) {
 
     return (
         <>
-            <Header />
-
             <Container>
                 <Section>
                     <SectionHeader>

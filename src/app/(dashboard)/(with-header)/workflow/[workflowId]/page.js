@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import Header from '~/components/header';
 import Container from '~/components/container';
 
 import {
@@ -55,8 +54,6 @@ export default async function Workflow({ params }) {
 
     return (
         <>
-            <Header />
-
             <Container>
                 <Section>
                     <SectionHeader>

@@ -1,6 +1,16 @@
+import Logo from '~/components/logo';
+
 export default function Layout ({ children }) {
     return (
-        <div className="flex flex-col items-center justify-center w-screen h-screen gap-6">
+        <div className="flex flex-col items-center justify-center w-screen h-screen gap-7">
+            <div className="flex flex-row items-center gap-4">
+                <Logo />
+
+                <span className="font-medium text-3xl">
+                    Easy Flow
+                </span>
+            </div>
+
             {children}
 
             <div className="flex flex-col items-center gap-2 text-sm text-on-background">

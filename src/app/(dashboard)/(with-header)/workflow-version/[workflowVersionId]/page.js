@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import Header from '~/components/header';
 import Container from '~/components/container';
 
 import {
@@ -49,7 +48,10 @@ export const title = 'Workflow Version';
 export default async function WorkflowVersion ({ params }) {
     const { workflowVersionId } = await params;
 
-    const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
+    const {
+        isOwner,
+        workflowVersion,
+    } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {
         return notFound();
@@ -63,8 +65,6 @@ export default async function WorkflowVersion ({ params }) {
 
     return (
         <>
-            <Header />
-
             <Container>
                 <Section>
                     <SectionHeader>
@@ -81,8 +81,10 @@ export default async function WorkflowVersion ({ params }) {
                             <ExecuteWorkflowVersionModalButton
                                 workflowVersion={workflowVersion} />
                                 
-                            <DeleteWorkflowVersionModalButton
-                                workflowVersion={workflowVersion} />
+                            {isOwner && (
+                                <DeleteWorkflowVersionModalButton
+                                    workflowVersion={workflowVersion} />
+                            )}    
                         </SectionActions>
                     </SectionHeader>
 

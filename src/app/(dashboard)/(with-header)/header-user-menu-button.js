@@ -7,9 +7,9 @@ import {
 import {
     Menu,
     MenuItem, 
-} from './menu';
+} from '~/components/menu';
 
-import UserColor from './user-color';
+import UserColor from '~/components/user-color';
 
 import signOutAction from '~/actions/sign-out-action';
 
