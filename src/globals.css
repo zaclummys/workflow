@@ -78,6 +78,10 @@ input:focus {
     --xy-node-boxshadow-selected: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 
     --xy-background-pattern-color: var(--outline-variant);
+
+    --xy-attribution-background-color: var(--surface);
+
+    @apply select-none;
 }
 
 .react-flow__controls {
