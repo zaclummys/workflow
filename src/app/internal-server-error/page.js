@@ -4,6 +4,7 @@ export default function InternalServerErrorPage () {
             <span className="text-2xl font-bold">
                 500
             </span>
+            
             <span className="text-2xl font-semibold text-on-background-variant">
                 Internal Server Error
             </span>
