@@ -1,10 +1,12 @@
 import { useId } from 'react';
-import { DestructiveButton } from '~/components/button';
+import { OutlineDestructiveButton } from '~/components/button';
 import { Field, Label, Select, Option } from '~/components/form';
 
 import ValueFacade from '~/components/value-facade';
 
 import { comparisonOperators } from '~/core/domain/workflow-version/operators/comparison-operators';
+
+import { Trash } from '~/components/icon';
 
 export default function Condition ({
     condition,
@@ -88,10 +90,8 @@ export default function Condition ({
                     Condition variable `{condition.variableId}` does not exist anymore.
                 </p>
 
-                <DestructiveButton
-                    onClick={handleRemoveConditionButtonClick}>
-                    Remove
-                </DestructiveButton>
+                <RemoveConditionButton
+                    onClick={handleRemoveConditionButtonClick} />
             </div>
         )
     }
@@ -199,10 +199,18 @@ export default function Condition ({
                 </Field>
             )}
 
-            <DestructiveButton
-                onClick={handleRemoveConditionButtonClick}>
-                Remove
-            </DestructiveButton>
+            <RemoveConditionButton
+                onClick={handleRemoveConditionButtonClick} />
         </div>
+    );
+}
+
+function RemoveConditionButton ({ onClick }) {
+    return (
+        <OutlineDestructiveButton
+            title="Remove condition"
+            onClick={onClick}>
+            <Trash className="w-4 h-4" />
+        </OutlineDestructiveButton>
     );
 }

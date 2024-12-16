@@ -714,4 +714,86 @@ describe('Workflow Version Editor Sidebar', () => {
 
         expect(editAssignTitle).not.toBeInTheDocument();
     });
+
+    it('Should allow user to remove an if element', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is a workflow version.',
+            elements: [
+                {
+                    id: 'element-1',
+                    type: 'if',
+                    name: 'If Element',
+                    description: 'This is an if element.',
+                    conditions: [],
+                },
+            ],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+
+        const ifElementNode = screen.getByText('If Element');
+
+        expect(ifElementNode).toBeInTheDocument();
+
+        fireEvent.dblClick(ifElementNode);
+
+        const removeElementButton = screen.getByText('Remove');
+
+        fireEvent.click(removeElementButton);
+
+        expect(ifElementNode).not.toBeInTheDocument();
+    });
+
+    it('Should allow user to remove an assign element', () => {
+        const workflowVersion = {
+            id: 'workflow-version-1',
+            name: 'Workflow Version 1',
+            number: 1,
+            description: 'This is a workflow version.',
+            elements: [
+                {
+                    id: 'element-1',
+                    type: 'assign',
+                    name: 'Assign Element',
+                    description: 'This is an assign element.',
+                    assignments: [],
+                },
+            ],
+            variables: [],
+            workflow: {
+                id: 'workflow-1',
+                name: 'Workflow 1',
+            },
+        };
+
+        render(
+            <WorkflowVersionEditor
+                workflowVersion={workflowVersion}
+            />
+        );
+
+        const assignElementNode = screen.getByText('Assign Element');
+
+        expect(assignElementNode).toBeInTheDocument();
+
+        fireEvent.dblClick(assignElementNode);
+
+        const removeElementButton = screen.getByText('Remove');
+
+        fireEvent.click(removeElementButton);
+
+        expect(assignElementNode).not.toBeInTheDocument();
+    });
 });

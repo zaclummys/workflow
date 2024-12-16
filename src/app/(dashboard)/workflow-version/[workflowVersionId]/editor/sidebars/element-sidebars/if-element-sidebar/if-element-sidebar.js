@@ -10,7 +10,7 @@ import {
     SidebarFooter,
 } from '~/components/sidebar';
 
-import { OutlineButton, PrimaryButton } from '~/components/button';
+import { DestructiveButton, OutlineButton, PrimaryButton } from '~/components/button';
 import { Field, Form, Input, Label, Select, Option, TextArea, Row } from '~/components/form';
 
 import Condition from './condition';
@@ -24,6 +24,8 @@ export default function IfElementSidebar ({
 
     onConfirm,
     onCancel,
+    
+    onRemove,
 }) {
     const formId = useId();
 
@@ -110,6 +112,10 @@ export default function IfElementSidebar ({
         onCancel();
     };
 
+    const handleRemoveButtonClick = event => {
+        onRemove(ifElement.id);
+    };
+
     const nameId = useId();
     const descriptionId = useId();
     const strategyId = useId();
@@ -121,6 +127,11 @@ export default function IfElementSidebar ({
                     <SidebarTitle>
                         Edit If
                     </SidebarTitle>
+
+                    <DestructiveButton
+                        onClick={handleRemoveButtonClick}>
+                        Remove
+                    </DestructiveButton>
                 </SidebarHeader>
 
                 <SidebarContent>

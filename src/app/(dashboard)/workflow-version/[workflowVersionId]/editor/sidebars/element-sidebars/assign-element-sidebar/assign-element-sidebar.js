@@ -8,7 +8,7 @@ import {
     SidebarFooter,
 } from '~/components/sidebar';
 
-import { OutlineButton, PrimaryButton } from '~/components/button';
+import { OutlineButton, PrimaryButton, DestructiveButton } from '~/components/button';
 import { Field, Form, Input, Label, TextArea } from '~/components/form';
 
 import Assignment from './assignment';
@@ -20,6 +20,8 @@ export default function AssignElementSidebar ({
 
     onConfirm,
     onCancel,
+
+    onRemove,
 }) {
     const formId = useId();
 
@@ -279,6 +281,10 @@ export default function AssignElementSidebar ({
         }));
     };
 
+    const handleRemoveButtonClick = event => {
+        onRemove(assignElement.id);
+    };
+
     const nameId = useId();
     const descriptionId = useId();
 
@@ -289,6 +295,11 @@ export default function AssignElementSidebar ({
                     <SidebarTitle>
                         Edit Assign
                     </SidebarTitle>
+
+                    <DestructiveButton
+                        onClick={handleRemoveButtonClick}>
+                        Remove
+                    </DestructiveButton>
                 </SidebarHeader>
 
                 <SidebarContent>

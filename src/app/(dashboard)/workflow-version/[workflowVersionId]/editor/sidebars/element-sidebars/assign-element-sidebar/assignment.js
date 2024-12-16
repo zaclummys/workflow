@@ -1,10 +1,12 @@
 import { useId } from 'react';
 import { Field, Label, Select, Option } from '~/components/form';
 
-import { DestructiveButton } from '~/components/button';
+import { OutlineDestructiveButton } from '~/components/button';
 import ValueFacade from '~/components/value-facade';
 
 import { assignmentOperators } from '~/core/domain/workflow-version/operators/assignment-operators';
+
+import { Trash } from '~/components/icon';
 
 export default function Assignment ({
     assignment,
@@ -33,10 +35,8 @@ export default function Assignment ({
                     Assignment variable `{assignment.variableId}` does not exist anymore.
                 </p>
 
-                <DestructiveButton
-                    onClick={onRemoveButtonClick}>
-                    Remove
-                </DestructiveButton>
+                <RemoveAssignmentButton
+                    onClick={onRemoveButtonClick} />
             </div>
         )
     }
@@ -142,10 +142,18 @@ export default function Assignment ({
                 </Field>
             )}
 
-            <DestructiveButton
-                onClick={onRemoveButtonClick}>
-                Remove
-            </DestructiveButton>
+            <RemoveAssignmentButton
+                onClick={onRemoveButtonClick} />
         </div>
     )
+}
+
+function RemoveAssignmentButton ({ onClick }) {
+    return (
+        <OutlineDestructiveButton
+            title="Remove assignment"
+            onClick={onClick}>
+            <Trash className="w-4 h-4" />
+        </OutlineDestructiveButton>
+    );
 }

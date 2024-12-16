@@ -25,11 +25,6 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
         }
     }, [workflowVersion]);
 
-    const findElementById = elementId => {
-        return workflowVersionEditor.workflowVersion
-            .elements.find(element => element.id === elementId);
-    }
-
     const handleElementSelect = (element) => {
         dispatchWorflowVersionEditor({ type: 'element-selected', element });
     };
@@ -181,6 +176,8 @@ export default function WorkflowVersionEditor ({ workflowVersion }) {
 
                         onEditElementConfirm={handleEditElementConfirm}
                         onEditElementCancel={handleEditElementCancel}
+
+                        onElementRemove={handleElementRemove}
 
                         onShowVariablesCloseButtonClick={handleShowVariablesCloseButtonClick}
                     />

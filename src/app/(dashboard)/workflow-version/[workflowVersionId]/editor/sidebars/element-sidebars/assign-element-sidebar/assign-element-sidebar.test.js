@@ -608,7 +608,7 @@ describe('Assign Element Sidebar', () => {
             />
         );
 
-        const removeAssignmentButton = screen.getByText('Remove');
+        const removeAssignmentButton = screen.getByTitle('Remove assignment');
 
         fireEvent.click(removeAssignmentButton);
 
@@ -652,5 +652,31 @@ describe('Assign Element Sidebar', () => {
         const alert = screen.getByText('Assignment variable `variable-unknown-1` does not exist anymore.');
 
         expect(alert).toBeInTheDocument();
+    });
+
+    it('Should allow user to remove the assign element', () => {
+        const assignElement = {
+            id: 'assign-1',
+            type: 'assign',
+            name: 'Assign',
+            description: 'This is an assign element.',
+            assignments: [],
+        };
+
+        const onRemove = vi.fn();
+
+        render(
+            <AssignElementSidebar
+                assignElement={assignElement}
+                variables={variables}
+                onRemove={onRemove}
+            />
+        );
+
+        const removeButton = screen.getByText('Remove');
+
+        fireEvent.click(removeButton);
+
+        expect(onRemove).toHaveBeenCalledWith('assign-1');
     });
 });

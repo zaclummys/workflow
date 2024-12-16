@@ -811,7 +811,7 @@ describe('If Element Sidebar', () => {
             />
         );
 
-        const removeConditionButton = screen.getByText('Remove');
+        const removeConditionButton = screen.getByTitle('Remove condition');
 
         act(() => {
             removeConditionButton.click();
@@ -936,10 +936,39 @@ describe('If Element Sidebar', () => {
 
         expect(conditionVariableDoesNotExistAlert).toBeInTheDocument();
 
-        const removeConditionButton = screen.getByText('Remove');
+        const removeConditionButton = screen.getByTitle('Remove condition');
 
         fireEvent.click(removeConditionButton);
 
         expect(conditionVariableDoesNotExistAlert).not.toBeInTheDocument();
+    });
+
+    it('Should allow user to remove the if element', () => {
+        const variables = [];
+
+        const ifElement = {
+            id: 'if-1',
+            type: 'if',
+            name: 'If',
+            description: 'This is a description.',
+            strategy: 'all',
+            conditions: [],
+        };
+
+        const onRemove = vi.fn();
+
+        render(
+            <IfElementSidebar
+                variables={variables}
+                ifElement={ifElement}
+                onRemove={onRemove}
+            />
+        );
+
+        const removeButton = screen.getByText('Remove');
+
+        fireEvent.click(removeButton);
+
+        expect(onRemove).toHaveBeenCalledWith('if-1');
     });
 });
