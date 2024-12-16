@@ -26,14 +26,14 @@ export default function useSyncCanvas (workflowVersion) {
             const nodeIdsInBoth = canvasNodeIds
                 .filter(canvasNodeId => workflowVersionNodesIds.includes(canvasNodeId));
 
-            
-            const nodeIdsOnlyInCanvas = canvasNodeIds
-                .filter(canvasNodeId => !workflowVersionNodesIds.includes(canvasNodeId));
+            const nodesOnlyInCanvas = canvasNodes
+                .filter(canvasNode => canvasNode.type === 'new')
+                .filter(canvasNode => !workflowVersionNodesIds.includes(canvasNode.id));
 
-            const nodeIdsOnlyInWorkflowVersion = workflowVersionNodesIds
-                .filter(workflowVersionNodeId => !canvasNodeIds.includes(workflowVersionNodeId));
+            const nodesOnlyInWorkflowVersion = workflowVersionNodes
+                .filter(workflowVersionNode => !canvasNodeIds.includes(workflowVersionNode.id));
 
-            const nodeIdsInBothUpdated = nodeIdsInBoth.map(nodeId => {
+            const mergedNodes = nodeIdsInBoth.map(nodeId => {
                 const canvasNode = canvasNodes.find(node => node.id === nodeId);
                 const workflowVersionNode = workflowVersionNodes.find(node => node.id === nodeId);
 
@@ -43,18 +43,10 @@ export default function useSyncCanvas (workflowVersion) {
                 }
             });
 
-            const nodeIdsOnlyInCanvasUpdated = nodeIdsOnlyInCanvas.map(nodeId => {
-                return canvasNodes.find(node => node.id === nodeId);
-            });
-
-            const nodeIdsOnlyInWorkflowVersionUpdated = nodeIdsOnlyInWorkflowVersion.map(nodeId => {
-                return workflowVersionNodes.find(node => node.id === nodeId);
-            });
-
             return [
-                ...nodeIdsInBothUpdated,
-                ...nodeIdsOnlyInCanvasUpdated,
-                ...nodeIdsOnlyInWorkflowVersionUpdated,
+                ...mergedNodes,
+                ...nodesOnlyInCanvas,
+                ...nodesOnlyInWorkflowVersion,
             ];
         });
 
