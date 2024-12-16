@@ -27,7 +27,7 @@ export default function WorkflowVersionEditorSidebar ({
     onEditElementConfirm,
     onEditElementCancel,
 
-    dispatchWorflowVersionEditor,
+    onElementRemove,
 }) {
     switch (sidebar.type) {
         case 'show-variables':
@@ -81,6 +81,8 @@ export default function WorkflowVersionEditorSidebar ({
 
                             onConfirm={onEditElementConfirm}
                             onCancel={onEditElementCancel}
+
+                            onRemove={onElementRemove}
                         />
                     );
 
@@ -94,6 +96,8 @@ export default function WorkflowVersionEditorSidebar ({
                             
                             onConfirm={onEditElementConfirm}
                             onCancel={onEditElementCancel}
+
+                            onRemove={onElementRemove}                            
                         />
                     );
 
