@@ -6,6 +6,8 @@ import WorkflowVersionStatus from "~/components/workflow-version-status";
 import SaveWorkflowVersionButton from '~/components/save-workflow-version-button';
 import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
 
+import HelpWorkflowVersionModalButton from './help-workflow-version-modal-button';
+
 export default function WorkflowVersionEditorHeader ({
     workflowVersion,
     disableSaveButton,
@@ -50,6 +52,8 @@ export default function WorkflowVersionEditorHeader ({
                     disabled={disableToggleButton}
                     workflowVersion={workflowVersion}
                 />
+
+                <HelpWorkflowVersionModalButton />
             </ButtonGroup>
         </header>
     );
