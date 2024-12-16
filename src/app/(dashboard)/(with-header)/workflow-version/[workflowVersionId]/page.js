@@ -48,10 +48,7 @@ export const title = 'Workflow Version';
 export default async function WorkflowVersion ({ params }) {
     const { workflowVersionId } = await params;
 
-    const {
-        isOwner,
-        workflowVersion,
-    } = await getWorkflowVersionAction(workflowVersionId);
+    const { workflowVersion } = await getWorkflowVersionAction(workflowVersionId);
 
     if (!workflowVersion) {
         return notFound();
@@ -81,10 +78,8 @@ export default async function WorkflowVersion ({ params }) {
                             <ExecuteWorkflowVersionModalButton
                                 workflowVersion={workflowVersion} />
                                 
-                            {isOwner && (
-                                <DeleteWorkflowVersionModalButton
-                                    workflowVersion={workflowVersion} />
-                            )}    
+                            <DeleteWorkflowVersionModalButton
+                                workflowVersion={workflowVersion} />
                         </SectionActions>
                     </SectionHeader>
 
