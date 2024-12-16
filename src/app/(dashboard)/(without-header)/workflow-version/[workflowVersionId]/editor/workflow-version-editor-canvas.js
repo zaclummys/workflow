@@ -272,8 +272,8 @@ function WorkflowVersionReactFlow ({
                 <Background
                     size={1}
                     offset={15} />
+                    
                 <Controls />
-                <MiniMap />
             </ReactFlow>
         </div>
     );
