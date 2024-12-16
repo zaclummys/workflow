@@ -4,7 +4,7 @@ import GoBack from '~/components/go-back';
 import ButtonGroup from '~/components/button-group';
 import WorkflowVersionStatus from "~/components/workflow-version-status";
 import SaveWorkflowVersionButton from '~/components/save-workflow-version-button';
-import ToggleWorkflowVersionButton from '~/components/toggle-workflow-version-button';
+import ToggleWorkflowVersionButton from '~/app/(dashboard)/(without-header)/workflow-version/[workflowVersionId]/editor/toggle-workflow-version-button';
 
 import HelpWorkflowVersionModalButton from './help-workflow-version-modal-button';
 

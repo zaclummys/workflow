@@ -3,9 +3,8 @@
 import { useState } from "react";
 
 import {
-    PrimaryButton,
     OutlineButton,
-} from "./button";
+} from "~/components/button";
 
 import activateWorkflowVersionAction from "~/actions/activate-workflow-version-action";
 import deactivateWorkflowVersionAction from "~/actions/deactivate-workflow-version-action";
@@ -54,12 +53,12 @@ function ActivateWorkflowVersionButton ({
     };
 
     return (
-        <PrimaryButton
+        <OutlineButton
             disabled={isActivating || disabled}
             onClick={handleActivateButtonClick}
         >
             Activate
-        </PrimaryButton>
+        </OutlineButton>
     );
 }
 
@@ -80,11 +79,11 @@ function DeactivateWorkflowVersionButton ({
     };
 
     return (
-        <PrimaryButton
+        <OutlineButton
             disabled={isDeactivating || disabled}
             onClick={handleDeactivateButtonClick}
         >
             Deactivate
-        </PrimaryButton>
+        </OutlineButton>
     );
 }
