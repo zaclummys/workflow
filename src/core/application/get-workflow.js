@@ -1,4 +1,8 @@
 import {
+    findSessionByToken,
+} from '~/core/data/mongodb/session';
+
+import {
     findWorkflowById, 
 } from '~/core/data/mongodb/workflow';
 
@@ -14,7 +18,18 @@ import {
     countWorkflowVersionsByWorkflowId,
 } from '~/core/data/mongodb/workflow-version';
 
-export default async function getWorkflow ({ workflowId }) {
+export default async function getWorkflow ({
+    sessionToken,
+    workflowId,
+}) {
+    const session = await findSessionByToken(sessionToken);
+
+    if (!session) {
+        return {
+            success: false,
+        };
+    }
+
     const workflow = await findWorkflowById(workflowId);
 
     if (!workflow) {
@@ -22,11 +37,31 @@ export default async function getWorkflow ({ workflowId }) {
             success: false,
         };
     }
-    
-    const numberOfVersions = await countWorkflowVersionsByWorkflowId(workflow.getId());
 
     const createdBy = await findUserById(workflow.getCreatedById());
+    
+    if (!createdBy) {
+        return {
+            success: false,
+        };
+    }
+
     const workspace = await findWorkspaceById(workflow.getWorkspaceId());
+
+    if (!workspace) {
+        return {
+            success: false,
+        };
+    }
+
+    if (!workspace.isMember(session.getUserId())) {
+        return {
+            success: false,
+            message: 'User is not a member of the workspace.',
+        };
+    }
+
+    const numberOfVersions = await countWorkflowVersionsByWorkflowId(workflow.getId());
 
     return {
         success: true,

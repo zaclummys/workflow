@@ -2,7 +2,7 @@ import {
     twMerge, 
 } from 'tailwind-merge';
 
-function getBackgroundClassName (color) {
+function computeUserColorClassName (color) {
     switch (color) {
         case 'red':
             return 'bg-user-red';
@@ -37,11 +37,12 @@ export default function UserColor ({
     user,
     className,
 }) {
-    const backgroundClassName = getBackgroundClassName(user.color);
+    const backgroundClassName = computeUserColorClassName(user.color);
 
     return (
         <div
             title={user.name}
-            className={twMerge('w-full h-full rounded-full', backgroundClassName, className)} />
+            className={twMerge('w-full h-full rounded-full', backgroundClassName, className)}
+        />
     );
 }

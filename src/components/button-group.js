@@ -1,6 +1,6 @@
 export default function ButtonGroup ({ children }) {
     return (
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-row items-center gap-2">
             {children}
         </div>
     );

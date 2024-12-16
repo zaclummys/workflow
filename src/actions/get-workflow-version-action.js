@@ -8,7 +8,7 @@ export default async function getWorkflowVersionAction (workflowVersionId) {
     const sessionToken = await getSessionToken();
 
     return getWorkflowVersion({
-        workflowVersionId,
         sessionToken,
+        workflowVersionId,
     });
 }

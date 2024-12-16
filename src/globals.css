@@ -18,16 +18,16 @@
     --outline-variant: theme('colors.outline.variant');
 
     --primary-hover: color-mix(in srgb, currentColor 16%, var(--primary));
-    --primary-press: color-mix(in srgb, currentColor 20%, var(--primary));
+    --primary-press: color-mix(in srgb, currentColor 24%, var(--primary));
 
     --surface-hover: color-mix(in srgb, currentColor 16%, var(--surface));
-    --surface-press: color-mix(in srgb, currentColor 20%, var(--surface));
+    --surface-press: color-mix(in srgb, currentColor 24%, var(--surface));
 
     --surface-high-hover: color-mix(in srgb, currentColor 16%, var(--surface-high));
-    --surface-high-press: color-mix(in srgb, currentColor 20%, var(--surface-high));
+    --surface-high-press: color-mix(in srgb, currentColor 24%, var(--surface-high));
 
     --danger-hover: color-mix(in srgb, currentColor 16%, var(--danger));
-    --danger-press: color-mix(in srgb, currentColor 20%, var(--danger));
+    --danger-press: color-mix(in srgb, currentColor 24%, var(--danger));
 }
 
 html {
@@ -78,6 +78,10 @@ input:focus {
     --xy-node-boxshadow-selected: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
 
     --xy-background-pattern-color: var(--outline-variant);
+
+    --xy-attribution-background-color: var(--surface);
+
+    @apply select-none;
 }
 
 .react-flow__controls {

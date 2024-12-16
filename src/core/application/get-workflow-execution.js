@@ -3,6 +3,7 @@ import { findUserById } from "~/core/data/mongodb/user";
 import { findWorkflowExecutionById } from "~/core/data/mongodb/workflow-execution";
 import { findWorkflowVersionById } from "~/core/data/mongodb/workflow-version";
 import { findWorkflowById } from "~/core/data/mongodb/workflow";
+import { findWorkspaceById } from "~/core/data/mongodb/workspace";
 
 export default async function getWorkflowExecution ({
     workflowExecutionId,
@@ -46,6 +47,21 @@ export default async function getWorkflowExecution ({
         return {
             success: false,
         }
+    }
+
+    const workspace = await findWorkspaceById(workflow.getWorkspaceId());
+
+    if (!workspace) {
+        return {
+            success: false,
+        }
+    }
+
+    if (!workspace.isMember(session.getUserId())) {
+        return {
+            success: false,
+            message: 'User is not a member of the workspace.',
+        };
     }
 
     return {
