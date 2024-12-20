@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react"
+
 import {
     Inter, 
 } from "next/font/google";
@@ -10,7 +12,7 @@ const inter = Inter({
 
 export const metadata = {
     title: "Easy Flow - Create algorithms without code",
-    description: "Create headless workflows without touch any code.",
+    description: "Create headless algorithms without touch any code.",
 };
 
 export default function Layout ({ children }) {
@@ -18,6 +20,8 @@ export default function Layout ({ children }) {
         <html lang="en">
             <body className={inter.className}>
                 {children}
+
+                <Analytics />
             </body>
         </html>
     );
