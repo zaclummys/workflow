@@ -1,20 +1,9 @@
 import { test, expect } from '@playwright/test';
 
-import signIn from './sign-in';
+import { createWorkspace } from './workspace';
 
-test('Should be able to create a new workspace', async ({ page }) => {
-    await signIn(page);
-
-    await page.getByText('New Workspace').click();
-
-    await page.getByText('Name').fill('My Workspace');
-    await page.getByText('Description').fill('This is my workspace');
-
-    await page.getByText('Create', {
-        exact: true,
-    }).click();
-
-    await page.waitForURL('/workspace/*');
+test('Create workspace', async ({ page }) => {
+    await createWorkspace(page);
 
     const title = page.getByText('My Workspace', {
         exact: true,
