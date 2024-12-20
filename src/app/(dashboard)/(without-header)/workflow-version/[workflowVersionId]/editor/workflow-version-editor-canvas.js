@@ -256,6 +256,11 @@ function WorkflowVersionReactFlow ({
         onElementSelect(element);
     }
 
+    const deleteKeyCodes = [
+        "Backspace",
+        "Delete",
+    ];
+
     return (
         <div className="w-full h-full relative">
             <ReactFlow
@@ -268,6 +273,7 @@ function WorkflowVersionReactFlow ({
                 onEdgesChange={handleEdgesChanges}
                 onConnectEnd={handleConnectEnd}
                 onBeforeDelete={handleBeforeDelete}
+                deleteKeyCode={deleteKeyCodes}
             >
                 <Background
                     size={1}
