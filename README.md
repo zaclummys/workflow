@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Easy Flow 🧩
 
-## Getting Started
+**Easy Flow** is a visual programming platform built with **Next.js** to simplify algorithm creation. With Easy Flow, you can design algorithms using **nodes and edges**, enabling structured and logical workflows without diving into complex code. Unlike drag-and-drop systems, Easy Flow offers a unique mechanism where every new node originates from an existing one. Start creating and connecting, step by step, with ease!
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Visual Algorithm Building**: Represent algorithms with clear and interactive visualizations.
+- **Node-Based System**: Add new nodes starting from existing ones for structured workflows.
+- **Simple Interface**: Intuitive design for users of all levels.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## 🛠️ Getting Started
 
-## Learn More
+Follow these steps to run Easy Flow locally:
 
-To learn more about Next.js, take a look at the following resources:
+### Prerequisites
+- **Node.js** (v14+ recommended)
+- **npm** or **yarn** installed globally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Installation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/yourusername/easy-flow.git
+   cd easy-flow
+   ```
 
-## Deploy on Vercel
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. **Setup database**: 
+    - Create a `.env` file in the root directory.
+    - Add the following environment variables:
+        ```bash
+        MONGODB_URI=your_mongodb_uri
+        ```
+
+    - Replace `your_mongodb_uri` with your MongoDB connection string.
+    - You can create a free MongoDB Atlas account [here](https://www.mongodb.com/cloud/atlas). 
+
+4. **Run the development server**:
+   ```bash
+    npm run dev
+    ```
+
+    Now, you can open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### Contributing 🤝
+
+Easy Flow is an open-source project and welcomes contributions from everyone. To contribute, follow these steps:
+
+1. **Fork** this repository.
+3. **Create a new branch** for your feature in your forked repository:
+   ```bash
+   git checkout -b feature/branch-name
+   ```
+
+4. **Make changes** and commit them:
+   ```bash
+    git commit -m "My changes"
+    ```
+
+5. **Push changes** to your branch:
+    ```bash
+    git push origin feature/branch-name
+    ```
+
+6. **Submit a pull request** to this repository.
+
