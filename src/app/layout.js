@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-    title: "Easy Flow - Create workflows without code",
+    title: "Easy Flow - Create algorithms without code",
     description: "Create headless workflows without touch any code.",
 };
 
